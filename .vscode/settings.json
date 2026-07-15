@@ -1,9 +1,18 @@
 {
   "files.watcherExclude": {
-    "**/routeTree.gen.ts": true
+    "**/routeTree.gen.ts": true,
+    "**/.tsr/**": true,
+    "**/.output/**": true,
+    "**/.vinxi/**": true,
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true
   },
   "search.exclude": {
-    "**/routeTree.gen.ts": true
+    "**/routeTree.gen.ts": true,
+    "**/.tsr/**": true,
+    "**/.output/**": true,
+    "**/.vinxi/**": true
   },
   "files.readonlyInclude": {
     "**/routeTree.gen.ts": true

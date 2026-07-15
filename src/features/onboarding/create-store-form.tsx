@@ -1,0 +1,131 @@
+import { SubmitButton } from "@/components/submit-button"
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
+import { BUSINESS_TYPES } from "@/lib/constants"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useNavigate } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/react-start"
+import {
+  Controller,
+  useForm,
+  type SubmitErrorHandler,
+  type SubmitHandler,
+} from "react-hook-form"
+import { toast } from "sonner"
+import { onboardingApi } from "./onboarding.functions"
+import { storeSchema, type CreateStoreInputs } from "./schema"
+
+export function CreateStoreForm() {
+  const createStore = useServerFn(onboardingApi.create)
+
+  const navigate = useNavigate()
+
+  const form = useForm({
+    resolver: zodResolver(storeSchema),
+    defaultValues: { name: "", businessType: "" },
+  })
+
+  const { errors, isSubmitting } = form.formState
+
+  const onFormError: SubmitErrorHandler<CreateStoreInputs> = (formError) => {
+    console.error(`Create Store Form Error: `, formError)
+  }
+
+  const onSubmit: SubmitHandler<CreateStoreInputs> = async (storeData) => {
+    try {
+      const result = await createStore({ data: storeData })
+
+      if (result.error) {
+        console.log("Error creating store: ", result.error)
+
+        let errMessage = result.error.message
+
+        if (result.error.code === "ORGANIZATION_ALREADY_EXISTS") {
+          errMessage = "The provided store name is already in use."
+        }
+        toast.error(errMessage)
+
+        return
+      }
+
+      toast.success(`Your store ${result.data?.name} is successfully created!`)
+
+      navigate({ to: "/onboarding/branch", replace: true })
+    } catch (err) {
+      console.log("Thrown Error: ", err)
+    }
+  }
+
+  return (
+    <form
+      onChange={() => form.clearErrors()}
+      onSubmit={form.handleSubmit(onSubmit, onFormError)}
+      noValidate
+    >
+      <FieldGroup>
+        <Field className="flex-1">
+          <FieldLabel htmlFor="name">Store Name</FieldLabel>
+          <Input
+            id="name"
+            placeholder="Enter your store's name"
+            autoComplete="store-name"
+            aria-invalid={!!errors.name || undefined}
+            {...form.register("name")}
+            className="h-12"
+            autoFocus
+          />
+          {errors.name && <FieldError>{errors.name.message}</FieldError>}
+        </Field>
+        <Controller
+          name="businessType"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Business Type</FieldLabel>
+              <FieldDescription>
+                What best describes your store?
+              </FieldDescription>
+              <FieldContent>
+                <NativeSelect
+                  id={field.name}
+                  aria-invalid={fieldState.invalid}
+                  className="h-12 w-full"
+                  {...field}
+                >
+                  <NativeSelectOption value="">
+                    Select business type
+                  </NativeSelectOption>
+                  {BUSINESS_TYPES.map((businessType) => (
+                    <NativeSelectOption
+                      key={businessType.value}
+                      value={businessType.value}
+                    >
+                      {businessType.emoji}&nbsp;&nbsp;&nbsp;
+                      {businessType.value}
+                    </NativeSelectOption>
+                  ))}
+                </NativeSelect>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </FieldContent>
+            </Field>
+          )}
+        />
+        <div className="flex justify-end pt-6">
+          <SubmitButton loading={isSubmitting} size="xl">
+            {isSubmitting ? "Creating your store…" : "Create Store"}
+          </SubmitButton>
+        </div>
+      </FieldGroup>
+    </form>
+  )
+}

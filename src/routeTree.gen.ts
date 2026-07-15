@@ -9,38 +9,186 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OnboardingRouteRouteImport } from './routes/onboarding/route'
+import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
+import { Route as OnboardingFinishRouteImport } from './routes/onboarding/finish'
+import { Route as OnboardingEmployeesRouteImport } from './routes/onboarding/employees'
+import { Route as OnboardingDesignationsRouteImport } from './routes/onboarding/designations'
+import { Route as OnboardingBranchRouteImport } from './routes/onboarding/branch'
+import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
+import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
+import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
+const OnboardingRouteRoute = OnboardingRouteRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
+  id: '/_protected',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingFinishRoute = OnboardingFinishRouteImport.update({
+  id: '/finish',
+  path: '/finish',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingEmployeesRoute = OnboardingEmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingDesignationsRoute = OnboardingDesignationsRouteImport.update({
+  id: '/designations',
+  path: '/designations',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingBranchRoute = OnboardingBranchRouteImport.update({
+  id: '/branch',
+  path: '/branch',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const authSignUpRoute = authSignUpRouteImport.update({
+  id: '/(auth)/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const authSignInRoute = authSignInRouteImport.update({
+  id: '/(auth)/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRouteRouteWithChildren
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
+  '/dashboard': typeof ProtectedDashboardRoute
+  '/onboarding/branch': typeof OnboardingBranchRoute
+  '/onboarding/designations': typeof OnboardingDesignationsRoute
+  '/onboarding/employees': typeof OnboardingEmployeesRoute
+  '/onboarding/finish': typeof OnboardingFinishRoute
+  '/onboarding/': typeof OnboardingIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
+  '/dashboard': typeof ProtectedDashboardRoute
+  '/onboarding/branch': typeof OnboardingBranchRoute
+  '/onboarding/designations': typeof OnboardingDesignationsRoute
+  '/onboarding/employees': typeof OnboardingEmployeesRoute
+  '/onboarding/finish': typeof OnboardingFinishRoute
+  '/onboarding': typeof OnboardingIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_protected': typeof ProtectedRouteRouteWithChildren
+  '/onboarding': typeof OnboardingRouteRouteWithChildren
+  '/(auth)/sign-in': typeof authSignInRoute
+  '/(auth)/sign-up': typeof authSignUpRoute
+  '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/onboarding/branch': typeof OnboardingBranchRoute
+  '/onboarding/designations': typeof OnboardingDesignationsRoute
+  '/onboarding/employees': typeof OnboardingEmployeesRoute
+  '/onboarding/finish': typeof OnboardingFinishRoute
+  '/onboarding/': typeof OnboardingIndexRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/onboarding'
+    | '/sign-in'
+    | '/sign-up'
+    | '/dashboard'
+    | '/onboarding/branch'
+    | '/onboarding/designations'
+    | '/onboarding/employees'
+    | '/onboarding/finish'
+    | '/onboarding/'
+    | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/dashboard'
+    | '/onboarding/branch'
+    | '/onboarding/designations'
+    | '/onboarding/employees'
+    | '/onboarding/finish'
+    | '/onboarding'
+    | '/api/auth/$'
+  id:
+    | '__root__'
+    | '/'
+    | '/_protected'
+    | '/onboarding'
+    | '/(auth)/sign-in'
+    | '/(auth)/sign-up'
+    | '/_protected/dashboard'
+    | '/onboarding/branch'
+    | '/onboarding/designations'
+    | '/onboarding/employees'
+    | '/onboarding/finish'
+    | '/onboarding/'
+    | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
+  OnboardingRouteRoute: typeof OnboardingRouteRouteWithChildren
+  authSignInRoute: typeof authSignInRoute
+  authSignUpRoute: typeof authSignUpRoute
+  ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +196,111 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding/': {
+      id: '/onboarding/'
+      path: '/'
+      fullPath: '/onboarding/'
+      preLoaderRoute: typeof OnboardingIndexRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/onboarding/finish': {
+      id: '/onboarding/finish'
+      path: '/finish'
+      fullPath: '/onboarding/finish'
+      preLoaderRoute: typeof OnboardingFinishRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/onboarding/employees': {
+      id: '/onboarding/employees'
+      path: '/employees'
+      fullPath: '/onboarding/employees'
+      preLoaderRoute: typeof OnboardingEmployeesRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/onboarding/designations': {
+      id: '/onboarding/designations'
+      path: '/designations'
+      fullPath: '/onboarding/designations'
+      preLoaderRoute: typeof OnboardingDesignationsRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/onboarding/branch': {
+      id: '/onboarding/branch'
+      path: '/branch'
+      fullPath: '/onboarding/branch'
+      preLoaderRoute: typeof OnboardingBranchRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/_protected/dashboard': {
+      id: '/_protected/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ProtectedDashboardRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/(auth)/sign-up': {
+      id: '/(auth)/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authSignUpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/sign-in': {
+      id: '/(auth)/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
+      preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface ProtectedRouteRouteChildren {
+  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+}
+
+const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
+  ProtectedDashboardRoute: ProtectedDashboardRoute,
+}
+
+const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
+  ProtectedRouteRouteChildren,
+)
+
+interface OnboardingRouteRouteChildren {
+  OnboardingBranchRoute: typeof OnboardingBranchRoute
+  OnboardingDesignationsRoute: typeof OnboardingDesignationsRoute
+  OnboardingEmployeesRoute: typeof OnboardingEmployeesRoute
+  OnboardingFinishRoute: typeof OnboardingFinishRoute
+  OnboardingIndexRoute: typeof OnboardingIndexRoute
+}
+
+const OnboardingRouteRouteChildren: OnboardingRouteRouteChildren = {
+  OnboardingBranchRoute: OnboardingBranchRoute,
+  OnboardingDesignationsRoute: OnboardingDesignationsRoute,
+  OnboardingEmployeesRoute: OnboardingEmployeesRoute,
+  OnboardingFinishRoute: OnboardingFinishRoute,
+  OnboardingIndexRoute: OnboardingIndexRoute,
+}
+
+const OnboardingRouteRouteWithChildren = OnboardingRouteRoute._addFileChildren(
+  OnboardingRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
+  OnboardingRouteRoute: OnboardingRouteRouteWithChildren,
+  authSignInRoute: authSignInRoute,
+  authSignUpRoute: authSignUpRoute,
+  ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

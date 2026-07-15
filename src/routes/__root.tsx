@@ -1,7 +1,9 @@
+import { Toaster } from "@/components/ui/sonner"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 
+import { siteConfig } from "@/config/site"
 import appCss from "../styles.css?url"
 
 export const Route = createRootRoute({
@@ -15,7 +17,11 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: siteConfig.title,
+      },
+      {
+        name: "description",
+        content: siteConfig.description,
       },
     ],
     links: [
@@ -54,6 +60,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           ]}
         />
         <Scripts />
+        <Toaster richColors />
       </body>
     </html>
   )
