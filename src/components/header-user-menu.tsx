@@ -40,16 +40,7 @@ export function HeaderUserMenu() {
             </Avatar>
           </button>
         }
-      >
-        <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring/50">
-          <Avatar className="bg-primary">
-            {user.image && <AvatarImage src={user.image} alt={user.name} />}
-            <AvatarFallback className="bg-primary text-primary-foreground">
-              {getInitials(user.name)}
-            </AvatarFallback>
-          </Avatar>
-        </button>
-      </DropdownMenuTrigger>
+      />
       <DropdownMenuContent align="end" sideOffset={8} className="min-w-48">
         <DropdownMenuGroup>
           <DropdownMenuLabel className="p-0 font-normal">

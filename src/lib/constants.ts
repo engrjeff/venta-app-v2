@@ -1,108 +1,43 @@
 export const BUSINESS_TYPES = [
   {
-    value: "Coffee Shop",
-    emoji: "☕️",
-    description: "Coffee, espresso, and café businesses",
-  },
-  {
-    value: "Milk Tea Shop",
-    emoji: "🧋",
-    description: "Bubble tea, fruit tea, and beverage shops",
-  },
-  {
-    value: "Restaurant",
+    value: "Food & Beverage",
     emoji: "🍽️",
-    description: "Dine-in, casual, and full-service restaurants",
-  },
-  {
-    value: "Fast Food",
-    emoji: "🍔",
-    description: "Quick-service restaurants and food stalls",
-  },
-  {
-    value: "Bakery",
-    emoji: "🍞",
-    description: "Bread, cakes, pastries, and baked goods",
+    description: "Restaurants, cafés, milk tea, bakeries, and food stalls",
   },
   {
     value: "Retail Store",
     emoji: "🛍️",
-    description: "General merchandise and specialty retail",
+    description: "Retail shops, groceries, convenience stores, and pharmacies",
   },
   {
-    value: "Convenience Store",
-    emoji: "🏪",
-    description: "Convenience stores and sari-sari stores",
-  },
-  {
-    value: "Grocery",
-    emoji: "🛒",
-    description: "Mini groceries and supermarkets",
-  },
-  {
-    value: "Pharmacy",
-    emoji: "💊",
-    description: "Drugstores and pharmacies",
-  },
-  {
-    value: "Salon & Barbershop",
+    value: "Beauty & Wellness",
     emoji: "💈",
-    description: "Hair salons, barber shops, and beauty services",
-  },
-  {
-    value: "Spa & Wellness",
-    emoji: "💆",
-    description: "Massage, spa, and wellness centers",
-  },
-  {
-    value: "Laundry Shop",
-    emoji: "🧺",
-    description: "Laundry, dry cleaning, and washing services",
-  },
-  {
-    value: "Hardware Store",
-    emoji: "🔩",
-    description: "Hardware, construction, and home improvement supplies",
-  },
-  {
-    value: "Electronics Store",
-    emoji: "💻",
-    description: "Electronics, gadgets, and appliance retailers",
-  },
-  {
-    value: "Fashion & Apparel",
-    emoji: "👕",
-    description: "Clothing, footwear, and fashion accessories",
-  },
-  {
-    value: "Bookstore & School Supplies",
-    emoji: "📚",
-    description: "Books, stationery, and school supplies",
-  },
-  {
-    value: "Pet Shop",
-    emoji: "🐶",
-    description: "Pet supplies, food, and grooming services",
-  },
-  {
-    value: "Auto Shop",
-    emoji: "🚗",
-    description: "Automotive parts, repair, and maintenance services",
+    description: "Salons, barbershops, spas, and wellness centers",
   },
   {
     value: "Service Business",
     emoji: "🧰",
-    description: "Repair, cleaning, maintenance, and professional services",
+    description: "Laundry, repair, cleaning, and professional services",
+  },
+  {
+    value: "Auto Shop",
+    emoji: "🚗",
+    description: "Auto repair, maintenance, and automotive services",
+  },
+  {
+    value: "Hardware & Electronics",
+    emoji: "🔩",
+    description: "Hardware, electronics, and appliance stores",
   },
   {
     value: "Office",
     emoji: "🏢",
-    description: "Offices, agencies, and administrative workplaces",
+    description: "Offices, agencies, and administrative businesses",
   },
   {
     value: "Other",
     emoji: "📦",
-    description: "Any other type of business",
+    description: "Something else",
   },
 ] as const
 

@@ -114,7 +114,11 @@ export function AddEmployeesForm({
 
       toast.success(`Employees are successfully saved!`)
 
-      navigate({ to: "/onboarding/finish", replace: true })
+      navigate({
+        to: "/onboarding/finish",
+        replace: true,
+        reloadDocument: true,
+      })
     } catch (err) {
       console.log("Thrown Error: ", err)
     }

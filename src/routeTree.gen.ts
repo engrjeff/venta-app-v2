@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as OnboardingRouteRouteImport } from './routes/onboarding/route'
 import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
+import { Route as OnboardingStoreSettingsRouteImport } from './routes/onboarding/store-settings'
 import { Route as OnboardingFinishRouteImport } from './routes/onboarding/finish'
 import { Route as OnboardingEmployeesRouteImport } from './routes/onboarding/employees'
 import { Route as OnboardingDesignationsRouteImport } from './routes/onboarding/designations'
@@ -20,6 +22,9 @@ import { Route as OnboardingBranchRouteImport } from './routes/onboarding/branch
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as EStoreSlugRouteRouteImport } from './routes/e/$storeSlug/route'
+import { Route as EStoreSlugIndexRouteImport } from './routes/e/$storeSlug/index'
+import { Route as EStoreSlugEmployeeIdRouteImport } from './routes/e/$storeSlug/$employeeId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const OnboardingRouteRoute = OnboardingRouteRouteImport.update({
@@ -31,6 +36,10 @@ const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
+const authRouteRoute = authRouteRouteImport.update({
+  id: '/(auth)',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -39,6 +48,11 @@ const IndexRoute = IndexRouteImport.update({
 const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingStoreSettingsRoute = OnboardingStoreSettingsRouteImport.update({
+  id: '/store-settings',
+  path: '/store-settings',
   getParentRoute: () => OnboardingRouteRoute,
 } as any)
 const OnboardingFinishRoute = OnboardingFinishRouteImport.update({
@@ -67,14 +81,29 @@ const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const authSignUpRoute = authSignUpRouteImport.update({
-  id: '/(auth)/sign-up',
+  id: '/sign-up',
   path: '/sign-up',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => authRouteRoute,
 } as any)
 const authSignInRoute = authSignInRouteImport.update({
-  id: '/(auth)/sign-in',
+  id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => authRouteRoute,
+} as any)
+const EStoreSlugRouteRoute = EStoreSlugRouteRouteImport.update({
+  id: '/e/$storeSlug',
+  path: '/e/$storeSlug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const EStoreSlugIndexRoute = EStoreSlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => EStoreSlugRouteRoute,
+} as any)
+const EStoreSlugEmployeeIdRoute = EStoreSlugEmployeeIdRouteImport.update({
+  id: '/$employeeId',
+  path: '/$employeeId',
+  getParentRoute: () => EStoreSlugRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
@@ -85,6 +114,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRouteRouteWithChildren
+  '/e/$storeSlug': typeof EStoreSlugRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/dashboard': typeof ProtectedDashboardRoute
@@ -92,8 +122,11 @@ export interface FileRoutesByFullPath {
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
   '/onboarding/finish': typeof OnboardingFinishRoute
+  '/onboarding/store-settings': typeof OnboardingStoreSettingsRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRoute
+  '/e/$storeSlug/': typeof EStoreSlugIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -104,14 +137,19 @@ export interface FileRoutesByTo {
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
   '/onboarding/finish': typeof OnboardingFinishRoute
+  '/onboarding/store-settings': typeof OnboardingStoreSettingsRoute
   '/onboarding': typeof OnboardingIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRoute
+  '/e/$storeSlug': typeof EStoreSlugIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/(auth)': typeof authRouteRouteWithChildren
   '/_protected': typeof ProtectedRouteRouteWithChildren
   '/onboarding': typeof OnboardingRouteRouteWithChildren
+  '/e/$storeSlug': typeof EStoreSlugRouteRouteWithChildren
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
@@ -119,14 +157,18 @@ export interface FileRoutesById {
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
   '/onboarding/finish': typeof OnboardingFinishRoute
+  '/onboarding/store-settings': typeof OnboardingStoreSettingsRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRoute
+  '/e/$storeSlug/': typeof EStoreSlugIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/onboarding'
+    | '/e/$storeSlug'
     | '/sign-in'
     | '/sign-up'
     | '/dashboard'
@@ -134,8 +176,11 @@ export interface FileRouteTypes {
     | '/onboarding/designations'
     | '/onboarding/employees'
     | '/onboarding/finish'
+    | '/onboarding/store-settings'
     | '/onboarding/'
     | '/api/auth/$'
+    | '/e/$storeSlug/$employeeId'
+    | '/e/$storeSlug/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -146,13 +191,18 @@ export interface FileRouteTypes {
     | '/onboarding/designations'
     | '/onboarding/employees'
     | '/onboarding/finish'
+    | '/onboarding/store-settings'
     | '/onboarding'
     | '/api/auth/$'
+    | '/e/$storeSlug/$employeeId'
+    | '/e/$storeSlug'
   id:
     | '__root__'
     | '/'
+    | '/(auth)'
     | '/_protected'
     | '/onboarding'
+    | '/e/$storeSlug'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/_protected/dashboard'
@@ -160,16 +210,19 @@ export interface FileRouteTypes {
     | '/onboarding/designations'
     | '/onboarding/employees'
     | '/onboarding/finish'
+    | '/onboarding/store-settings'
     | '/onboarding/'
     | '/api/auth/$'
+    | '/e/$storeSlug/$employeeId'
+    | '/e/$storeSlug/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  authRouteRoute: typeof authRouteRouteWithChildren
   ProtectedRouteRoute: typeof ProtectedRouteRouteWithChildren
   OnboardingRouteRoute: typeof OnboardingRouteRouteWithChildren
-  authSignInRoute: typeof authSignInRoute
-  authSignUpRoute: typeof authSignUpRoute
+  EStoreSlugRouteRoute: typeof EStoreSlugRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -189,6 +242,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(auth)': {
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -201,6 +261,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/onboarding/'
       preLoaderRoute: typeof OnboardingIndexRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/onboarding/store-settings': {
+      id: '/onboarding/store-settings'
+      path: '/store-settings'
+      fullPath: '/onboarding/store-settings'
+      preLoaderRoute: typeof OnboardingStoreSettingsRouteImport
       parentRoute: typeof OnboardingRouteRoute
     }
     '/onboarding/finish': {
@@ -243,14 +310,35 @@ declare module '@tanstack/react-router' {
       path: '/sign-up'
       fullPath: '/sign-up'
       preLoaderRoute: typeof authSignUpRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof authRouteRoute
     }
     '/(auth)/sign-in': {
       id: '/(auth)/sign-in'
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof authSignInRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/e/$storeSlug': {
+      id: '/e/$storeSlug'
+      path: '/e/$storeSlug'
+      fullPath: '/e/$storeSlug'
+      preLoaderRoute: typeof EStoreSlugRouteRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/e/$storeSlug/': {
+      id: '/e/$storeSlug/'
+      path: '/'
+      fullPath: '/e/$storeSlug/'
+      preLoaderRoute: typeof EStoreSlugIndexRouteImport
+      parentRoute: typeof EStoreSlugRouteRoute
+    }
+    '/e/$storeSlug/$employeeId': {
+      id: '/e/$storeSlug/$employeeId'
+      path: '/$employeeId'
+      fullPath: '/e/$storeSlug/$employeeId'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdRouteImport
+      parentRoute: typeof EStoreSlugRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -261,6 +349,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface authRouteRouteChildren {
+  authSignInRoute: typeof authSignInRoute
+  authSignUpRoute: typeof authSignUpRoute
+}
+
+const authRouteRouteChildren: authRouteRouteChildren = {
+  authSignInRoute: authSignInRoute,
+  authSignUpRoute: authSignUpRoute,
+}
+
+const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
+  authRouteRouteChildren,
+)
 
 interface ProtectedRouteRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
@@ -279,6 +381,7 @@ interface OnboardingRouteRouteChildren {
   OnboardingDesignationsRoute: typeof OnboardingDesignationsRoute
   OnboardingEmployeesRoute: typeof OnboardingEmployeesRoute
   OnboardingFinishRoute: typeof OnboardingFinishRoute
+  OnboardingStoreSettingsRoute: typeof OnboardingStoreSettingsRoute
   OnboardingIndexRoute: typeof OnboardingIndexRoute
 }
 
@@ -287,6 +390,7 @@ const OnboardingRouteRouteChildren: OnboardingRouteRouteChildren = {
   OnboardingDesignationsRoute: OnboardingDesignationsRoute,
   OnboardingEmployeesRoute: OnboardingEmployeesRoute,
   OnboardingFinishRoute: OnboardingFinishRoute,
+  OnboardingStoreSettingsRoute: OnboardingStoreSettingsRoute,
   OnboardingIndexRoute: OnboardingIndexRoute,
 }
 
@@ -294,12 +398,26 @@ const OnboardingRouteRouteWithChildren = OnboardingRouteRoute._addFileChildren(
   OnboardingRouteRouteChildren,
 )
 
+interface EStoreSlugRouteRouteChildren {
+  EStoreSlugEmployeeIdRoute: typeof EStoreSlugEmployeeIdRoute
+  EStoreSlugIndexRoute: typeof EStoreSlugIndexRoute
+}
+
+const EStoreSlugRouteRouteChildren: EStoreSlugRouteRouteChildren = {
+  EStoreSlugEmployeeIdRoute: EStoreSlugEmployeeIdRoute,
+  EStoreSlugIndexRoute: EStoreSlugIndexRoute,
+}
+
+const EStoreSlugRouteRouteWithChildren = EStoreSlugRouteRoute._addFileChildren(
+  EStoreSlugRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  authRouteRoute: authRouteRouteWithChildren,
   ProtectedRouteRoute: ProtectedRouteRouteWithChildren,
   OnboardingRouteRoute: OnboardingRouteRouteWithChildren,
-  authSignInRoute: authSignInRoute,
-  authSignUpRoute: authSignUpRoute,
+  EStoreSlugRouteRoute: EStoreSlugRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

@@ -11,7 +11,7 @@
     "jsx": "react-jsx",
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["vite/client"],
+    "types": ["vite/client", "google.maps"],
     "paths": {
       "@/*": ["./src/*"]
     },
@@ -28,7 +28,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    "typeRoots": ["node_modules/@types"]
   },
   "exclude": ["node_modules", ".vinxi", ".output", "dist"]
 }

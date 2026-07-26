@@ -2,26 +2,7 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
 import { getRequestHeaders } from "@tanstack/react-start/server"
 import slugify from "slugify"
-import type { CreateStoreInputs } from "./schema"
-
-type OnboardingStatus = {
-  completed: boolean
-  nextStep:
-    | "/onboarding"
-    | "/onboarding/branch"
-    | "/onboarding/designations"
-    | "/onboarding/employees"
-    | "/onboarding/finish"
-    | "/dashboard"
-  storeData?:
-    | {
-        name: string
-        branchCount: number
-        designationCount: number
-        employeeCount: number
-      }
-    | undefined
-}
+import type { CreateStoreInputs, CreateStoreSettingsInputs } from "./schema"
 
 async function generateStoreSlug(name: string) {
   const baseSlug = slugify(name, {
@@ -68,13 +49,13 @@ export async function createStore(store: CreateStoreInputs) {
       headers: getRequestHeaders(),
     })
 
-    // if ok, create the org setting
-    await prisma.organizationSettings.create({
-      data: {
-        businessType: store.businessType,
-        organizationId: storeOrg.id,
-      },
-    })
+    // // if ok, create the org setting
+    // await prisma.organizationSettings.create({
+    //   data: {
+    //     businessType: store.businessType,
+    //     organizationId: storeOrg.id,
+    //   },
+    // })
 
     return { data: storeOrg, error: null }
   } catch (error) {
@@ -82,8 +63,56 @@ export async function createStore(store: CreateStoreInputs) {
   }
 }
 
+export async function createStoreSettings(data: CreateStoreSettingsInputs) {
+  try {
+    const storeSettings = await prisma.organizationSettings.create({
+      data: {
+        businessType: data.businessType,
+        organizationId: data.storeId,
+      },
+    })
+
+    return { data: storeSettings, error: null }
+  } catch (error) {
+    return { data: null, error: error as any }
+  }
+}
+
+type OnboardingStatusResponse =
+  | {
+      completed: boolean
+      nextStep: "/onboarding"
+    }
+  | {
+      completed: boolean
+      nextStep:
+        | "/onboarding/store-settings"
+        | "/onboarding/branch"
+        | "/onboarding/designations"
+        | "/onboarding/employees"
+      storeData: {
+        name: string
+        id: string
+      }
+    }
+  | {
+      completed: boolean
+      nextStep: "/onboarding/finish"
+      storeData: {
+        name: string
+        id: string
+        branchCount: number
+        designationCount: number
+        employeeCount: number
+      }
+    }
+  | {
+      completed: true
+      nextStep: "/dashboard"
+    }
+
 export async function getOnboardingStatus(organizationId?: string): Promise<{
-  data: OnboardingStatus | null
+  data: OnboardingStatusResponse | null
   error: any
 }> {
   try {
@@ -97,7 +126,9 @@ export async function getOnboardingStatus(organizationId?: string): Promise<{
     const store = await prisma.organization.findUnique({
       where: { id: organizationId },
       include: {
-        organizationSettings: { select: { onboardingCompleted: true } },
+        organizationSettings: {
+          select: { businessType: true, onboardingCompleted: true },
+        },
         _count: {
           select: { branches: true, designations: true, employees: true },
         },
@@ -111,23 +142,46 @@ export async function getOnboardingStatus(organizationId?: string): Promise<{
       }
     }
 
+    if (!store.organizationSettings) {
+      return {
+        data: {
+          completed: false,
+          nextStep: "/onboarding/store-settings",
+          storeData: { name: store.name, id: store.id },
+        },
+        error: null,
+      }
+    }
+
     if (store._count.branches === 0) {
       return {
-        data: { completed: false, nextStep: "/onboarding/branch" },
+        data: {
+          completed: false,
+          nextStep: "/onboarding/branch",
+          storeData: { name: store.name, id: store.id },
+        },
         error: null,
       }
     }
 
     if (store._count.designations === 0) {
       return {
-        data: { completed: false, nextStep: "/onboarding/designations" },
+        data: {
+          completed: false,
+          nextStep: "/onboarding/designations",
+          storeData: { name: store.name, id: store.id },
+        },
         error: null,
       }
     }
 
     if (store._count.employees === 0) {
       return {
-        data: { completed: false, nextStep: "/onboarding/employees" },
+        data: {
+          completed: false,
+          nextStep: "/onboarding/employees",
+          storeData: { name: store.name, id: store.id },
+        },
         error: null,
       }
     }
@@ -139,6 +193,7 @@ export async function getOnboardingStatus(organizationId?: string): Promise<{
           nextStep: "/onboarding/finish",
           storeData: {
             name: store.name,
+            id: store.id,
             branchCount: store._count.branches,
             designationCount: store._count.designations,
             employeeCount: store._count.employees,

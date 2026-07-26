@@ -1,3 +1,4 @@
+import { AppLogo } from "@/components/app-logo"
 import { SigninForm } from "@/components/signin-form"
 import { getSession } from "@/lib/auth.functions"
 import { generatePageTitle } from "@/lib/utils"
@@ -20,13 +21,12 @@ export const Route = createFileRoute("/(auth)/sign-in")({
 
 function RouteComponent() {
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
-      <div className="w-full max-w-sm">
-        <h1 className="mb-6 text-center text-2xl font-bold">
-          Welcome to TindaNatin!
-        </h1>
-        <SigninForm />
+    <>
+      <div className="mb-8 space-y-4">
+        <AppLogo />
+        <h1 className="text-2xl font-medium">Sign in to TindaNatin</h1>
       </div>
-    </div>
+      <SigninForm />
+    </>
   )
 }

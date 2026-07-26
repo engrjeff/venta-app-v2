@@ -1,17 +1,20 @@
+import { MapEmbed } from "@/components/map-embed"
 import { SubmitButton } from "@/components/submit-button"
+import { Button } from "@/components/ui/button"
 import {
   Field,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { authClient } from "@/lib/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate } from "@tanstack/react-router"
+import { useNavigate, useRouter } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
-import { CheckIcon } from "lucide-react"
+import { ArrowRightIcon, MapIcon } from "lucide-react"
+import { useState } from "react"
 import {
   useForm,
   type SubmitErrorHandler,
@@ -21,15 +24,17 @@ import { toast } from "sonner"
 import { branchApi } from "./branch.functions"
 import { branchSchema, type CreateBranchInput } from "./schema"
 
-export function CreateBranchForm() {
+export function CreateBranchForm({ storeId }: { storeId: string }) {
   const createBranch = useServerFn(branchApi.create)
-  const store = authClient.useActiveOrganization()
+
   const navigate = useNavigate()
+  const router = useRouter()
+
+  const [viewingInMap, setViewingInMap] = useState(false)
 
   const form = useForm({
     resolver: zodResolver(branchSchema),
-    defaultValues: { name: "", address: "", storeId: "" },
-    values: { name: "", address: "", storeId: store.data?.id ?? "" },
+    defaultValues: { name: "", address: "", storeId },
   })
 
   const { errors, isSubmitting } = form.formState
@@ -50,15 +55,20 @@ export function CreateBranchForm() {
         return
       }
 
-      toast.success(
-        `Store branch ${result.data?.name} is successfully created!`
-      )
+      toast.success(`Store branch ${result.data?.name} is successfully saved!`)
 
-      navigate({ to: "/onboarding/designations", replace: true })
+      await router.invalidate()
+
+      navigate({
+        to: "/onboarding/designations",
+        replace: true,
+      })
     } catch (err) {
       console.log("Thrown Error: ", err)
     }
   }
+
+  const enteredAddress = form.watch("address")
 
   return (
     <form
@@ -73,7 +83,7 @@ export function CreateBranchForm() {
           </FieldLabel>
           <Input
             id="name"
-            placeholder="Enter your branch's name"
+            placeholder="e.g. Main Branch"
             autoComplete="branch-name"
             className="h-12"
             autoFocus
@@ -83,22 +93,52 @@ export function CreateBranchForm() {
           {errors.name && <FieldError>{errors.name.message}</FieldError>}
         </Field>
         <Field className="flex-1">
-          <FieldLabel htmlFor="address">
-            Where is your branch located?
-          </FieldLabel>
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <FieldLabel htmlFor="address">
+                Where is your branch located?
+              </FieldLabel>
+              <FieldDescription>
+                Tip: Enter the address indicated in Google Maps
+              </FieldDescription>
+            </div>
+            <Button
+              type="button"
+              disabled={!enteredAddress}
+              variant="secondary"
+              onClick={() => setViewingInMap(true)}
+            >
+              <MapIcon /> Verify On Map
+            </Button>
+          </div>
           <Textarea
             id="address"
             placeholder="Enter your branch's address"
             autoComplete="branch-address"
             className="min-h-20"
-            aria-invalid={!!errors.name || undefined}
+            aria-invalid={!!errors.address || undefined}
             {...form.register("address")}
           />
+
           {errors.address && <FieldError>{errors.address.message}</FieldError>}
         </Field>
+        {viewingInMap && enteredAddress ? (
+          <div className="space-y-3">
+            <p className="text-sm leading-none font-medium select-none">
+              Does this look right to you?
+            </p>
+            <MapEmbed location={enteredAddress} />
+          </div>
+        ) : null}
         <div className="flex justify-end pt-6">
           <SubmitButton loading={isSubmitting} size="xl">
-            Create Branch <CheckIcon />
+            {isSubmitting ? (
+              "Saving Branch…"
+            ) : (
+              <>
+                Next <ArrowRightIcon />
+              </>
+            )}
           </SubmitButton>
         </div>
       </FieldGroup>

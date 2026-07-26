@@ -8,11 +8,20 @@ export const Route = createFileRoute("/onboarding/branch")({
 })
 
 function RouteComponent() {
+  const { status, organizationId: storeId } = Route.useRouteContext()
+
+  if (!storeId) return null
+
+  let storeData =
+    status.data?.nextStep === "/onboarding/branch"
+      ? status.data.storeData
+      : undefined
+
   return (
     <>
-      <StepFormHeading step={2} />
+      <StepFormHeading step={3} storeName={storeData?.name} />
       <Separator />
-      <CreateBranchForm />
+      <CreateBranchForm storeId={storeId} />
     </>
   )
 }

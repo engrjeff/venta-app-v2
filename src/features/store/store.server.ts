@@ -57,3 +57,15 @@ export async function getStores() {
     return { data: null, error: error as any }
   }
 }
+
+export async function getStoreBySlug(storeSlug: string) {
+  try {
+    const store = await prisma.organization.findUnique({
+      where: { slug: storeSlug },
+    })
+
+    return { data: store, error: null }
+  } catch (error) {
+    return { data: null, error: error as any }
+  }
+}

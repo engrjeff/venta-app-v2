@@ -1,3 +1,4 @@
+import { CopyEmployeePortalButton } from "./copy-employee-portal-button"
 import { HeaderUserMenu } from "./header-user-menu"
 import { Separator } from "./ui/separator"
 import { SidebarTrigger } from "./ui/sidebar"
@@ -13,6 +14,7 @@ export function AppHeader() {
         />
         <h1 className="text-base font-medium">Dashboard</h1>
         <div className="ml-auto flex items-center gap-2">
+          <CopyEmployeePortalButton />
           <HeaderUserMenu />
         </div>
       </div>

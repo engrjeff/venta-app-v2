@@ -10,7 +10,7 @@ export const Route = createFileRoute("/onboarding/designations")({
 function RouteComponent() {
   return (
     <>
-      <StepFormHeading step={3} />
+      <StepFormHeading step={4} />
       <Separator />
       <CreateDesignationsForm />
     </>

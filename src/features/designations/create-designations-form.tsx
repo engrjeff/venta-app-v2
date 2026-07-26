@@ -15,7 +15,7 @@ import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 import { SalaryType } from "@/generated/prisma/enums"
 import { authClient } from "@/lib/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate } from "@tanstack/react-router"
+import { useNavigate, useRouter } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { PlusIcon, XIcon } from "lucide-react"
 import {
@@ -34,6 +34,8 @@ import {
 
 export function CreateDesignationsForm() {
   const navigate = useNavigate()
+  const router = useRouter()
+
   const createManyDesignations = useServerFn(designationsApi.createMany)
   const store = authClient.useActiveOrganization()
 
@@ -107,7 +109,12 @@ export function CreateDesignationsForm() {
 
       toast.success(`Designations are successfully created!`)
 
-      navigate({ to: "/onboarding/employees", replace: true })
+      await router.invalidate()
+
+      navigate({
+        to: "/onboarding/employees",
+        replace: true,
+      })
     } catch (err) {
       console.log("Thrown Error: ", err)
     }
@@ -148,6 +155,7 @@ export function CreateDesignationsForm() {
                         placeholder="Designation"
                         className="h-12"
                         aria-invalid={fieldState.invalid}
+                        autoFocus
                         {...controllerField}
                       />
                       {fieldState.invalid && (

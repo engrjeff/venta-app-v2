@@ -19,7 +19,10 @@ export const Route = createFileRoute("/onboarding/finish")({
 function RouteComponent() {
   const { status, organizationId } = Route.useRouteContext()
 
-  const store = status.data?.storeData
+  let storeData =
+    status.data?.nextStep === "/onboarding/finish"
+      ? status.data.storeData
+      : undefined
 
   return (
     <>
@@ -33,7 +36,7 @@ function RouteComponent() {
             <StoreIcon size={20} />
           </div>
           <h3>Store</h3>
-          <span className="ml-auto inline-block">{store?.name}</span>
+          <span className="ml-auto inline-block">{storeData?.name}</span>
         </div>
         <div className="flex items-center gap-4">
           <div className="relative flex size-11 items-center justify-center rounded-full bg-primary text-white">
@@ -41,7 +44,7 @@ function RouteComponent() {
           </div>
           <h3>Branch</h3>
           <span className="ml-auto inline-block">
-            {store?.branchCount} branch added
+            {storeData?.branchCount} branch added
           </span>
         </div>
         <div className="flex items-center gap-4">
@@ -50,7 +53,7 @@ function RouteComponent() {
           </div>
           <h3>Designations</h3>
           <span className="ml-auto inline-block">
-            {store?.designationCount} designations added
+            {storeData?.designationCount} designations added
           </span>
         </div>
         <div className="flex items-center gap-4">
@@ -59,7 +62,7 @@ function RouteComponent() {
           </div>
           <h3>Employees</h3>
           <span className="ml-auto inline-block">
-            {store?.employeeCount} employees added
+            {storeData?.employeeCount} employees added
           </span>
         </div>
       </div>

@@ -1,0 +1,24 @@
+import { serverEnv } from "@/config/serverEnv"
+import { useSession } from "@tanstack/react-start/server"
+import { endOfDay } from "date-fns"
+
+export type ClockInSessionData = {
+  employeeId: string
+  attendanceId: string
+  timeInString: string
+}
+
+export function useClockInSession() {
+  const today = new Date().toISOString().split("T")[0]
+
+  return useSession<ClockInSessionData>({
+    name: "tindanatin-clockin-session",
+    password: serverEnv.EMPLOYEE_SESSION_SECRET,
+    cookie: {
+      secure: serverEnv.NODE_ENV === "production",
+      sameSite: "lax",
+      httpOnly: true,
+      expires: endOfDay(new Date(today)),
+    },
+  })
+}

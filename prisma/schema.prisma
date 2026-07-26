@@ -170,13 +170,13 @@ model Branch {
 
   name String
 
-  address    String?
+  address    String
   city       String?
   province   String?
   postalCode String?
 
-  latitude  Float?
-  longitude Float?
+  latitude  Float
+  longitude Float
 
   attendanceRadius Int @default(100) // meters
 
@@ -187,6 +187,10 @@ model Branch {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // gmaps fields
+  gmFormattedAddress String?
+  gmPlaceId          String?
 
   @@index([organizationId])
   @@map("branch")
@@ -299,6 +303,8 @@ model Attendance {
 
   timeIn  DateTime?
   timeOut DateTime?
+
+  totalTimeWorked Float?
 
   timeInLatitude  Float?
   timeInLongitude Float?

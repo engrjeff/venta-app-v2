@@ -23,3 +23,11 @@ export function getInitials(
 export function generatePageTitle(title: string) {
   return `${title} | ${siteConfig.title}`
 }
+
+export function sleep(ms: number) {
+  if (typeof window === "undefined") return
+
+  if (typeof setTimeout === "undefined") return
+
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}

@@ -24,7 +24,7 @@ function RouteComponent() {
 
   return (
     <>
-      <StepFormHeading step={4} />
+      <StepFormHeading step={5} />
       <Separator />
       {!loaderData.data ? null : (
         <AddEmployeesForm

@@ -35,6 +35,44 @@ export const employeeArraySchema = z.object({
     .min(1, { error: "Provide at least 1 employee" }),
 })
 
+export const employeeUsernameSchema = z.object({
+  storeId: z.string({ error: "Store is required" }).min(1, "Store is required"),
+  username: z
+    .string({ error: "Username is required" })
+    .min(1, "Username is required"),
+})
+
+export const employeeIdSchema = z.object({
+  employeeId: z
+    .string({ error: "Employee ID is required" })
+    .min(1, "Employee ID is required"),
+})
+
+export const employeeClockInSchema = z.object({
+  storeId: z.string({ error: "Store is required" }).min(1, "Store is required"),
+  employeeId: z
+    .string({ error: "Employee ID is required" })
+    .min(1, "Employee ID is required"),
+  branchId: z
+    .string({ error: "Branch is required" })
+    .min(1, "Branch is required"),
+  timeIn: z.iso.datetime({ local: true, error: "Clock-in time is required" }),
+  timeInLat: z.number({ error: "Clock-in location is required" }),
+  timeInLng: z.number({ error: "Clock-in location is required" }),
+})
+
+export const employeeClockInFormSchema = employeeClockInSchema.partial({
+  timeIn: true,
+  timeInLat: true,
+  timeInLng: true,
+})
+
 export type CreateEmployeeInput = z.infer<typeof employeeSchema>
 
 export type CreateManyEmployeeInput = z.infer<typeof employeeArraySchema>
+
+export type VerifyUsernameInput = z.infer<typeof employeeUsernameSchema>
+
+export type EmployeeClockInInput = z.infer<typeof employeeClockInSchema>
+
+export type EmployeeClockInFormInput = z.infer<typeof employeeClockInFormSchema>
