@@ -9,6 +9,9 @@ export type EmployeeSessionData = {
   employeeLastName: string
   storeId: string
 
+  branchId: string
+  branchName: string
+
   attendanceId: string
   timeInString: string
 }

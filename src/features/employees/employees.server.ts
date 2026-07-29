@@ -1,8 +1,12 @@
+import { type Attendance } from "@/generated/prisma/client"
+import { AttendanceStatus } from "@/generated/prisma/enums"
 import { prisma } from "@/lib/db"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client"
 import slugify from "slugify"
 import { useEmployeeSession } from "./employee-session"
 import type {
+  ActiveAttendanceQueryInput,
+  AttendanceTransitionInput,
   CreateManyEmployeeInput,
   EmployeeClockInInput,
   VerifyUsernameInput,
@@ -160,6 +164,10 @@ export async function submitClockInAttendance(
         timeInLatitude: timeInLat,
         timeInLongitude: timeInLng,
         date: new Date(today),
+        workStartedAt: clockInDate,
+      },
+      include: {
+        branch: { select: { name: true } },
       },
     })
 
@@ -168,6 +176,10 @@ export async function submitClockInAttendance(
 
     await employeeSession.update({
       ...employeeSession.data,
+
+      branchId,
+      branchName: attendance.branch.name,
+
       attendanceId: attendance.id,
       timeInString: timeIn,
     })
@@ -197,6 +209,7 @@ export async function submitClockInAttendance(
                 employeeId: clockInInputs.employeeId,
                 date: new Date(today),
               },
+              include: { branch: { select: { id: true, name: true } } },
             })
 
             if (!attendance) {
@@ -209,6 +222,10 @@ export async function submitClockInAttendance(
             // update the employee session cookie with the clock-in data
             await employeeSession.update({
               ...employeeSession.data,
+
+              branchId: attendance.branchId,
+              branchName: attendance.branch.name,
+
               attendanceId: attendance.id,
               timeInString: attendance.timeIn?.toISOString(),
             })
@@ -226,4 +243,216 @@ export async function submitClockInAttendance(
 
     return { data: null, error: error as any }
   }
+}
+
+export async function getActiveAttendance(inputs: ActiveAttendanceQueryInput) {
+  try {
+    const attendance = await prisma.attendance.findUnique({
+      where: {
+        id: inputs.attendanceId,
+        employeeId: inputs.employeeId,
+      },
+      include: {
+        organization: true,
+        branch: true,
+        breaks: true,
+        employee: {
+          include: { designation: { select: { id: true, name: true } } },
+        },
+      },
+    })
+
+    return { data: attendance, error: null }
+  } catch (error) {
+    return { data: null, error: error as any }
+  }
+}
+
+// ATTENDANCE TRANSITION
+function secondsBetween(start: Date, end: Date) {
+  return Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000))
+}
+
+export function pauseAttendance(attendance: Attendance, at: Date): Attendance {
+  if (attendance.status !== AttendanceStatus.WORKING) {
+    throw new Error("Employee is not currently working.")
+  }
+
+  if (!attendance.workStartedAt) {
+    throw new Error("Missing workStartedAt.")
+  }
+
+  return {
+    ...attendance,
+
+    status: AttendanceStatus.ON_BREAK,
+
+    workStartedAt: null,
+    breakStartedAt: at,
+
+    totalWorkedSeconds:
+      attendance.totalWorkedSeconds +
+      secondsBetween(attendance.workStartedAt, at),
+  }
+}
+
+export function resumeAttendance(attendance: Attendance, at: Date): Attendance {
+  if (attendance.status !== AttendanceStatus.ON_BREAK) {
+    throw new Error("Employee is not on break.")
+  }
+
+  if (!attendance.breakStartedAt) {
+    throw new Error("Missing breakStartedAt.")
+  }
+
+  return {
+    ...attendance,
+
+    status: AttendanceStatus.WORKING,
+
+    breakStartedAt: null,
+    workStartedAt: at,
+
+    totalBreakSeconds:
+      attendance.totalBreakSeconds +
+      secondsBetween(attendance.breakStartedAt, at),
+  }
+}
+
+export function clockOutAttendance(
+  attendance: Attendance,
+  at: Date,
+  lat: number,
+  lng: number
+): Attendance {
+  if (attendance.status === AttendanceStatus.CLOCKED_OUT) {
+    throw new Error("Employee already clocked out.")
+  }
+
+  if (
+    attendance.status === AttendanceStatus.WORKING &&
+    !attendance.workStartedAt
+  ) {
+    throw new Error("Missing workStartedAt.")
+  }
+
+  if (
+    attendance.status === AttendanceStatus.ON_BREAK &&
+    !attendance.breakStartedAt
+  ) {
+    throw new Error("Missing breakStartedAt.")
+  }
+
+  return {
+    ...attendance,
+
+    status: AttendanceStatus.CLOCKED_OUT,
+
+    timeOut: at,
+
+    workStartedAt: null,
+    breakStartedAt: null,
+
+    totalWorkedSeconds:
+      attendance.totalWorkedSeconds +
+      (attendance.status === AttendanceStatus.WORKING
+        ? secondsBetween(attendance.workStartedAt!, at)
+        : 0),
+
+    totalBreakSeconds:
+      attendance.totalBreakSeconds +
+      (attendance.status === AttendanceStatus.ON_BREAK
+        ? secondsBetween(attendance.breakStartedAt!, at)
+        : 0),
+
+    timeOutLatitude: lat,
+    timeOutLongitude: lng,
+  }
+}
+
+export function transitionAttendance(
+  attendance: Attendance,
+  input: AttendanceTransitionInput
+) {
+  switch (input.action) {
+    case "pause":
+      return pauseAttendance(attendance, new Date(input.at))
+
+    case "resume":
+      return resumeAttendance(attendance, new Date(input.at))
+
+    case "clockOut":
+      return clockOutAttendance(
+        attendance,
+        new Date(input.at),
+        input.timeOutLatitude,
+        input.timeOutLongitude
+      )
+  }
+}
+
+export async function submitAttendanceTransition(
+  input: AttendanceTransitionInput
+) {
+  return prisma.$transaction(async (tx) => {
+    const attendance = await tx.attendance.findUniqueOrThrow({
+      where: {
+        id: input.attendanceId,
+      },
+    })
+
+    const next = transitionAttendance(attendance, input)
+
+    await tx.attendance.update({
+      where: {
+        id: attendance.id,
+      },
+      data: next,
+    })
+
+    switch (input.action) {
+      case "pause":
+        await tx.attendanceBreak.create({
+          data: {
+            attendanceId: attendance.id,
+            startedAt: input.at,
+          },
+        })
+        break
+
+      case "resume":
+      case "clockOut":
+        if (attendance.status === AttendanceStatus.ON_BREAK) {
+          const activeBreak = await tx.attendanceBreak.findFirstOrThrow({
+            where: {
+              attendanceId: attendance.id,
+              endedAt: null,
+            },
+            orderBy: {
+              startedAt: "desc",
+            },
+          })
+
+          await tx.attendanceBreak.update({
+            where: {
+              id: activeBreak.id,
+            },
+            data: {
+              endedAt: input.at,
+              durationSeconds: secondsBetween(
+                attendance.breakStartedAt!,
+                new Date(input.at)
+              ),
+            },
+          })
+        }
+        break
+    }
+
+    return tx.attendance.findUniqueOrThrow({
+      where: {
+        id: attendance.id,
+      },
+    })
+  })
 }

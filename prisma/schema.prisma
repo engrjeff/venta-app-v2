@@ -185,6 +185,10 @@ model Branch {
   employees  EmployeeBranch[]
   attendance Attendance[]
 
+  // work schedule start and end time
+  scheduleStartTime DateTime @db.Time(0)
+  scheduleEndTime   DateTime @db.Time(0)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -260,7 +264,7 @@ model Employee {
   updatedAt DateTime @updatedAt
 
   @@unique([organizationId, username])
-  @@unique([organizationId, email])
+  @@unique([organizationId, id, email])
   @@index([organizationId])
   @@index([username])
   @@index([email])
@@ -287,6 +291,28 @@ model EmployeeBranch {
   @@map("employee_branch")
 }
 
+enum AttendanceStatus {
+  WORKING
+  ON_BREAK
+  CLOCKED_OUT
+}
+
+model AttendanceBreak {
+  id String @id @default(cuid())
+
+  attendanceId String
+  attendance   Attendance @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
+
+  startedAt DateTime
+  endedAt   DateTime?
+
+  durationSeconds Int?
+
+  createdAt DateTime @default(now())
+
+  @@index([attendanceId])
+}
+
 model Attendance {
   id String @id @default(cuid())
 
@@ -299,18 +325,35 @@ model Attendance {
   branchId String
   branch   Branch @relation(fields: [branchId], references: [id])
 
+  /// Business date
   date DateTime
 
+  /// Clock events
   timeIn  DateTime?
   timeOut DateTime?
 
-  totalTimeWorked Float?
+  /// Current state
+  status AttendanceStatus @default(WORKING)
 
+  /// Cached totals
+  totalWorkedSeconds Int @default(0)
+  totalBreakSeconds  Int @default(0)
+
+  /// Current working segment
+  workStartedAt DateTime?
+
+  /// Current active break
+  breakStartedAt DateTime?
+
+  /// GPS
   timeInLatitude  Float?
   timeInLongitude Float?
 
   timeOutLatitude  Float?
   timeOutLongitude Float?
+
+  /// Break history
+  breaks AttendanceBreak[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

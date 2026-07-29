@@ -1,5 +1,5 @@
 import { useRouter } from "@tanstack/react-router"
-import { LogOutIcon } from "lucide-react"
+import { LogOutIcon, LogsIcon } from "lucide-react"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
@@ -68,6 +68,10 @@ export function EmployeeMenu() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
+          <DropdownMenuItem>
+            <LogsIcon /> My Logs
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleSignOut}>
             <LogOutIcon />
             Log out

@@ -67,6 +67,42 @@ export const employeeClockInFormSchema = employeeClockInSchema.partial({
   timeInLng: true,
 })
 
+export const activeAttendanceSchema = z.object({
+  attendanceId: z
+    .string({ error: "Attendance ID is required" })
+    .min(1, "Attendance ID is required"),
+  employeeId: z
+    .string({ error: "Employee ID is required" })
+    .min(1, "Employee ID is required"),
+})
+
+export const attendanceTransitionSchema = z.discriminatedUnion("action", [
+  z.object({
+    action: z.literal("pause"),
+    attendanceId: z.string({ error: "No active attendance record provided" }),
+    at: z.iso.datetime({ local: true, error: "Pause time is required" }),
+  }),
+
+  z.object({
+    action: z.literal("resume"),
+    attendanceId: z.string({ error: "No active attendance record provided" }),
+    at: z.iso.datetime({ local: true, error: "Resume time is required" }),
+  }),
+
+  z.object({
+    action: z.literal("clockOut"),
+    attendanceId: z.string({ error: "No active attendance record provided" }),
+    at: z.iso.datetime({ local: true, error: "Clock-out time is required" }),
+
+    timeOutLatitude: z.number({ error: "Clock-out location is required" }),
+    timeOutLongitude: z.number({ error: "Clock-out location is required" }),
+  }),
+])
+
+export type AttendanceTransitionInput = z.infer<
+  typeof attendanceTransitionSchema
+>
+
 export type CreateEmployeeInput = z.infer<typeof employeeSchema>
 
 export type CreateManyEmployeeInput = z.infer<typeof employeeArraySchema>
@@ -76,3 +112,5 @@ export type VerifyUsernameInput = z.infer<typeof employeeUsernameSchema>
 export type EmployeeClockInInput = z.infer<typeof employeeClockInSchema>
 
 export type EmployeeClockInFormInput = z.infer<typeof employeeClockInFormSchema>
+
+export type ActiveAttendanceQueryInput = z.infer<typeof activeAttendanceSchema>

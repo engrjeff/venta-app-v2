@@ -10,8 +10,9 @@ import { siteConfig } from "@/config/site"
 import { EmployeeMenu } from "@/features/employees/employee-menu"
 import { employeesApi } from "@/features/employees/employees.functions"
 import { WorkHours } from "@/features/employees/work-hours"
+import { formatScheduleTimeRange } from "@/lib/utils"
 import { createFileRoute, redirect } from "@tanstack/react-router"
-import { ListIcon } from "lucide-react"
+import { ClockIcon, ListIcon } from "lucide-react"
 
 export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
   beforeLoad: async (context) => {
@@ -27,12 +28,39 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
       })
     }
   },
-  loader: async ({ context }) => {
-    if (!context.employee?.employeeId) return null
+  loader: async ({ context, params }) => {
+    if (!context.employee?.employeeId) {
+      await employeesApi.clearSession()
 
-    const result = await employeesApi.getById({
-      data: { employeeId: context.employee?.employeeId },
+      throw redirect({
+        to: "/e/$storeSlug",
+        params: { storeSlug: params.storeSlug },
+      })
+    }
+
+    if (!context.employee?.attendanceId) {
+      await employeesApi.clearSession()
+
+      throw redirect({
+        to: "/e/$storeSlug",
+        params: { storeSlug: params.storeSlug },
+      })
+    }
+
+    const { employeeId, attendanceId } = context.employee
+
+    const result = await employeesApi.queryActiveAttendance({
+      data: { attendanceId, employeeId },
     })
+
+    if (!result.data?.id) {
+      await employeesApi.clearSession()
+
+      throw redirect({
+        to: "/e/$storeSlug",
+        params: { storeSlug: params.storeSlug },
+      })
+    }
 
     return result.data
   },
@@ -40,18 +68,21 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
 })
 
 function RouteComponent() {
-  const employee = Route.useLoaderData()
+  const data = Route.useLoaderData()
 
-  const context = Route.useRouteContext()
+  if (!data) return null
 
-  if (!employee) return null
+  const { organization: store, employee, branch, ...serverAttendance } = data
+
+  const { formatted: branchSchedule } = formatScheduleTimeRange(
+    branch.scheduleStartTime,
+    branch.scheduleEndTime
+  )
 
   return (
     <>
       <div className="w-full text-left">
-        <h1 className="text-2xl font-semibold">
-          {employee.organization.name} Employee Portal
-        </h1>
+        <h1 className="text-2xl font-semibold">{store.name} Employee Portal</h1>
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           Powered by{" "}
           <span className="inline-flex items-center gap-1">
@@ -66,18 +97,22 @@ function RouteComponent() {
               Hi, {employee.firstName} 👋
             </h2>
             <p className="text-xs text-muted-foreground">
-              {employee.designation.name} @ {employee.organization.name}
+              {employee.designation.name} @ {store.name} {branch.name}
             </p>
           </div>
           <EmployeeMenu />
         </div>
 
-        {/* work hours */}
-        {context.employee?.timeInString && (
-          <WorkHours timeInString={context.employee?.timeInString} />
-        )}
+        {/* Branch - Schedule */}
+        <div className="flex items-center gap-2 text-muted-foreground">
+          <ClockIcon className="size-3" />
+          <p className="text-xs">Schedule: {branchSchedule}</p>
+        </div>
 
-        <Empty className="border border-dashed">
+        {/* work hours */}
+        <WorkHours branch={branch} serverAttendance={serverAttendance} />
+
+        <Empty className="hidden border border-dashed">
           <EmptyHeader>
             <EmptyMedia variant="icon">
               <ListIcon />

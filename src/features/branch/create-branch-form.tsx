@@ -7,6 +7,8 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -34,7 +36,14 @@ export function CreateBranchForm({ storeId }: { storeId: string }) {
 
   const form = useForm({
     resolver: zodResolver(branchSchema),
-    defaultValues: { name: "", address: "", storeId },
+    defaultValues: {
+      name: "San Juan Branch",
+      address:
+        "Block 2 Lot 10 Casas Carlina, Barangay Tatala, Binangonan, Rizal (Segovia Residence)",
+      storeId,
+      scheduleStartTime: "08:00",
+      scheduleEndTime: "17:00",
+    },
   })
 
   const { errors, isSubmitting } = form.formState
@@ -45,6 +54,7 @@ export function CreateBranchForm({ storeId }: { storeId: string }) {
 
   const onSubmit: SubmitHandler<CreateBranchInput> = async (branchData) => {
     try {
+      console.log(branchData)
       const result = await createBranch({ data: branchData })
 
       if (result.error) {
@@ -92,6 +102,46 @@ export function CreateBranchForm({ storeId }: { storeId: string }) {
           />
           {errors.name && <FieldError>{errors.name.message}</FieldError>}
         </Field>
+        <FieldSet>
+          <FieldLegend>Work Schedule</FieldLegend>
+          <FieldDescription>
+            Tell us the work schedule in this branch
+          </FieldDescription>
+
+          <div className="grid grid-cols-2 gap-4">
+            <Field className="flex-1">
+              <FieldLabel htmlFor="scheduleStartTime">Start</FieldLabel>
+              <Input
+                id="scheduleStartTime"
+                placeholder="e.g. 08:00"
+                autoComplete="branch-scheduleStartTime"
+                className="h-12"
+                type="time"
+                aria-invalid={!!errors.scheduleStartTime || undefined}
+                {...form.register("scheduleStartTime")}
+              />
+              {errors.scheduleStartTime && (
+                <FieldError>{errors.scheduleStartTime.message}</FieldError>
+              )}
+            </Field>
+            <Field className="flex-1">
+              <FieldLabel htmlFor="name">End</FieldLabel>
+              <Input
+                id="scheduleEndTime"
+                placeholder="e.g. 08:00"
+                autoComplete="branch-scheduleEndTime"
+                className="h-12"
+                type="time"
+                aria-invalid={!!errors.scheduleEndTime || undefined}
+                {...form.register("scheduleEndTime")}
+              />
+              {errors.scheduleEndTime && (
+                <FieldError>{errors.scheduleEndTime.message}</FieldError>
+              )}
+            </Field>
+          </div>
+        </FieldSet>
+
         <Field className="flex-1">
           <div className="flex items-center justify-between gap-4">
             <div>

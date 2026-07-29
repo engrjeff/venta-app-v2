@@ -3,11 +3,15 @@ import {
   clearEmployeeSession,
   createEmployees,
   createEmployeeSession,
+  getActiveAttendance,
   getEmployee,
   getEmployeeSession,
+  submitAttendanceTransition,
   submitClockInAttendance,
 } from "./employees.server"
 import {
+  activeAttendanceSchema,
+  attendanceTransitionSchema,
   employeeArraySchema,
   employeeClockInSchema,
   employeeIdSchema,
@@ -46,6 +50,18 @@ export const clockIn = createServerFn({ method: "POST" })
     return submitClockInAttendance(data)
   })
 
+export const queryActiveAttendance = createServerFn({ method: "GET" })
+  .inputValidator(activeAttendanceSchema)
+  .handler(async ({ data }) => {
+    return getActiveAttendance(data)
+  })
+
+export const transitionAttendance = createServerFn({ method: "POST" })
+  .inputValidator(attendanceTransitionSchema)
+  .handler(async ({ data }) => {
+    return submitAttendanceTransition(data)
+  })
+
 export const employeesApi = {
   createMany,
   getById,
@@ -53,4 +69,6 @@ export const employeesApi = {
   getSession,
   clearSession,
   clockIn,
+  queryActiveAttendance,
+  transitionAttendance,
 }

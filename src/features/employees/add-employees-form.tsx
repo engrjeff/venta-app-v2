@@ -57,27 +57,27 @@ export function AddEmployeesForm({
       storeId,
       storeName,
       employees: [
-        {
-          firstName: "Willana",
-          lastName: "Castello",
-          username: "yanacastello",
-          branchId: branches[0].id,
-          designationId: designations[1].id,
-        },
-        {
-          firstName: "Wryx",
-          lastName: "Castello",
-          username: "wryxcastello",
-          branchId: branches[0].id,
-          designationId: designations[1].id,
-        },
-        {
-          firstName: "Rosenel",
-          lastName: "Magday",
-          username: "rosenelmagday",
-          branchId: branches[0].id,
-          designationId: designations[0].id,
-        },
+        // {
+        //   firstName: "Willana",
+        //   lastName: "Castello",
+        //   username: "yanacastello",
+        //   branchId: branches[0].id,
+        //   designationId: designations[1].id,
+        // },
+        // {
+        //   firstName: "Wryx",
+        //   lastName: "Castello",
+        //   username: "wryxcastello",
+        //   branchId: branches[0].id,
+        //   designationId: designations[1].id,
+        // },
+        // {
+        //   firstName: "Rosenel",
+        //   lastName: "Magday",
+        //   username: "rosenelmagday",
+        //   branchId: branches[0].id,
+        //   designationId: designations[0].id,
+        // },
       ],
     },
   })

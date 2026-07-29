@@ -12,11 +12,21 @@ export async function createStoreBranch(branchInput: CreateBranchInput) {
       lng: number
     }
 
+    const scheduleStartTime = new Date(
+      `1970-01-01T${branchInput.scheduleStartTime}:00Z`
+    )
+
+    const scheduleEndTime = new Date(
+      `1970-01-01T${branchInput.scheduleEndTime}:00Z`
+    )
+
     const branch = await prisma.branch.create({
       data: {
         organizationId: branchInput.storeId,
         name: branchInput.name,
         address: branchInput.address,
+        scheduleStartTime,
+        scheduleEndTime,
         latitude: lat,
         longitude: lng,
         gmFormattedAddress: geocodeResult.formatted_address,
