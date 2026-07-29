@@ -1,24 +1,26 @@
-import { SubmitButton } from "@/components/submit-button"
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { ArrowRightIcon } from "lucide-react"
 import {
   Controller,
-  useForm,
-  type SubmitErrorHandler,
-  type SubmitHandler,
+  
+  
+  useForm
 } from "react-hook-form"
 import { toast } from "sonner"
 import { employeesApi } from "./employees.functions"
-import { employeeUsernameSchema, type VerifyUsernameInput } from "./schema"
+import {  employeeUsernameSchema } from "./schema"
+import type {SubmitErrorHandler, SubmitHandler} from "react-hook-form";
+import type {VerifyUsernameInput} from "./schema";
+import { Input } from "@/components/ui/input"
+import {
+  Field,
+  FieldContent,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field"
+import { SubmitButton } from "@/components/submit-button"
 
 export function EmployeePortalForm({ storeId }: { storeId: string }) {
   return <EmployeeUsernameForm storeId={storeId} />

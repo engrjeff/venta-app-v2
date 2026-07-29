@@ -239,7 +239,7 @@ export async function getCurrentLocation(
   }
 
   try {
-    const position = await new Promise<GeolocationPosition>(
+    const positionResult = await new Promise<GeolocationPosition>(
       (resolve, reject) => {
         let finished = false
         let bestPosition: GeolocationPosition | null = null
@@ -294,13 +294,13 @@ export async function getCurrentLocation(
     return {
       source: "gps",
 
-      accuracy: position.coords.accuracy,
+      accuracy: positionResult.coords.accuracy,
 
-      quality: getGpsQuality(position.coords.accuracy),
+      quality: getGpsQuality(positionResult.coords.accuracy),
 
       location: {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
+        latitude: positionResult.coords.latitude,
+        longitude: positionResult.coords.longitude,
       },
     }
   } catch (err) {

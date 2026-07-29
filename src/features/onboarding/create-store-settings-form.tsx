@@ -1,4 +1,20 @@
-import { SubmitButton } from "@/components/submit-button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useNavigate, useRouter } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/react-start"
+import { ArrowRightIcon } from "lucide-react"
+import {
+  Controller,
+  
+  
+  useForm
+} from "react-hook-form"
+import { toast } from "sonner"
+import { onboardingApi } from "./onboarding.functions"
+import {  storeSettingsSchema } from "./schema"
+import type {SubmitErrorHandler, SubmitHandler} from "react-hook-form";
+import type {CreateStoreSettingsInputs} from "./schema";
+import { BUSINESS_TYPES } from "@/lib/constants"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
   Field,
   FieldContent,
@@ -10,21 +26,7 @@ import {
   FieldSet,
   FieldTitle,
 } from "@/components/ui/field"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { BUSINESS_TYPES } from "@/lib/constants"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate, useRouter } from "@tanstack/react-router"
-import { useServerFn } from "@tanstack/react-start"
-import { ArrowRightIcon } from "lucide-react"
-import {
-  Controller,
-  useForm,
-  type SubmitErrorHandler,
-  type SubmitHandler,
-} from "react-hook-form"
-import { toast } from "sonner"
-import { onboardingApi } from "./onboarding.functions"
-import { storeSettingsSchema, type CreateStoreSettingsInputs } from "./schema"
+import { SubmitButton } from "@/components/submit-button"
 
 export function CreateStoreSettingsForm({ storeId }: { storeId: string }) {
   const createStoreSettings = useServerFn(onboardingApi.createSettings)

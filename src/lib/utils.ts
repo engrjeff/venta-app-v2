@@ -1,5 +1,7 @@
 import { siteConfig } from "@/config/site"
-import { clsx, type ClassValue } from "clsx"
+import type { ClassValue } from "clsx"
+import { clsx } from "clsx"
+import { formatDate } from "date-fns"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
@@ -60,4 +62,10 @@ export function formatScheduleTimeRange(
     start: start.getUTCHours(),
     end: end.getUTCHours(),
   }
+}
+
+export function formatTime(time: string | Date) {
+  const _time = time instanceof Date ? time : new Date(time)
+
+  return formatDate(new Date(_time), "hh:mm aa")
 }

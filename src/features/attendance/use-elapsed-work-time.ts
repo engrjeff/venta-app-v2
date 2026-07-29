@@ -1,5 +1,5 @@
-import { AttendanceStatus } from "@/generated/prisma/enums"
 import { useEffect, useMemo, useState } from "react"
+import { AttendanceStatus } from "@/generated/prisma/enums"
 
 interface Attendance {
   id: string

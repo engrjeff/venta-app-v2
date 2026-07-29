@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/db"
 import type { CreateManyDesignationInput } from "./schema"
+import { prisma } from "@/lib/db"
 
 export async function createDesignations(
   designationArrayInput: CreateManyDesignationInput

@@ -1,12 +1,12 @@
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Spinner } from "@/components/ui/spinner"
-import type { Attendance, Branch } from "@/generated/prisma/browser"
-import { AttendanceStatus } from "@/generated/prisma/enums"
-
 import { LockIcon, LogOutIcon, PauseIcon, PlayIcon } from "lucide-react"
 import { useAttendanceSession } from "./use-attendance-session"
 import { useElapsedWorkTime } from "./use-elapsed-work-time"
+import type { Attendance, Branch } from "@/generated/prisma/browser"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
+import { AttendanceStatus } from "@/generated/prisma/enums"
+
 
 export function WorkHours({
   serverAttendance,

@@ -1,6 +1,6 @@
+import type { CreateBranchInput } from "./schema"
 import { prisma } from "@/lib/db"
 import { geocodeAddress } from "@/lib/geocoding"
-import type { CreateBranchInput } from "./schema"
 
 export async function createStoreBranch(branchInput: CreateBranchInput) {
   try {

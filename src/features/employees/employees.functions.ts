@@ -1,19 +1,13 @@
 import { createServerFn } from "@tanstack/react-start"
 import {
   clearEmployeeSession,
-  createEmployees,
   createEmployeeSession,
-  getActiveAttendance,
+  createEmployees,
   getEmployee,
   getEmployeeSession,
-  submitAttendanceTransition,
-  submitClockInAttendance,
 } from "./employees.server"
 import {
-  activeAttendanceSchema,
-  attendanceTransitionSchema,
   employeeArraySchema,
-  employeeClockInSchema,
   employeeIdSchema,
   employeeUsernameSchema,
 } from "./schema"
@@ -44,31 +38,10 @@ export const clearSession = createServerFn({ method: "POST" }).handler(
   clearEmployeeSession
 )
 
-export const clockIn = createServerFn({ method: "POST" })
-  .inputValidator(employeeClockInSchema)
-  .handler(async ({ data }) => {
-    return submitClockInAttendance(data)
-  })
-
-export const queryActiveAttendance = createServerFn({ method: "GET" })
-  .inputValidator(activeAttendanceSchema)
-  .handler(async ({ data }) => {
-    return getActiveAttendance(data)
-  })
-
-export const transitionAttendance = createServerFn({ method: "POST" })
-  .inputValidator(attendanceTransitionSchema)
-  .handler(async ({ data }) => {
-    return submitAttendanceTransition(data)
-  })
-
 export const employeesApi = {
   createMany,
   getById,
   createSession,
   getSession,
   clearSession,
-  clockIn,
-  queryActiveAttendance,
-  transitionAttendance,
 }

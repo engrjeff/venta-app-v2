@@ -7,10 +7,11 @@ export default [
   {
     rules: {
       "import/no-cycle": "off",
-      "import/order": "on",
-      "sort-imports": "on",
+      "import/order": "off",
+      "sort-imports": "off",
       "@typescript-eslint/array-type": "off",
       "@typescript-eslint/require-await": "off",
+      "@typescript-eslint/no-unnecessary-condition": "off",
       "pnpm/json-enforce-catalog": "off",
     },
   },

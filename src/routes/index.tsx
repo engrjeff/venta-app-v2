@@ -1,13 +1,93 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { Link, createFileRoute } from "@tanstack/react-router"
+import { AppLogo } from "@/components/app-logo"
+import { HeaderUserMenu } from "@/components/header-user-menu"
+import { Button } from "@/components/ui/button"
+import { getSession } from "@/lib/auth.functions"
 
-export const Route = createFileRoute("/")({ component: App })
+export const Route = createFileRoute("/")({
+  loader: async () => {
+    const session = await getSession()
+
+    return session
+  },
+  component: App,
+})
 
 function App() {
+  const session = Route.useLoaderData()
+
   return (
-    <div>
-      <h1>Hello, World</h1>
-      <Link to="/sign-up">Sign Up</Link>
-      <Link to="/onboarding">Onboarding</Link>
+    <div className="flex min-h-screen flex-col">
+      <header className="container mx-auto flex max-w-6xl items-center gap-4 p-6">
+        <Link to="/" className="flex w-max items-center gap-3">
+          <AppLogo size={36} />{" "}
+          <span className="text-2xl font-semibold">TindaNatin</span>
+        </Link>
+
+        <nav className="ml-auto flex items-center gap-4">
+          {session?.user ? (
+            <>
+              <Button
+                variant="secondary"
+                render={<Link to="/dashboard">Dashboard</Link>}
+              />
+              <HeaderUserMenu />
+            </>
+          ) : (
+            <Button render={<Link to="/sign-in">Sign In</Link>} />
+          )}
+        </nav>
+      </header>
+
+      <main className="grid flex-1">
+        <section
+          data-section="tn-hero"
+          className="container mx-auto flex h-full max-w-6xl flex-col items-center justify-center gap-8 px-6"
+        >
+          <AppLogo />
+          <div className="space-y-4 text-center">
+            <h1 className="text-2xl font-bold lg:text-6xl">
+              Run your store
+              <br />
+              with less paperwork.
+            </h1>
+            <p className="text-lg text-muted-foreground">
+              Manage branches, employees, attendance, and payroll in one simple
+              app.
+            </p>
+          </div>
+
+          <div className="flex w-full max-w-sm items-center gap-4">
+            <Button
+              size="xl"
+              className="flex-1"
+              render={<Link to="/sign-in">Start Free</Link>}
+            />
+            <Button
+              variant="outline"
+              size="xl"
+              className="flex-1"
+              render={<a href="#explore">Explore</a>}
+            />
+          </div>
+        </section>
+      </main>
+
+      <footer className="mt-auto py-10">
+        <div className="container mx-auto flex max-w-6xl items-center justify-center">
+          <p className="text-sm text-muted-foreground">
+            &copy; {new Date().getFullYear()}. Made by{" "}
+            <a
+              href="https://jeffsegovia.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Jeff Segovia
+            </a>
+            .
+          </p>
+        </div>
+      </footer>
     </div>
   )
 }

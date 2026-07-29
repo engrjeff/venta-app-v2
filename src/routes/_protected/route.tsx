@@ -4,7 +4,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { onboardingApi } from "@/features/onboarding/onboarding.functions"
 import { storeApi } from "@/features/store/store.functions"
 import { getSession } from "@/lib/auth.functions"
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
+import { Outlet, createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/_protected")({
   beforeLoad: async ({ location }) => {
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_protected")({
     })
 
     if (!status.data?.completed && status.data?.nextStep) {
-      throw redirect({ to: status.data?.nextStep })
+      throw redirect({ to: status.data.nextStep })
     }
 
     return {
@@ -54,7 +54,7 @@ function RouteComponent() {
       <AppSidebar stores={loaderData.data} />
       <SidebarInset>
         <AppHeader />
-        <main>
+        <main className="p-6">
           <Outlet />
         </main>
       </SidebarInset>

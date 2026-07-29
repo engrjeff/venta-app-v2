@@ -1,5 +1,5 @@
 import { employeesApi } from "@/features/employees/employees.functions"
-import { createFileRoute, Outlet } from "@tanstack/react-router"
+import { Outlet, createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/e/$storeSlug")({
   beforeLoad: async () => {
@@ -13,7 +13,7 @@ export const Route = createFileRoute("/e/$storeSlug")({
     if (!context.employee?.employeeId) return null
 
     const result = await employeesApi.getById({
-      data: { employeeId: context.employee?.employeeId },
+      data: { employeeId: context.employee.employeeId },
     })
 
     return result.data

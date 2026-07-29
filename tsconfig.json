@@ -30,7 +30,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "typeRoots": ["node_modules/@types"]
+    "typeRoots": ["node_modules/@types", "node_modules"]
   },
   "exclude": ["node_modules", ".vinxi", ".output", "dist"]
 }

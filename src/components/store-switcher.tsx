@@ -1,3 +1,5 @@
+import { ChevronsUpDownIcon, PlusIcon, StoreIcon } from "lucide-react"
+import type { Store } from "@/features/store/store.types"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,8 +15,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import type { Store } from "@/features/store/store.types"
-import { ChevronsUpDownIcon, PlusIcon, StoreIcon } from "lucide-react"
 
 export function StoreSwitcher({
   stores,

@@ -1,5 +1,14 @@
 "use client"
 
+import { Link, useLocation } from "@tanstack/react-router"
+import {
+  Building2Icon,
+  CheckCircleIcon,
+  HomeIcon,
+  NetworkIcon,
+  SettingsIcon,
+  UsersIcon,
+} from "lucide-react"
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -7,8 +16,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Link, useLocation } from "@tanstack/react-router"
-import { Building2Icon, HomeIcon, NetworkIcon, UsersIcon } from "lucide-react"
 
 const MAIN_NAV = [
   {
@@ -17,17 +24,14 @@ const MAIN_NAV = [
     Icon: HomeIcon,
     pathname: "/dashboard",
   },
+]
+
+const OPERATIONS_NAV = [
   {
-    id: "branch",
-    title: "Branch",
-    Icon: Building2Icon,
-    pathname: "/branch",
-  },
-  {
-    id: "designations",
-    title: "Designations",
-    Icon: NetworkIcon,
-    pathname: "/designations",
+    id: "attendance",
+    title: "Attendance",
+    Icon: CheckCircleIcon,
+    pathname: "/attendance",
   },
   {
     id: "employees",
@@ -35,27 +39,82 @@ const MAIN_NAV = [
     Icon: UsersIcon,
     pathname: "/employees",
   },
+  {
+    id: "branches",
+    title: "Branches",
+    Icon: Building2Icon,
+    pathname: "/branches",
+  },
+  {
+    id: "designations",
+    title: "Designations",
+    Icon: NetworkIcon,
+    pathname: "/designations",
+  },
+]
+
+const SETTINGS_NAV = [
+  {
+    id: "settings",
+    title: "Store Settings",
+    Icon: SettingsIcon,
+    pathname: "/settings",
+  },
 ]
 
 export function NavMain() {
   const location = useLocation()
 
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Menu</SidebarGroupLabel>
-      <SidebarMenu>
-        {MAIN_NAV.map((item) => (
-          <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton
-              isActive={item.pathname === location.pathname}
-              render={<Link to={item.pathname} />}
-            >
-              <item.Icon />
-              <span>{item.title}</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        ))}
-      </SidebarMenu>
-    </SidebarGroup>
+    <>
+      <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroupLabel>Menu</SidebarGroupLabel>
+        <SidebarMenu>
+          {MAIN_NAV.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                isActive={item.pathname === location.pathname}
+                render={<Link to={item.pathname} />}
+              >
+                <item.Icon />
+                <span>{item.title}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroup>
+      <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroupLabel>Operations</SidebarGroupLabel>
+        <SidebarMenu>
+          {OPERATIONS_NAV.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                isActive={item.pathname === location.pathname}
+                render={<Link to={item.pathname} />}
+              >
+                <item.Icon />
+                <span>{item.title}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroup>
+      <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+        <SidebarGroupLabel>Settings</SidebarGroupLabel>
+        <SidebarMenu>
+          {SETTINGS_NAV.map((item) => (
+            <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton
+                isActive={item.pathname === location.pathname}
+                render={<Link to={item.pathname} />}
+              >
+                <item.Icon />
+                <span>{item.title}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarGroup>
+    </>
   )
 }

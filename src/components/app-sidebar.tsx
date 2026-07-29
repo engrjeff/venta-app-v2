@@ -1,4 +1,7 @@
-import { NavUser } from "@/components/nav-user"
+import { useRouteContext } from "@tanstack/react-router"
+import { NavMain } from "./nav-main"
+import { StoreSwitcher } from "./store-switcher"
+import type { Store } from "@/features/store/store.types"
 import {
   Sidebar,
   SidebarContent,
@@ -6,10 +9,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import type { Store } from "@/features/store/store.types"
-import { useRouteContext } from "@tanstack/react-router"
-import { NavMain } from "./nav-main"
-import { StoreSwitcher } from "./store-switcher"
+import { NavUser } from "@/components/nav-user"
 
 interface AppSidebarProps {
   stores: Store[] | null

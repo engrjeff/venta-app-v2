@@ -30,7 +30,7 @@ function RouteComponent() {
         <AddEmployeesForm
           storeId={loaderData.data.id}
           storeName={loaderData.data.name}
-          branches={loaderData.data.branches ?? []}
+          branches={loaderData.data.branches}
           designations={loaderData.data.designations}
         />
       )}

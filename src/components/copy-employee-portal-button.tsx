@@ -1,7 +1,7 @@
-import { authClient } from "@/lib/auth-client"
-import { CopyIcon } from "lucide-react"
+import { LinkIcon } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "./ui/button"
+import { authClient } from "@/lib/auth-client"
 
 export function CopyEmployeePortalButton() {
   const store = authClient.useActiveOrganization()
@@ -24,10 +24,11 @@ export function CopyEmployeePortalButton() {
     <Button
       type="button"
       variant="secondary"
+      size="sm"
       disabled={!store.data || store.isPending}
       onClick={handleCopy}
     >
-      <CopyIcon /> Employee Portal Link
+      Employee Portal <LinkIcon />
     </Button>
   )
 }

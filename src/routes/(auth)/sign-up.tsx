@@ -1,8 +1,8 @@
+import { createFileRoute, redirect } from "@tanstack/react-router"
 import { AppLogo } from "@/components/app-logo"
 import { SignupForm } from "@/components/signup-form"
 import { getSession } from "@/lib/auth.functions"
 import { generatePageTitle } from "@/lib/utils"
-import { createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/(auth)/sign-up")({
   component: SignUpPage,

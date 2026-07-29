@@ -1,3 +1,6 @@
+import { useNavigate } from "@tanstack/react-router"
+import { BadgeCheckIcon, ChevronsUpDownIcon, LogOutIcon } from "lucide-react"
+import type { User } from "better-auth"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -16,9 +19,6 @@ import {
 } from "@/components/ui/sidebar"
 import { authClient } from "@/lib/auth-client"
 import { getInitials } from "@/lib/utils"
-import { useNavigate } from "@tanstack/react-router"
-import type { User } from "better-auth"
-import { BadgeCheckIcon, ChevronsUpDownIcon, LogOutIcon } from "lucide-react"
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar()

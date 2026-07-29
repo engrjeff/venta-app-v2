@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site"
 import { onboardingApi } from "@/features/onboarding/onboarding.functions"
 import { getSession } from "@/lib/auth.functions"
 import { generatePageTitle } from "@/lib/utils"
-import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router"
+import { Link, Outlet, createFileRoute, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/onboarding")({
   beforeLoad: async ({ location }) => {
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/onboarding")({
 
     // Only redirect if they're trying to access the wrong onboarding step.
     if (location.pathname !== status.data?.nextStep && status.data?.nextStep) {
-      throw redirect({ to: status.data?.nextStep })
+      throw redirect({ to: status.data.nextStep })
     }
 
     return {

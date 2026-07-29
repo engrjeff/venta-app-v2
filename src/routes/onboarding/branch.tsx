@@ -1,7 +1,7 @@
+import { createFileRoute } from "@tanstack/react-router"
 import { Separator } from "@/components/ui/separator"
 import { CreateBranchForm } from "@/features/branch/create-branch-form"
 import { StepFormHeading } from "@/features/onboarding/step-form-heading"
-import { createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/onboarding/branch")({
   component: RouteComponent,
@@ -12,7 +12,7 @@ function RouteComponent() {
 
   if (!storeId) return null
 
-  let storeData =
+  const storeData =
     status.data?.nextStep === "/onboarding/branch"
       ? status.data.storeData
       : undefined

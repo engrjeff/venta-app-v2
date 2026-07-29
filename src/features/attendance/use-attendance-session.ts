@@ -1,11 +1,12 @@
-import { AttendanceStatus } from "@/generated/prisma/enums"
-import { performGeofenceCheck, type Coordinates } from "@/lib/geo-fencing"
 import { useRouter } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { formatDate } from "date-fns"
 import { useCallback, useMemo, useState } from "react"
 import { toast } from "sonner"
-import { employeesApi } from "./employees.functions"
+import { attendanceApi } from "./attendance.functions"
+import type {Coordinates} from "@/lib/geo-fencing";
+import {  performGeofenceCheck } from "@/lib/geo-fencing"
+import { AttendanceStatus } from "@/generated/prisma/enums"
 
 export interface Attendance {
   id: string
@@ -29,7 +30,7 @@ interface UseAttendanceSessionOptions {
 export function useAttendanceSession({
   attendance: serverAttendance,
 }: UseAttendanceSessionOptions) {
-  const transitionAttendance = useServerFn(employeesApi.transitionAttendance)
+  const transitionAttendance = useServerFn(attendanceApi.transition)
 
   const router = useRouter()
 

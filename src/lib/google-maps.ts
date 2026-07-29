@@ -1,7 +1,7 @@
+import { importLibrary, setOptions } from "@googlemaps/js-api-loader"
 import { clientEnv } from "@/config/clientEnv"
 // src/lib/google-maps.ts
 
-import { importLibrary, setOptions } from "@googlemaps/js-api-loader"
 
 setOptions({
   key: clientEnv.VITE_GOOGLE_MAPS_API_KEY,

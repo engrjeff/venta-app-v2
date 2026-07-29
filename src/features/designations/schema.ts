@@ -1,5 +1,5 @@
-import { SalaryType } from "@/generated/prisma/enums"
 import z from "zod"
+import { SalaryType } from "@/generated/prisma/enums"
 
 // the storeId is the organizationId
 export const designationSchema = z.object({

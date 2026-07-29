@@ -1,23 +1,24 @@
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Link, useNavigate, useSearch } from "@tanstack/react-router"
+import { useState } from "react"
+import {
+  
+  
+  useForm
+} from "react-hook-form"
+import z from "zod"
+import { PasswordInput } from "./password-input"
+import { SubmitButton } from "./submit-button"
+import { Alert, AlertDescription } from "./ui/alert"
+import type {SubmitErrorHandler, SubmitHandler} from "react-hook-form";
+import { authClient } from "@/lib/auth-client"
+import { Input } from "@/components/ui/input"
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { authClient } from "@/lib/auth-client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Link, useNavigate, useSearch } from "@tanstack/react-router"
-import { useState } from "react"
-import {
-  useForm,
-  type SubmitErrorHandler,
-  type SubmitHandler,
-} from "react-hook-form"
-import z from "zod"
-import { PasswordInput } from "./password-input"
-import { SubmitButton } from "./submit-button"
-import { Alert, AlertDescription } from "./ui/alert"
 
 const schema = z.object({
   email: z.email("Enter a valid email address"),

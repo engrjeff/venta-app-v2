@@ -7,9 +7,10 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 import { siteConfig } from "@/config/site"
+import { attendanceApi } from "@/features/attendance/attendance.functions"
+import { WorkHours } from "@/features/attendance/work-hours"
 import { EmployeeMenu } from "@/features/employees/employee-menu"
 import { employeesApi } from "@/features/employees/employees.functions"
-import { WorkHours } from "@/features/employees/work-hours"
 import { formatScheduleTimeRange } from "@/lib/utils"
 import { createFileRoute, redirect } from "@tanstack/react-router"
 import { ClockIcon, ListIcon } from "lucide-react"
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
   beforeLoad: async (context) => {
     const employeeSession = await employeesApi.getSession()
 
-    if (!employeeSession?.data?.attendanceId) {
+    if (!employeeSession.data?.attendanceId) {
       throw redirect({
         to: "/e/$storeSlug",
         params: {
@@ -38,7 +39,7 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
       })
     }
 
-    if (!context.employee?.attendanceId) {
+    if (!context.employee.attendanceId) {
       await employeesApi.clearSession()
 
       throw redirect({
@@ -49,7 +50,7 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
 
     const { employeeId, attendanceId } = context.employee
 
-    const result = await employeesApi.queryActiveAttendance({
+    const result = await attendanceApi.getActive({
       data: { attendanceId, employeeId },
     })
 
@@ -69,8 +70,6 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
 
 function RouteComponent() {
   const data = Route.useLoaderData()
-
-  if (!data) return null
 
   const { organization: store, employee, branch, ...serverAttendance } = data
 

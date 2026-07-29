@@ -1,6 +1,7 @@
 import { useRouter } from "@tanstack/react-router"
 import { LogOutIcon, LogsIcon } from "lucide-react"
 
+import { useEmployeeSession } from "./use-employee-session"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -12,7 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { getInitials } from "@/lib/utils"
-import { useEmployeeSession } from "./use-employee-session"
 
 export function EmployeeMenu() {
   const employeeSession = useEmployeeSession()

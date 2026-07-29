@@ -1,6 +1,6 @@
+import { getRequestHeaders } from "@tanstack/react-start/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
-import { getRequestHeaders } from "@tanstack/react-start/server"
 
 /**
  *

@@ -1,5 +1,3 @@
-import { SubmitButton } from "@/components/submit-button"
-import { onboardingApi } from "@/features/onboarding/onboarding.functions"
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import {
@@ -9,8 +7,11 @@ import {
   StoreIcon,
   UsersIcon,
 } from "lucide-react"
-import { useState, type SubmitEventHandler } from "react"
+import {  useState } from "react"
 import { toast } from "sonner"
+import type {SubmitEventHandler} from "react";
+import { onboardingApi } from "@/features/onboarding/onboarding.functions"
+import { SubmitButton } from "@/components/submit-button"
 
 export const Route = createFileRoute("/onboarding/finish")({
   component: RouteComponent,
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/onboarding/finish")({
 function RouteComponent() {
   const { status, organizationId } = Route.useRouteContext()
 
-  let storeData =
+  const storeData =
     status.data?.nextStep === "/onboarding/finish"
       ? status.data.storeData
       : undefined

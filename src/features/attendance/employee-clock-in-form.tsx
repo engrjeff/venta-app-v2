@@ -24,19 +24,13 @@ import {
 } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { ArrowRightIcon } from "lucide-react"
-import {
-  Controller,
-  useForm,
-  type SubmitErrorHandler,
-  type SubmitHandler,
-} from "react-hook-form"
+import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { EmployeeMenu } from "./employee-menu"
-import { employeesApi } from "./employees.functions"
-import {
-  employeeClockInFormSchema,
-  type EmployeeClockInFormInput,
-} from "./schema"
+import { EmployeeMenu } from "../employees/employee-menu"
+import { attendanceApi } from "./attendance.functions"
+import type { EmployeeClockInFormInput } from "./schema"
+import { employeeClockInFormSchema } from "./schema"
 
 export function EmployeeClockInForm() {
   const employee = useLoaderData({ from: "/e/$storeSlug" })
@@ -83,7 +77,7 @@ function ClockInForm({
   employeeId: string
   branches: SimpleBranch[]
 }) {
-  const clockInFn = useServerFn(employeesApi.clockIn)
+  const clockInFn = useServerFn(attendanceApi.clockIn)
 
   const navigate = useNavigate()
 
@@ -128,11 +122,9 @@ function ClockInForm({
     console.error(`Employee Clock In Form Error: `, formError)
   }
 
-  const handleClockIn: SubmitHandler<EmployeeClockInFormInput> = async ({
-    employeeId,
-    storeId,
-    branchId,
-  }) => {
+  const handleClockIn: SubmitHandler<EmployeeClockInFormInput> = async (
+    inputs
+  ) => {
     try {
       const geoResult = await performGeofenceCheck(locationCenter, radius)
 
@@ -143,9 +135,9 @@ function ClockInForm({
 
       const result = await clockInFn({
         data: {
-          employeeId,
-          storeId,
-          branchId,
+          employeeId: inputs.employeeId,
+          storeId: inputs.storeId,
+          branchId: inputs.branchId,
           timeIn: new Date().toISOString(),
           timeInLat: geoResult.current.location.latitude,
           timeInLng: geoResult.current.location.longitude,

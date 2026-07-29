@@ -1,8 +1,8 @@
-import { auth } from "@/lib/auth"
-import { prisma } from "@/lib/db"
 import { getRequestHeaders } from "@tanstack/react-start/server"
 import slugify from "slugify"
 import type { CreateStoreInputs, CreateStoreSettingsInputs } from "./schema"
+import { prisma } from "@/lib/db"
+import { auth } from "@/lib/auth"
 
 async function generateStoreSlug(name: string) {
   const baseSlug = slugify(name, {

@@ -1,11 +1,3 @@
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { authClient } from "@/lib/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Link, useNavigate } from "@tanstack/react-router"
 import { useForm } from "react-hook-form"
@@ -13,6 +5,14 @@ import { toast } from "sonner"
 import z from "zod"
 import { PasswordInput } from "./password-input"
 import { SubmitButton } from "./submit-button"
+import { authClient } from "@/lib/auth-client"
+import { Input } from "@/components/ui/input"
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
 
 const schema = z
   .object({
