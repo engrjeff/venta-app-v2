@@ -69,3 +69,11 @@ export function formatTime(time: string | Date) {
 
   return formatDate(new Date(_time), "hh:mm aa")
 }
+
+export function formatPHP(amount: number): string {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+    minimumFractionDigits: 2,
+  }).format(amount)
+}

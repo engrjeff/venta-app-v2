@@ -26,7 +26,7 @@ export async function submitClockInAttendance(
 
     const clockInDate = new Date(timeIn)
 
-    const today = new Date().toISOString().split("T")[0]
+    const today = new Intl.DateTimeFormat("en-CA").format(new Date())
 
     const attendance = await prisma.attendance.create({
       data: {

@@ -1,4 +1,4 @@
 export const siteConfig = {
-  title: "TindaNatin",
-  description: "Some description here.",
+  title: "Venta",
+  description: "Run your store with less paperwork.",
 }

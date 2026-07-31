@@ -1,9 +1,10 @@
-import { createFileRoute, redirect } from "@tanstack/react-router"
-import z from "zod"
 import { AppLogo } from "@/components/app-logo"
 import { SigninForm } from "@/components/signin-form"
+import { siteConfig } from "@/config/site"
 import { getSession } from "@/lib/auth.functions"
 import { generatePageTitle } from "@/lib/utils"
+import { createFileRoute, redirect } from "@tanstack/react-router"
+import z from "zod"
 
 export const Route = createFileRoute("/(auth)/sign-in")({
   validateSearch: z.object({ redirect: z.string().optional() }),
@@ -24,7 +25,7 @@ function RouteComponent() {
     <>
       <div className="mb-8 space-y-4">
         <AppLogo />
-        <h1 className="text-2xl font-medium">Sign in to TindaNatin</h1>
+        <h1 className="text-2xl font-medium">Sign in to {siteConfig.title}</h1>
       </div>
       <SigninForm />
     </>

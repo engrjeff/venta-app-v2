@@ -1,3 +1,4 @@
+import { EmploymentStatus } from "@/generated/prisma/enums"
 import z from "zod"
 
 // the storeId is the organizationId
@@ -48,8 +49,29 @@ export const employeeIdSchema = z.object({
     .min(1, "Employee ID is required"),
 })
 
+export const updateEmployeeSchema = employeeSchema.extend({
+  id: z
+    .string({ error: "Employee ID is required" })
+    .min(1, "Employee ID is required"),
+})
+
+export const updateEmployeeStatusSchema = z.object({
+  employeeId: z
+    .string({ error: "Employee ID is required" })
+    .min(1, "Employee ID is required"),
+  status: z.enum(EmploymentStatus),
+})
+
+export type EmployeeIdInput = z.infer<typeof employeeIdSchema>
+
 export type CreateEmployeeInput = z.infer<typeof employeeSchema>
 
 export type CreateManyEmployeeInput = z.infer<typeof employeeArraySchema>
 
 export type VerifyUsernameInput = z.infer<typeof employeeUsernameSchema>
+
+export type UpdateEmployeeInput = z.infer<typeof updateEmployeeSchema>
+
+export type UpdateEmployeeStatusInput = z.infer<
+  typeof updateEmployeeStatusSchema
+>

@@ -1,6 +1,6 @@
+import { serverEnv } from "@/config/serverEnv"
 import { useSession } from "@tanstack/react-start/server"
 import { endOfDay } from "date-fns"
-import { serverEnv } from "@/config/serverEnv"
 
 export type EmployeeSessionData = {
   employeeId: string
@@ -17,7 +17,7 @@ export type EmployeeSessionData = {
 }
 
 export function useEmployeeSession() {
-  const today = new Date().toISOString().split("T")[0]
+  const today = new Intl.DateTimeFormat("en-CA").format(new Date())
 
   return useSession<EmployeeSessionData>({
     name: "tindanatin-employee-session",

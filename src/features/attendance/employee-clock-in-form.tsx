@@ -129,7 +129,7 @@ function ClockInForm({
       const geoResult = await performGeofenceCheck(locationCenter, radius)
 
       if (!geoResult?.canClockIn) {
-        toast.error("No location data. Cannot clock-in.")
+        toast.error("Cannot clock-in. Make sure you are in the store.")
         return
       }
 

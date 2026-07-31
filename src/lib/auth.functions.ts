@@ -1,6 +1,6 @@
-import { createServerFn } from "@tanstack/react-start"
-import { getRequestHeaders } from "@tanstack/react-start/server"
 import { auth } from "@/lib/auth"
+import { createMiddleware, createServerFn } from "@tanstack/react-start"
+import { getRequestHeaders } from "@tanstack/react-start/server"
 
 export const getSession = createServerFn({ method: "GET" }).handler(
   async () => {
@@ -33,3 +33,14 @@ export const getOrganizationCount = createServerFn({ method: "GET" }).handler(
     return result.length ?? 0
   }
 )
+
+export const authMiddleware = createMiddleware().server(async ({ next }) => {
+  const headers = getRequestHeaders()
+  const session = await auth.api.getSession({ headers })
+
+  if (!session) {
+    return Response.json({ message: "Unauthorized" }, { status: 401 })
+  }
+
+  return next()
+})

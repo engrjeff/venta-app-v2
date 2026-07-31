@@ -19,13 +19,16 @@ import { Route as OnboardingFinishRouteImport } from './routes/onboarding/finish
 import { Route as OnboardingEmployeesRouteImport } from './routes/onboarding/employees'
 import { Route as OnboardingDesignationsRouteImport } from './routes/onboarding/designations'
 import { Route as OnboardingBranchRouteImport } from './routes/onboarding/branch'
+import { Route as ProtectedEmployeesRouteImport } from './routes/_protected/employees'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
+import { Route as ProtectedBranchesRouteImport } from './routes/_protected/branches'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as EStoreSlugRouteRouteImport } from './routes/e/$storeSlug/route'
 import { Route as EStoreSlugIndexRouteImport } from './routes/e/$storeSlug/index'
 import { Route as EStoreSlugEmployeeIdRouteImport } from './routes/e/$storeSlug/$employeeId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiResourcesStoreIdFieldOptionsRouteImport } from './routes/api/resources/$storeId.field-options'
 
 const OnboardingRouteRoute = OnboardingRouteRouteImport.update({
   id: '/onboarding',
@@ -75,9 +78,19 @@ const OnboardingBranchRoute = OnboardingBranchRouteImport.update({
   path: '/branch',
   getParentRoute: () => OnboardingRouteRoute,
 } as any)
+const ProtectedEmployeesRoute = ProtectedEmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
 const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedBranchesRoute = ProtectedBranchesRouteImport.update({
+  id: '/branches',
+  path: '/branches',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const authSignUpRoute = authSignUpRouteImport.update({
@@ -110,6 +123,12 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiResourcesStoreIdFieldOptionsRoute =
+  ApiResourcesStoreIdFieldOptionsRouteImport.update({
+    id: '/api/resources/$storeId/field-options',
+    path: '/api/resources/$storeId/field-options',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -117,7 +136,9 @@ export interface FileRoutesByFullPath {
   '/e/$storeSlug': typeof EStoreSlugRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/branches': typeof ProtectedBranchesRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/employees': typeof ProtectedEmployeesRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
@@ -127,12 +148,15 @@ export interface FileRoutesByFullPath {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRoute
   '/e/$storeSlug/': typeof EStoreSlugIndexRoute
+  '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
+  '/branches': typeof ProtectedBranchesRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/employees': typeof ProtectedEmployeesRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
@@ -142,6 +166,7 @@ export interface FileRoutesByTo {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRoute
   '/e/$storeSlug': typeof EStoreSlugIndexRoute
+  '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -152,7 +177,9 @@ export interface FileRoutesById {
   '/e/$storeSlug': typeof EStoreSlugRouteRouteWithChildren
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
+  '/_protected/branches': typeof ProtectedBranchesRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/_protected/employees': typeof ProtectedEmployeesRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
@@ -162,6 +189,7 @@ export interface FileRoutesById {
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRoute
   '/e/$storeSlug/': typeof EStoreSlugIndexRoute
+  '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -171,7 +199,9 @@ export interface FileRouteTypes {
     | '/e/$storeSlug'
     | '/sign-in'
     | '/sign-up'
+    | '/branches'
     | '/dashboard'
+    | '/employees'
     | '/onboarding/branch'
     | '/onboarding/designations'
     | '/onboarding/employees'
@@ -181,12 +211,15 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/e/$storeSlug/$employeeId'
     | '/e/$storeSlug/'
+    | '/api/resources/$storeId/field-options'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/sign-in'
     | '/sign-up'
+    | '/branches'
     | '/dashboard'
+    | '/employees'
     | '/onboarding/branch'
     | '/onboarding/designations'
     | '/onboarding/employees'
@@ -196,6 +229,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/e/$storeSlug/$employeeId'
     | '/e/$storeSlug'
+    | '/api/resources/$storeId/field-options'
   id:
     | '__root__'
     | '/'
@@ -205,7 +239,9 @@ export interface FileRouteTypes {
     | '/e/$storeSlug'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
+    | '/_protected/branches'
     | '/_protected/dashboard'
+    | '/_protected/employees'
     | '/onboarding/branch'
     | '/onboarding/designations'
     | '/onboarding/employees'
@@ -215,6 +251,7 @@ export interface FileRouteTypes {
     | '/api/auth/$'
     | '/e/$storeSlug/$employeeId'
     | '/e/$storeSlug/'
+    | '/api/resources/$storeId/field-options'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -224,6 +261,7 @@ export interface RootRouteChildren {
   OnboardingRouteRoute: typeof OnboardingRouteRouteWithChildren
   EStoreSlugRouteRoute: typeof EStoreSlugRouteRouteWithChildren
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiResourcesStoreIdFieldOptionsRoute: typeof ApiResourcesStoreIdFieldOptionsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -298,11 +336,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingBranchRouteImport
       parentRoute: typeof OnboardingRouteRoute
     }
+    '/_protected/employees': {
+      id: '/_protected/employees'
+      path: '/employees'
+      fullPath: '/employees'
+      preLoaderRoute: typeof ProtectedEmployeesRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
     '/_protected/dashboard': {
       id: '/_protected/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof ProtectedDashboardRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/branches': {
+      id: '/_protected/branches'
+      path: '/branches'
+      fullPath: '/branches'
+      preLoaderRoute: typeof ProtectedBranchesRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
     '/(auth)/sign-up': {
@@ -347,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/resources/$storeId/field-options': {
+      id: '/api/resources/$storeId/field-options'
+      path: '/api/resources/$storeId/field-options'
+      fullPath: '/api/resources/$storeId/field-options'
+      preLoaderRoute: typeof ApiResourcesStoreIdFieldOptionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -365,11 +424,15 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 )
 
 interface ProtectedRouteRouteChildren {
+  ProtectedBranchesRoute: typeof ProtectedBranchesRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedEmployeesRoute: typeof ProtectedEmployeesRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
+  ProtectedBranchesRoute: ProtectedBranchesRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedEmployeesRoute: ProtectedEmployeesRoute,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
@@ -419,6 +482,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRouteRoute: OnboardingRouteRouteWithChildren,
   EStoreSlugRouteRoute: EStoreSlugRouteRouteWithChildren,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiResourcesStoreIdFieldOptionsRoute: ApiResourcesStoreIdFieldOptionsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

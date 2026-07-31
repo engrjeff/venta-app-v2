@@ -1,9 +1,3 @@
-import {
-  createFileRoute,
-  notFound,
-  redirect,
-  useRouteContext,
-} from "@tanstack/react-router"
 import { AppLogo } from "@/components/app-logo"
 import { siteConfig } from "@/config/site"
 import { EmployeeClockInForm } from "@/features/attendance/employee-clock-in-form"
@@ -11,6 +5,12 @@ import { EmployeePortalForm } from "@/features/employees/employee-portal-form"
 import { employeesApi } from "@/features/employees/employees.functions"
 import { storeApi } from "@/features/store/store.functions"
 import { generatePageTitle } from "@/lib/utils"
+import {
+  createFileRoute,
+  notFound,
+  redirect,
+  useRouteContext,
+} from "@tanstack/react-router"
 
 export const Route = createFileRoute("/e/$storeSlug/")({
   component: RouteComponent,
