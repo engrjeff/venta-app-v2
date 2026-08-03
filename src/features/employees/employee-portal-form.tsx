@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { ArrowRightIcon } from "lucide-react"
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
@@ -23,8 +22,6 @@ export function EmployeePortalForm({ storeId }: { storeId: string }) {
 
 function EmployeeUsernameForm({ storeId }: { storeId: string }) {
   const createEmployeeSession = useServerFn(employeesApi.createSession)
-
-  const router = useRouter()
 
   const form = useForm({
     resolver: zodResolver(employeeUsernameSchema),
@@ -54,8 +51,6 @@ function EmployeeUsernameForm({ storeId }: { storeId: string }) {
 
         return
       }
-
-      await router.invalidate()
 
       toast.success(`Employee verified!`)
 

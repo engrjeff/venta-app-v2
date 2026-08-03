@@ -265,67 +265,70 @@ export function transitionAttendance(
 export async function submitAttendanceTransition(
   input: AttendanceTransitionInput
 ) {
-  return prisma.$transaction(async (tx) => {
-    const attendance = await tx.attendance.findUniqueOrThrow({
-      where: {
-        id: input.attendanceId,
-      },
-    })
+  return prisma.$transaction(
+    async (tx) => {
+      const attendance = await tx.attendance.findUniqueOrThrow({
+        where: {
+          id: input.attendanceId,
+        },
+      })
 
-    const next = transitionAttendance(attendance, input)
+      const next = transitionAttendance(attendance, input)
 
-    await tx.attendance.update({
-      where: {
-        id: attendance.id,
-      },
-      data: next,
-    })
+      await tx.attendance.update({
+        where: {
+          id: attendance.id,
+        },
+        data: next,
+      })
 
-    switch (input.action) {
-      case "pause":
-        await tx.attendanceBreak.create({
-          data: {
-            attendanceId: attendance.id,
-            startedAt: input.at,
-          },
-        })
-        break
-
-      case "resume":
-      case "clockOut":
-        if (attendance.status === AttendanceStatus.ON_BREAK) {
-          const activeBreak = await tx.attendanceBreak.findFirstOrThrow({
-            where: {
-              attendanceId: attendance.id,
-              endedAt: null,
-            },
-            orderBy: {
-              startedAt: "desc",
-            },
-          })
-
-          await tx.attendanceBreak.update({
-            where: {
-              id: activeBreak.id,
-            },
+      switch (input.action) {
+        case "pause":
+          await tx.attendanceBreak.create({
             data: {
-              endedAt: input.at,
-              durationSeconds: secondsBetween(
-                attendance.breakStartedAt!,
-                new Date(input.at)
-              ),
+              attendanceId: attendance.id,
+              startedAt: input.at,
             },
           })
-        }
-        break
-    }
+          break
 
-    return tx.attendance.findUniqueOrThrow({
-      where: {
-        id: attendance.id,
-      },
-    })
-  })
+        case "resume":
+        case "clockOut":
+          if (attendance.status === AttendanceStatus.ON_BREAK) {
+            const activeBreak = await tx.attendanceBreak.findFirstOrThrow({
+              where: {
+                attendanceId: attendance.id,
+                endedAt: null,
+              },
+              orderBy: {
+                startedAt: "desc",
+              },
+            })
+
+            await tx.attendanceBreak.update({
+              where: {
+                id: activeBreak.id,
+              },
+              data: {
+                endedAt: input.at,
+                durationSeconds: secondsBetween(
+                  attendance.breakStartedAt!,
+                  new Date(input.at)
+                ),
+              },
+            })
+          }
+          break
+      }
+
+      return tx.attendance.findUniqueOrThrow({
+        where: {
+          id: attendance.id,
+        },
+      })
+    },
+    { maxWait: 5000, timeout: 10000 }
+  )
 }
 
 export async function getAttendanceRecordsToday(input: AttendanceTodayInput) {

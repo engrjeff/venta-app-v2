@@ -11,7 +11,7 @@ import { attendanceApi } from "@/features/attendance/attendance.functions"
 import { WorkHours } from "@/features/attendance/work-hours"
 import { EmployeeMenu } from "@/features/employees/employee-menu"
 import { employeesApi } from "@/features/employees/employees.functions"
-import { formatScheduleTimeRange } from "@/lib/utils"
+import { formatScheduleTimeRange, generatePageTitle } from "@/lib/utils"
 import { createFileRoute, redirect } from "@tanstack/react-router"
 import { ClockIcon, ListIcon } from "lucide-react"
 
@@ -65,6 +65,9 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
 
     return result.data
   },
+  head: ({ loaderData }) => ({
+    meta: [{ title: generatePageTitle(loaderData?.employee?.firstName ?? "") }],
+  }),
   component: RouteComponent,
 })
 

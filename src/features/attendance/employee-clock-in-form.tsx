@@ -16,12 +16,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import type { Branch } from "@/generated/prisma/browser"
 import { performGeofenceCheck, useGeofence } from "@/lib/geo-fencing"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  useLoaderData,
-  useNavigate,
-  useParams,
-  useRouter,
-} from "@tanstack/react-router"
+import { useLoaderData, useNavigate, useParams } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { ArrowRightIcon } from "lucide-react"
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
@@ -80,8 +75,6 @@ function ClockInForm({
   const clockInFn = useServerFn(attendanceApi.clockIn)
 
   const navigate = useNavigate()
-
-  const router = useRouter()
 
   const params = useParams({ from: "/e/$storeSlug/" })
 
@@ -171,8 +164,6 @@ function ClockInForm({
         replace: true,
         reloadDocument: true,
       })
-
-      await router.invalidate()
     } catch (err) {
       console.log("Thrown Error: ", err)
     }
