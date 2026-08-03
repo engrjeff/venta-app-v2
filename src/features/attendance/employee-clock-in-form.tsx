@@ -169,6 +169,7 @@ function ClockInForm({
           employeeId: result.data.employeeId,
         },
         replace: true,
+        reloadDocument: true,
       })
 
       await router.invalidate()

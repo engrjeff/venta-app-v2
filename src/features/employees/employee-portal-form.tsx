@@ -1,26 +1,21 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "@tanstack/react-router"
-import { useServerFn } from "@tanstack/react-start"
-import { ArrowRightIcon } from "lucide-react"
-import {
-  Controller,
-  
-  
-  useForm
-} from "react-hook-form"
-import { toast } from "sonner"
-import { employeesApi } from "./employees.functions"
-import {  employeeUsernameSchema } from "./schema"
-import type {SubmitErrorHandler, SubmitHandler} from "react-hook-form";
-import type {VerifyUsernameInput} from "./schema";
-import { Input } from "@/components/ui/input"
+import { SubmitButton } from "@/components/submit-button"
 import {
   Field,
   FieldContent,
   FieldError,
   FieldLabel,
 } from "@/components/ui/field"
-import { SubmitButton } from "@/components/submit-button"
+import { Input } from "@/components/ui/input"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/react-start"
+import { ArrowRightIcon } from "lucide-react"
+import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { employeesApi } from "./employees.functions"
+import type { VerifyUsernameInput } from "./schema"
+import { employeeUsernameSchema } from "./schema"
 
 export function EmployeePortalForm({ storeId }: { storeId: string }) {
   return <EmployeeUsernameForm storeId={storeId} />
@@ -60,9 +55,11 @@ function EmployeeUsernameForm({ storeId }: { storeId: string }) {
         return
       }
 
+      await router.invalidate()
+
       toast.success(`Employee verified!`)
 
-      await router.invalidate()
+      window.location.reload()
     } catch (err) {
       console.log("Thrown Error: ", err)
     }

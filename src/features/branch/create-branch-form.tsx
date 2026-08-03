@@ -35,9 +35,8 @@ export function CreateBranchForm({ storeId }: { storeId: string }) {
   const form = useForm({
     resolver: zodResolver(branchSchema),
     defaultValues: {
-      name: "San Juan Branch",
-      address:
-        "Block 2 Lot 10 Casas Carlina, Barangay Tatala, Binangonan, Rizal (Segovia Residence)",
+      name: "",
+      address: "",
       storeId,
       scheduleStartTime: "08:00",
       scheduleEndTime: "17:00",
@@ -63,9 +62,9 @@ export function CreateBranchForm({ storeId }: { storeId: string }) {
         return
       }
 
-      toast.success(`Store branch ${result.data?.name} is successfully saved!`)
-
       await router.invalidate()
+
+      toast.success(`Store branch ${result.data?.name} is successfully saved!`)
 
       navigate({
         to: "/onboarding/designations",
