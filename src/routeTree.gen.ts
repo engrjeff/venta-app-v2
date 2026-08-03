@@ -19,7 +19,9 @@ import { Route as OnboardingFinishRouteImport } from './routes/onboarding/finish
 import { Route as OnboardingEmployeesRouteImport } from './routes/onboarding/employees'
 import { Route as OnboardingDesignationsRouteImport } from './routes/onboarding/designations'
 import { Route as OnboardingBranchRouteImport } from './routes/onboarding/branch'
+import { Route as ProtectedTimesheetRouteImport } from './routes/_protected/timesheet'
 import { Route as ProtectedEmployeesRouteImport } from './routes/_protected/employees'
+import { Route as ProtectedDesignationsRouteImport } from './routes/_protected/designations'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedBranchesRouteImport } from './routes/_protected/branches'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
@@ -78,9 +80,19 @@ const OnboardingBranchRoute = OnboardingBranchRouteImport.update({
   path: '/branch',
   getParentRoute: () => OnboardingRouteRoute,
 } as any)
+const ProtectedTimesheetRoute = ProtectedTimesheetRouteImport.update({
+  id: '/timesheet',
+  path: '/timesheet',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
 const ProtectedEmployeesRoute = ProtectedEmployeesRouteImport.update({
   id: '/employees',
   path: '/employees',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedDesignationsRoute = ProtectedDesignationsRouteImport.update({
+  id: '/designations',
+  path: '/designations',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
@@ -138,7 +150,9 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof authSignUpRoute
   '/branches': typeof ProtectedBranchesRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/designations': typeof ProtectedDesignationsRoute
   '/employees': typeof ProtectedEmployeesRoute
+  '/timesheet': typeof ProtectedTimesheetRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
@@ -156,7 +170,9 @@ export interface FileRoutesByTo {
   '/sign-up': typeof authSignUpRoute
   '/branches': typeof ProtectedBranchesRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/designations': typeof ProtectedDesignationsRoute
   '/employees': typeof ProtectedEmployeesRoute
+  '/timesheet': typeof ProtectedTimesheetRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
@@ -179,7 +195,9 @@ export interface FileRoutesById {
   '/(auth)/sign-up': typeof authSignUpRoute
   '/_protected/branches': typeof ProtectedBranchesRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/_protected/designations': typeof ProtectedDesignationsRoute
   '/_protected/employees': typeof ProtectedEmployeesRoute
+  '/_protected/timesheet': typeof ProtectedTimesheetRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
@@ -201,7 +219,9 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/branches'
     | '/dashboard'
+    | '/designations'
     | '/employees'
+    | '/timesheet'
     | '/onboarding/branch'
     | '/onboarding/designations'
     | '/onboarding/employees'
@@ -219,7 +239,9 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/branches'
     | '/dashboard'
+    | '/designations'
     | '/employees'
+    | '/timesheet'
     | '/onboarding/branch'
     | '/onboarding/designations'
     | '/onboarding/employees'
@@ -241,7 +263,9 @@ export interface FileRouteTypes {
     | '/(auth)/sign-up'
     | '/_protected/branches'
     | '/_protected/dashboard'
+    | '/_protected/designations'
     | '/_protected/employees'
+    | '/_protected/timesheet'
     | '/onboarding/branch'
     | '/onboarding/designations'
     | '/onboarding/employees'
@@ -336,11 +360,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingBranchRouteImport
       parentRoute: typeof OnboardingRouteRoute
     }
+    '/_protected/timesheet': {
+      id: '/_protected/timesheet'
+      path: '/timesheet'
+      fullPath: '/timesheet'
+      preLoaderRoute: typeof ProtectedTimesheetRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
     '/_protected/employees': {
       id: '/_protected/employees'
       path: '/employees'
       fullPath: '/employees'
       preLoaderRoute: typeof ProtectedEmployeesRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/designations': {
+      id: '/_protected/designations'
+      path: '/designations'
+      fullPath: '/designations'
+      preLoaderRoute: typeof ProtectedDesignationsRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
     '/_protected/dashboard': {
@@ -426,13 +464,17 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 interface ProtectedRouteRouteChildren {
   ProtectedBranchesRoute: typeof ProtectedBranchesRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedDesignationsRoute: typeof ProtectedDesignationsRoute
   ProtectedEmployeesRoute: typeof ProtectedEmployeesRoute
+  ProtectedTimesheetRoute: typeof ProtectedTimesheetRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedBranchesRoute: ProtectedBranchesRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedDesignationsRoute: ProtectedDesignationsRoute,
   ProtectedEmployeesRoute: ProtectedEmployeesRoute,
+  ProtectedTimesheetRoute: ProtectedTimesheetRoute,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(

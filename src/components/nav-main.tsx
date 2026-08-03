@@ -1,14 +1,5 @@
 "use client"
 
-import { Link, useLocation } from "@tanstack/react-router"
-import {
-  Building2Icon,
-  CheckCircleIcon,
-  HomeIcon,
-  NetworkIcon,
-  SettingsIcon,
-  UsersIcon,
-} from "lucide-react"
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -16,6 +7,16 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { Link, useLocation } from "@tanstack/react-router"
+import {
+  Building2Icon,
+  CheckCircleIcon,
+  FileClockIcon,
+  HomeIcon,
+  NetworkIcon,
+  SettingsIcon,
+  UsersIcon,
+} from "lucide-react"
 
 const MAIN_NAV = [
   {
@@ -23,6 +24,12 @@ const MAIN_NAV = [
     title: "Dashboard",
     Icon: HomeIcon,
     pathname: "/dashboard",
+  },
+  {
+    id: "timesheet",
+    title: "Timesheet",
+    Icon: FileClockIcon,
+    pathname: "/timesheet",
   },
 ]
 

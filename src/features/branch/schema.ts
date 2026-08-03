@@ -25,4 +25,20 @@ export const branchSchema = z
     }
   })
 
+export const branchIdSchema = z.object({
+  id: z
+    .string({ error: "Branch ID is required" })
+    .min(1, "Branch ID is required"),
+})
+
+export const branchUpdateSchema = branchSchema.extend({
+  id: z
+    .string({ error: "Branch ID is required" })
+    .min(1, "Branch ID is required"),
+})
+
+export type BranchIdInput = z.infer<typeof branchIdSchema>
+
 export type CreateBranchInput = z.infer<typeof branchSchema>
+
+export type UpdateBranchInput = z.infer<typeof branchUpdateSchema>

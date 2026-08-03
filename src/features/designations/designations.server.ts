@@ -1,5 +1,5 @@
-import type { CreateManyDesignationInput } from "./schema"
 import { prisma } from "@/lib/db"
+import type { CreateManyDesignationInput } from "./schema"
 
 export async function createDesignations(
   designationArrayInput: CreateManyDesignationInput
@@ -10,6 +10,21 @@ export async function createDesignations(
         organizationId: designationArrayInput.storeId,
         ...designation,
       })),
+    })
+
+    return { data: designations, error: null }
+  } catch (error) {
+    return { data: null, error: error as any }
+  }
+}
+
+export async function getStoreDesignations(storeId: string) {
+  try {
+    const designations = await prisma.designation.findMany({
+      where: { organizationId: storeId },
+      include: {
+        employees: { select: { id: true, firstName: true, lastName: true } },
+      },
     })
 
     return { data: designations, error: null }

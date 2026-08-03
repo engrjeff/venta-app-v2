@@ -183,7 +183,6 @@ function RouteComponent() {
                 {clockedOut.map(({ employee, branch, timeOut }) => (
                   <li key={`clocked-out-${employee.id}`}>
                     <div className="flex items-center gap-3 p-3">
-                      <span className="mr-1 inline-block size-1.5 rounded-full bg-blue-500" />{" "}
                       <div className="space-y-0.5">
                         <p className="text-sm font-semibold">
                           {employee.firstName} {employee.lastName}
@@ -191,13 +190,14 @@ function RouteComponent() {
                         <p className="text-xs">
                           {employee.designation.name} &bull; {branch.name}
                         </p>
-                        <div className="ml-auto flex items-center gap-1 text-xs">
-                          {timeOut && (
-                            <p className="text-blue-500">
-                              Out at {formatTime(timeOut)}
-                            </p>
-                          )}
-                        </div>
+                      </div>
+                      <div className="ml-auto flex items-center gap-1 text-xs">
+                        <span className="mr-1 inline-block size-1.5 rounded-full bg-blue-500" />{" "}
+                        {timeOut && (
+                          <p className="text-blue-500">
+                            Out at {formatTime(timeOut)}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </li>
