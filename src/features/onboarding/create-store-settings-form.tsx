@@ -13,7 +13,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { BUSINESS_TYPES } from "@/lib/constants"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate, useRouter } from "@tanstack/react-router"
+import { useNavigate } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { ArrowRightIcon } from "lucide-react"
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
@@ -27,7 +27,6 @@ export function CreateStoreSettingsForm({ storeId }: { storeId: string }) {
   const createStoreSettings = useServerFn(onboardingApi.createSettings)
 
   const navigate = useNavigate()
-  const router = useRouter()
 
   const form = useForm({
     resolver: zodResolver(storeSettingsSchema),
@@ -55,7 +54,6 @@ export function CreateStoreSettingsForm({ storeId }: { storeId: string }) {
 
         return
       }
-      await router.invalidate()
 
       toast.success(`Saved successfully!`)
 

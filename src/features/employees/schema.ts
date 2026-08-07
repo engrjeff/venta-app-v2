@@ -62,6 +62,24 @@ export const updateEmployeeStatusSchema = z.object({
   status: z.enum(EmploymentStatus),
 })
 
+export const updateEmployeeSessionSchema = z.object({
+  attendanceId: z
+    .string({ error: "Attendance ID is required" })
+    .min(1, "Attendance ID is required"),
+  branchId: z
+    .string({ error: "Branch ID is required" })
+    .min(1, "Branch ID is required"),
+  branchName: z
+    .string({ error: "Branch Name is required" })
+    .min(1, "Branch Name is required"),
+  timeIn: z.iso.datetime({ local: true, error: "Clock-in time is required" }),
+})
+
+export const getEmployeesInputSchema = z.object({
+  storeId: z.string({ error: "Store is required" }).min(1, "Store is required"),
+  q: z.string().optional(), // search query
+})
+
 export type EmployeeIdInput = z.infer<typeof employeeIdSchema>
 
 export type CreateEmployeeInput = z.infer<typeof employeeSchema>
@@ -74,4 +92,10 @@ export type UpdateEmployeeInput = z.infer<typeof updateEmployeeSchema>
 
 export type UpdateEmployeeStatusInput = z.infer<
   typeof updateEmployeeStatusSchema
+>
+
+export type GetEmployeesInput = z.infer<typeof getEmployeesInputSchema>
+
+export type UpdateEmployeeSessionInput = z.infer<
+  typeof updateEmployeeSessionSchema
 >

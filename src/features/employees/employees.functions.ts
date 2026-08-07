@@ -1,5 +1,4 @@
 import { createServerFn } from "@tanstack/react-start"
-import { storeIdSchema } from "../store/schema"
 import {
   clearEmployeeSession,
   createEmployee,
@@ -10,6 +9,7 @@ import {
   getEmployeeSession,
   getEmployees,
   updateEmployee,
+  updateEmployeeSession,
   updateEmployeeStatus,
 } from "./employees.server"
 import {
@@ -17,14 +17,16 @@ import {
   employeeIdSchema,
   employeeSchema,
   employeeUsernameSchema,
+  getEmployeesInputSchema,
   updateEmployeeSchema,
+  updateEmployeeSessionSchema,
   updateEmployeeStatusSchema,
 } from "./schema"
 
 export const getAll = createServerFn({ method: "GET" })
-  .inputValidator(storeIdSchema)
+  .inputValidator(getEmployeesInputSchema)
   .handler(async ({ data }) => {
-    return getEmployees({ storeId: data.id })
+    return getEmployees(data)
   })
 
 export const create = createServerFn({ method: "POST" })
@@ -76,6 +78,9 @@ export const getSession = createServerFn({ method: "GET" }).handler(
 export const clearSession = createServerFn({ method: "POST" }).handler(
   clearEmployeeSession
 )
+export const updateSession = createServerFn({ method: "POST" })
+  .inputValidator(updateEmployeeSessionSchema)
+  .handler(async ({ data }) => updateEmployeeSession(data))
 
 export const employeesApi = {
   getAll,
@@ -89,4 +94,5 @@ export const employeesApi = {
   createSession,
   getSession,
   clearSession,
+  updateSession,
 }

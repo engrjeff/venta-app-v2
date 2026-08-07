@@ -5,7 +5,9 @@ import type {
   CreateEmployeeInput,
   CreateManyEmployeeInput,
   EmployeeIdInput,
+  GetEmployeesInput,
   UpdateEmployeeInput,
+  UpdateEmployeeSessionInput,
   UpdateEmployeeStatusInput,
   VerifyUsernameInput,
 } from "./schema"
@@ -14,10 +16,18 @@ function generateEmployeeNumber(storeName: string, username: string) {
   return `${slugify(storeName.toUpperCase(), { trim: true })}-${slugify(username.toUpperCase(), { trim: true })}`
 }
 
-export async function getEmployees({ storeId }: { storeId: string }) {
+export async function getEmployees(input: GetEmployeesInput) {
   try {
     const employees = await prisma.employee.findMany({
-      where: { organizationId: storeId },
+      where: {
+        organizationId: input.storeId,
+        AND: {
+          OR: [
+            { firstName: { contains: input.q, mode: "insensitive" } },
+            { lastName: { contains: input.q, mode: "insensitive" } },
+          ],
+        },
+      },
       include: {
         designation: {
           select: { id: true, name: true, salaryRate: true, salaryType: true },
@@ -242,6 +252,7 @@ export async function createEmployeeSession(input: VerifyUsernameInput) {
         organizationId: input.storeId,
         username: input.username,
       },
+      include: { organization: { select: { slug: true } } },
     })
 
     if (!foundEmployee) {
@@ -257,6 +268,7 @@ export async function createEmployeeSession(input: VerifyUsernameInput) {
       employeeFirstName: foundEmployee.firstName,
       employeeLastName: foundEmployee.lastName,
       storeId: foundEmployee.organizationId,
+      storeSlug: foundEmployee.organization.slug,
     })
 
     return { data: { success: true }, error: null }
@@ -288,6 +300,26 @@ export async function clearEmployeeSession() {
     await employeeSession.clear()
 
     return { data: { success: true }, error: null }
+  } catch (error) {
+    return { data: null, error: error as any }
+  }
+}
+
+export async function updateEmployeeSession(input: UpdateEmployeeSessionInput) {
+  try {
+    const employeeSession = await useEmployeeSession()
+
+    if (!input.timeIn) return { data: null, error: "Not clocked in" }
+    // update the employee session cookie with the clock-in data
+    await employeeSession.update({
+      ...employeeSession.data,
+
+      branchId: input.branchId,
+      branchName: input.branchName,
+
+      attendanceId: input.attendanceId,
+      timeInString: new Date(input.timeIn).toISOString(),
+    })
   } catch (error) {
     return { data: null, error: error as any }
   }

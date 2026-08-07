@@ -19,6 +19,17 @@ const badgeVariants = cva(
         ghost:
           "hover:bg-muted hover:text-muted-foreground dark:hover:bg-muted/50",
         link: "text-primary underline-offset-4 hover:underline",
+        EARLY:
+          "border-none bg-accent text-emerald-400 capitalize dark:bg-muted/50",
+        LATE: "border-none bg-accent text-red-400 capitalize dark:bg-muted/50",
+        ON_TIME:
+          "border-none bg-accent text-gray-400 capitalize dark:bg-muted/50",
+        WORKING:
+          "border-none bg-accent text-emerald-400 capitalize dark:bg-muted/50",
+        ON_BREAK:
+          "border-none bg-accent text-amber-400 capitalize dark:bg-muted/50",
+        CLOCKED_OUT:
+          "border-none bg-accent text-gray-400 capitalize dark:bg-muted/50",
       },
     },
     defaultVariants: {

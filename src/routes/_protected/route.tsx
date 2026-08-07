@@ -17,21 +17,21 @@ export const Route = createFileRoute("/_protected")({
       })
     }
 
+    return {
+      user: session.user,
+      activeStoreId: session.session.activeOrganizationId as string,
+    }
+  },
+  loader: async ({ context }) => {
     // check onboarding status
     const status = await onboardingApi.checkOnboardingStatus({
-      data: { id: session.session.activeOrganizationId ?? undefined },
+      data: { id: context.activeStoreId ?? undefined },
     })
 
     if (!status.data?.completed && status.data?.nextStep) {
       throw redirect({ to: status.data.nextStep })
     }
 
-    return {
-      user: session.user,
-      activeStoreId: session.session.activeOrganizationId,
-    }
-  },
-  loader: async () => {
     const stores = await storeApi.getAll()
 
     return stores
@@ -52,11 +52,11 @@ function RouteComponent() {
       }
     >
       <AppSidebar stores={loaderData.data} />
-      <SidebarInset>
+      <SidebarInset className="flex max-h-screen flex-col overflow-hidden">
         <AppHeader />
-        <main className="p-6">
+        <div className="h-[calc(100%-48px)] max-h-[calc(100%-48px)] flex-1 p-4">
           <Outlet />
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )

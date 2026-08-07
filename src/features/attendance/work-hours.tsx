@@ -167,7 +167,7 @@ export function WorkHours({
               onClick={() => setAction("CLOCK_OUT")}
               disabled={session.saving || session.savingClockout}
             >
-              {session.savingClockout ? (
+              {session.savingClockout || session.saving ? (
                 <Spinner data-icon="inline-start" />
               ) : (
                 <LogOutIcon />

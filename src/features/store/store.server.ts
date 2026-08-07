@@ -1,6 +1,6 @@
-import { getRequestHeaders } from "@tanstack/react-start/server"
 import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/db"
+import { getRequestHeaders } from "@tanstack/react-start/server"
 
 /**
  *
@@ -62,6 +62,23 @@ export async function getStoreBySlug(storeSlug: string) {
   try {
     const store = await prisma.organization.findUnique({
       where: { slug: storeSlug },
+    })
+
+    return { data: store, error: null }
+  } catch (error) {
+    return { data: null, error: error as any }
+  }
+}
+
+export async function getStoreById(id: string) {
+  try {
+    const store = await prisma.organization.findUnique({
+      where: { id },
+      include: {
+        organizationSettings: true,
+        branches: true,
+        designations: true,
+      },
     })
 
     return { data: store, error: null }

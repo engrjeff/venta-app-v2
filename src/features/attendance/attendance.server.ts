@@ -5,6 +5,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client"
 import { useEmployeeSession } from "../employees/employee-session"
 import type {
   ActiveAttendanceQueryInput,
+  AttendanceByEmployeeInput,
   AttendanceTodayInput,
   AttendanceTransitionInput,
   EmployeeClockInInput,
@@ -26,8 +27,6 @@ export async function submitClockInAttendance(
 
     const clockInDate = new Date(timeIn)
 
-    const today = new Intl.DateTimeFormat("en-CA").format(new Date())
-
     const attendance = await prisma.attendance.create({
       data: {
         organizationId: storeId,
@@ -36,7 +35,7 @@ export async function submitClockInAttendance(
         timeIn: clockInDate,
         timeInLatitude: timeInLat,
         timeInLongitude: timeInLng,
-        date: new Date(today),
+        date: getToday(),
         workStartedAt: clockInDate,
       },
       include: {
@@ -130,6 +129,26 @@ export async function getActiveAttendance(inputs: ActiveAttendanceQueryInput) {
         employee: {
           include: { designation: { select: { id: true, name: true } } },
         },
+      },
+    })
+
+    return { data: attendance, error: null }
+  } catch (error) {
+    return { data: null, error: error as any }
+  }
+}
+
+export async function getActiveAttendanceByEmployeeId(
+  inputs: Pick<ActiveAttendanceQueryInput, "employeeId">
+) {
+  try {
+    const attendance = await prisma.attendance.findFirst({
+      where: {
+        employeeId: inputs.employeeId,
+        date: getToday(),
+      },
+      include: {
+        branch: true,
       },
     })
 
@@ -343,6 +362,36 @@ export async function getAttendanceRecordsToday(input: AttendanceTodayInput) {
     return { data: attendanceRecords, error: null }
   } catch (error) {
     console.log("Get Attendance Today Error: ", error)
+    return { data: null, error: error as any }
+  }
+}
+
+export async function getAttendanceRecordsByEmployee(
+  input: AttendanceByEmployeeInput
+) {
+  try {
+    const employeeWithAttendance = await prisma.employee.findUnique({
+      where: { id: input.employeeId },
+      include: {
+        designation: true,
+        branches: { include: { branch: true } },
+        attendance: {
+          where:
+            input.start && input.end
+              ? {
+                  date: {
+                    gte: new Date(input.start),
+                    lte: new Date(input.end),
+                  },
+                }
+              : undefined,
+          orderBy: { date: "desc" },
+        },
+      },
+    })
+    return { data: employeeWithAttendance, error: null }
+  } catch (error) {
+    console.log("Get Attendance by Employee Error: ", error)
     return { data: null, error: error as any }
   }
 }

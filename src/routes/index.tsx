@@ -2,20 +2,24 @@ import { AppLogo } from "@/components/app-logo"
 import { HeaderUserMenu } from "@/components/header-user-menu"
 import { Button } from "@/components/ui/button"
 import { siteConfig } from "@/config/site"
+import { employeesApi } from "@/features/employees/employees.functions"
 import { getSession } from "@/lib/auth.functions"
 import { Link, createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/")({
   loader: async () => {
-    const session = await getSession()
+    const [session, employeeSession] = await Promise.all([
+      getSession(),
+      employeesApi.getSession(),
+    ])
 
-    return session
+    return { session, employeeSession }
   },
   component: App,
 })
 
 function App() {
-  const session = Route.useLoaderData()
+  const { session, employeeSession } = Route.useLoaderData()
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -26,16 +30,35 @@ function App() {
         </Link>
 
         <nav className="ml-auto flex items-center gap-4">
+          {employeeSession.data?.employeeId &&
+          employeeSession.data.storeSlug ? (
+            <Button
+              variant="secondary"
+              nativeButton={false}
+              render={
+                <Link
+                  to="/e/$storeSlug"
+                  params={{ storeSlug: employeeSession.data.storeSlug }}
+                >
+                  Employee Portal
+                </Link>
+              }
+            />
+          ) : null}
           {session?.user ? (
             <>
               <Button
                 variant="secondary"
+                nativeButton={false}
                 render={<Link to="/dashboard">Dashboard</Link>}
               />
               <HeaderUserMenu />
             </>
           ) : (
-            <Button render={<Link to="/sign-in">Sign In</Link>} />
+            <Button
+              nativeButton={false}
+              render={<Link to="/sign-in">Sign In</Link>}
+            />
           )}
         </nav>
       </header>
@@ -62,12 +85,14 @@ function App() {
             <Button
               size="xl"
               className="shrink-0 lg:flex-1"
+              nativeButton={false}
               render={<Link to="/sign-up">Start Free</Link>}
             />
             <Button
               variant="outline"
               size="xl"
               className="shrink-0 lg:flex-1"
+              nativeButton={false}
               render={<a href="#explore">Explore</a>}
             />
           </div>

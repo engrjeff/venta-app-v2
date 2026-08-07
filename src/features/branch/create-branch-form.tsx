@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate, useRouter } from "@tanstack/react-router"
+import { useNavigate } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { ArrowRightIcon, MapIcon } from "lucide-react"
 import { useState } from "react"
@@ -28,7 +28,6 @@ export function CreateBranchForm({ storeId }: { storeId: string }) {
   const createBranch = useServerFn(branchApi.create)
 
   const navigate = useNavigate()
-  const router = useRouter()
 
   const [viewingInMap, setViewingInMap] = useState(false)
 
@@ -61,8 +60,6 @@ export function CreateBranchForm({ storeId }: { storeId: string }) {
 
         return
       }
-
-      await router.invalidate()
 
       toast.success(`Store branch ${result.data?.name} is successfully saved!`)
 

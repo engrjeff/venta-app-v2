@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate, useRouter } from "@tanstack/react-router"
+import { useNavigate } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { ArrowRightIcon } from "lucide-react"
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
@@ -22,7 +22,6 @@ export function CreateStoreForm() {
   const createStore = useServerFn(onboardingApi.create)
 
   const navigate = useNavigate()
-  const router = useRouter()
 
   const form = useForm({
     resolver: zodResolver(storeSchema),
@@ -51,8 +50,6 @@ export function CreateStoreForm() {
 
         return
       }
-
-      await router.invalidate()
 
       toast.success(`Your store ${result.data?.name} is successfully created!`)
 

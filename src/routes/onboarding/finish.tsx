@@ -1,4 +1,10 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router"
+import { SubmitButton } from "@/components/submit-button"
+import { onboardingApi } from "@/features/onboarding/onboarding.functions"
+import {
+  createFileRoute,
+  useLoaderData,
+  useNavigate,
+} from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import {
   ArrowRightIcon,
@@ -7,18 +13,17 @@ import {
   StoreIcon,
   UsersIcon,
 } from "lucide-react"
-import {  useState } from "react"
+import type { SubmitEventHandler } from "react"
+import { useState } from "react"
 import { toast } from "sonner"
-import type {SubmitEventHandler} from "react";
-import { onboardingApi } from "@/features/onboarding/onboarding.functions"
-import { SubmitButton } from "@/components/submit-button"
 
 export const Route = createFileRoute("/onboarding/finish")({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const { status, organizationId } = Route.useRouteContext()
+  const { status } = useLoaderData({ from: "/onboarding" })
+  const { storeId } = Route.useRouteContext()
 
   const storeData =
     status.data?.nextStep === "/onboarding/finish"
@@ -67,15 +72,15 @@ function RouteComponent() {
           </span>
         </div>
       </div>
-      <FinishOnboardingForm organizationId={organizationId} />
+      <FinishOnboardingForm storeId={storeId} />
     </>
   )
 }
 
 function FinishOnboardingForm({
-  organizationId,
+  storeId,
 }: {
-  organizationId: string | null | undefined
+  storeId: string | null | undefined
 }) {
   const finishOnboarding = useServerFn(onboardingApi.finish)
 
@@ -88,11 +93,11 @@ function FinishOnboardingForm({
   ) => {
     try {
       e.preventDefault()
-      if (!organizationId) return toast.error("Store is required.")
+      if (!storeId) return toast.error("Store is required.")
 
       setPending(true)
 
-      const result = await finishOnboarding({ data: { id: organizationId } })
+      const result = await finishOnboarding({ data: { id: storeId } })
 
       if (result.error) {
         console.log("Error finishing onboarding: ", result.error)

@@ -138,8 +138,9 @@ model OrganizationSettings {
   // Business Information
   businessType String
 
-  phone String?
-  email String?
+  phone   String?
+  email   String?
+  website String?
 
   // Default business address (not branch address)
   address    String?

@@ -17,25 +17,23 @@ export const Route = createFileRoute("/onboarding")({
       })
     }
 
+    return {
+      user: session.user,
+      storeId: session.session.activeOrganizationId,
+    }
+  },
+  loader: async ({ context, location }) => {
     // check onboarding status
     const status = await onboardingApi.checkOnboardingStatus({
-      data: { id: session.session.activeOrganizationId ?? undefined },
+      data: { id: context.storeId ?? undefined },
     })
-
-    // if (status.data?.completed) {
-    //   throw redirect({ to: "/dashboard" })
-    // }
 
     // Only redirect if they're trying to access the wrong onboarding step.
     if (location.pathname !== status.data?.nextStep && status.data?.nextStep) {
       throw redirect({ to: status.data.nextStep })
     }
 
-    return {
-      user: session.user,
-      organizationId: session.session.activeOrganizationId,
-      status,
-    }
+    return { status }
   },
   component: RouteComponent,
   head: () => ({

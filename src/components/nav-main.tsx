@@ -8,15 +8,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Link, useLocation } from "@tanstack/react-router"
-import {
-  Building2Icon,
-  CheckCircleIcon,
-  FileClockIcon,
-  HomeIcon,
-  NetworkIcon,
-  SettingsIcon,
-  UsersIcon,
-} from "lucide-react"
+import { FileClockIcon, HomeIcon, SettingsIcon, UsersIcon } from "lucide-react"
 
 const MAIN_NAV = [
   {
@@ -35,28 +27,10 @@ const MAIN_NAV = [
 
 const OPERATIONS_NAV = [
   {
-    id: "attendance",
-    title: "Attendance",
-    Icon: CheckCircleIcon,
-    pathname: "/attendance",
-  },
-  {
     id: "employees",
     title: "Employees",
     Icon: UsersIcon,
     pathname: "/employees",
-  },
-  {
-    id: "branches",
-    title: "Branches",
-    Icon: Building2Icon,
-    pathname: "/branches",
-  },
-  {
-    id: "designations",
-    title: "Designations",
-    Icon: NetworkIcon,
-    pathname: "/designations",
   },
 ]
 
@@ -80,7 +54,7 @@ export function NavMain() {
           {MAIN_NAV.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
-                isActive={item.pathname === location.pathname}
+                isActive={location.pathname.includes(item.pathname)}
                 render={<Link to={item.pathname} />}
               >
                 <item.Icon />
@@ -96,7 +70,7 @@ export function NavMain() {
           {OPERATIONS_NAV.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
-                isActive={item.pathname === location.pathname}
+                isActive={location.pathname.includes(item.pathname)}
                 render={<Link to={item.pathname} />}
               >
                 <item.Icon />
@@ -112,7 +86,7 @@ export function NavMain() {
           {SETTINGS_NAV.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
-                isActive={item.pathname === location.pathname}
+                isActive={location.pathname.includes(item.pathname)}
                 render={<Link to={item.pathname} />}
               >
                 <item.Icon />
