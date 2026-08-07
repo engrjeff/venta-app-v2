@@ -33,7 +33,7 @@ export function SigninForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormInput>({
     resolver: zodResolver(schema as any),
   })
