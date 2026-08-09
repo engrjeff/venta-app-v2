@@ -5,9 +5,10 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { authClient } from "@/lib/auth-client"
+import { authClient, getAuthErrorMessage } from "@/lib/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Link, useNavigate } from "@tanstack/react-router"
+import {} from "better-auth"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -42,6 +43,7 @@ export function SignupForm() {
   const onSubmit = async (signupData: SignupFormInput) => {
     try {
       setLoading(true)
+
       const { error } = await authClient.signUp.email({
         email: signupData.email,
         password: signupData.password,
@@ -53,15 +55,16 @@ export function SignupForm() {
       }
 
       await navigate({ to: "/onboarding", replace: true })
+
+      toast.success("Welcome! Let us now set up your store.")
     } catch (error) {
-      let msg =
-        "An error occurred while creating your account. Try again later."
-
-      if (error instanceof Error) {
-        msg = error.message
-      }
-
-      toast.error(msg)
+      console.error(`Sign Up Error: `, error)
+      toast.error(
+        getAuthErrorMessage(
+          error,
+          "An error occurred while creating your account. Try again later."
+        )
+      )
     } finally {
       setLoading(false)
     }
