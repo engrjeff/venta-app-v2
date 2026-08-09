@@ -1,8 +1,8 @@
 import { useRouter } from "@tanstack/react-router"
-import { LogOutIcon, LogsIcon } from "lucide-react"
+import { LogOutIcon, LogsIcon, MoreVerticalIcon } from "lucide-react"
 
-import { useEmployeeSession } from "./use-employee-session"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { getInitials } from "@/lib/utils"
+import { useEmployeeSession } from "./use-employee-session"
 
 export function EmployeeMenu() {
   const employeeSession = useEmployeeSession()
@@ -31,16 +32,9 @@ export function EmployeeMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <button className="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring/50">
-            <Avatar className="bg-primary">
-              <AvatarFallback className="bg-primary text-primary-foreground">
-                {getInitials(
-                  employee.employeeFirstName,
-                  employee.employeeLastName
-                )}
-              </AvatarFallback>
-            </Avatar>
-          </button>
+          <Button size="icon" variant="secondary" aria-label="Employee menu">
+            <MoreVerticalIcon />
+          </Button>
         }
       />
       <DropdownMenuContent align="end" sideOffset={8} className="min-w-48">

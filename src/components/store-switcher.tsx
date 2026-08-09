@@ -1,5 +1,3 @@
-import { ChevronsUpDownIcon, PlusIcon, StoreIcon } from "lucide-react"
-import type { Store } from "@/features/store/store.types"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +13,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import type { Store } from "@/features/store/store.types"
+import { ChevronsUpDownIcon, PlusIcon, StoreIcon } from "lucide-react"
 
 export function StoreSwitcher({
   stores,
@@ -78,7 +78,7 @@ export function StoreSwitcher({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem className="gap-2 p-2">
+              <DropdownMenuItem className="gap-2 p-2" disabled>
                 <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
                   <PlusIcon className="size-4" />
                 </div>

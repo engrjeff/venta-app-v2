@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { EmploymentStatus } from "@/generated/prisma/enums"
+import { useNavigate } from "@tanstack/react-router"
 import {
   EditIcon,
   ListIcon,
@@ -32,6 +33,7 @@ type EmployeeAction =
   | "delete"
 
 export function EmployeeActions({ employee }: { employee: ExtendedEmployee }) {
+  const navigate = useNavigate()
   const [action, setAction] = useState<EmployeeAction>()
 
   function resetAction() {
@@ -54,7 +56,14 @@ export function EmployeeActions({ employee }: { employee: ExtendedEmployee }) {
             <DropdownMenuItem onClick={() => setAction("edit")}>
               <EditIcon /> Update
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => setAction("view-attendance")}>
+            <DropdownMenuItem
+              onClick={() =>
+                navigate({
+                  to: "/timesheet/$employeeId",
+                  params: { employeeId: employee.id },
+                })
+              }
+            >
               <ListIcon /> Attendance
             </DropdownMenuItem>
           </DropdownMenuGroup>

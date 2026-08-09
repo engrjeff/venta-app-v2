@@ -55,6 +55,15 @@ export const attendanceTodaySchema = z.object({
   storeId: z.string({ error: "Store is required" }).min(1, "Store is required"),
 })
 
+export const attendanceByEmployeeSchema = z.object({
+  employeeId: z
+    .string({ error: "Employee ID is required" })
+    .min(1, "Employee ID is required"),
+  // date range filter
+  start: z.iso.date().optional(),
+  end: z.iso.date().optional(),
+})
+
 export type AttendanceTransitionInput = z.infer<
   typeof attendanceTransitionSchema
 >
@@ -66,3 +75,7 @@ export type EmployeeClockInFormInput = z.infer<typeof employeeClockInFormSchema>
 export type ActiveAttendanceQueryInput = z.infer<typeof activeAttendanceSchema>
 
 export type AttendanceTodayInput = z.infer<typeof attendanceTodaySchema>
+
+export type AttendanceByEmployeeInput = z.infer<
+  typeof attendanceByEmployeeSchema
+>

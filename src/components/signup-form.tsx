@@ -1,18 +1,19 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Link, useNavigate } from "@tanstack/react-router"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import z from "zod"
-import { PasswordInput } from "./password-input"
-import { SubmitButton } from "./submit-button"
-import { authClient } from "@/lib/auth-client"
-import { Input } from "@/components/ui/input"
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { authClient } from "@/lib/auth-client"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Link, useNavigate } from "@tanstack/react-router"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import z from "zod"
+import { PasswordInput } from "./password-input"
+import { SubmitButton } from "./submit-button"
 
 const schema = z
   .object({
@@ -34,22 +35,36 @@ export function SignupForm() {
     resolver: zodResolver(schema),
   })
 
-  const { errors, isSubmitting } = formState
+  const [loading, setLoading] = useState(false)
+
+  const { errors } = formState
 
   const onSubmit = async (signupData: SignupFormInput) => {
-    const { error } = await authClient.signUp.email({
-      email: signupData.email,
-      password: signupData.password,
-      name: signupData.name,
-    })
+    try {
+      setLoading(true)
+      const { error } = await authClient.signUp.email({
+        email: signupData.email,
+        password: signupData.password,
+        name: signupData.name,
+      })
 
-    if (error) {
-      console.log(error)
-      toast.error(error.message)
-      return
+      if (error) {
+        throw error
+      }
+
+      await navigate({ to: "/onboarding", replace: true })
+    } catch (error) {
+      let msg =
+        "An error occurred while creating your account. Try again later."
+
+      if (error instanceof Error) {
+        msg = error.message
+      }
+
+      toast.error(msg)
+    } finally {
+      setLoading(false)
     }
-
-    await navigate({ to: "/onboarding", replace: true })
   }
 
   return (
@@ -108,8 +123,8 @@ export function SignupForm() {
           )}
         </Field>
         <div className="mt-4">
-          <SubmitButton loading={isSubmitting} className="w-full" size="lg">
-            {isSubmitting ? "Creating account…" : "Continue"}
+          <SubmitButton loading={loading} className="w-full" size="lg">
+            {loading ? "Creating account…" : "Continue"}
           </SubmitButton>
         </div>
 

@@ -1,12 +1,15 @@
 import { createServerFn } from "@tanstack/react-start"
 import {
   getActiveAttendance,
+  getActiveAttendanceByEmployeeId,
+  getAttendanceRecordsByEmployee,
   getAttendanceRecordsToday,
   submitAttendanceTransition,
   submitClockInAttendance,
 } from "./attendance.server"
 import {
   activeAttendanceSchema,
+  attendanceByEmployeeSchema,
   attendanceTodaySchema,
   attendanceTransitionSchema,
   employeeClockInSchema,
@@ -24,6 +27,12 @@ export const getActive = createServerFn({ method: "GET" })
     return getActiveAttendance(data)
   })
 
+export const getActiveByEmployeeId = createServerFn({ method: "GET" })
+  .inputValidator(activeAttendanceSchema.pick({ employeeId: true }))
+  .handler(async ({ data }) => {
+    return getActiveAttendanceByEmployeeId(data)
+  })
+
 export const transition = createServerFn({ method: "POST" })
   .inputValidator(attendanceTransitionSchema)
   .handler(async ({ data }) => {
@@ -36,4 +45,17 @@ export const getRecordsToday = createServerFn({ method: "GET" })
     return getAttendanceRecordsToday(data)
   })
 
-export const attendanceApi = { clockIn, getActive, transition, getRecordsToday }
+export const getRecordsByEmployee = createServerFn({ method: "GET" })
+  .inputValidator(attendanceByEmployeeSchema)
+  .handler(async ({ data }) => {
+    return getAttendanceRecordsByEmployee(data)
+  })
+
+export const attendanceApi = {
+  clockIn,
+  getActive,
+  getActiveByEmployeeId,
+  transition,
+  getRecordsToday,
+  getRecordsByEmployee,
+}

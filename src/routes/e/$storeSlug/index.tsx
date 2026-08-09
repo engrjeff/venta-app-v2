@@ -1,5 +1,6 @@
 import { AppLogo } from "@/components/app-logo"
 import { siteConfig } from "@/config/site"
+import { attendanceApi } from "@/features/attendance/attendance.functions"
 import { EmployeeClockInForm } from "@/features/attendance/employee-clock-in-form"
 import { EmployeePortalForm } from "@/features/employees/employee-portal-form"
 import { employeesApi } from "@/features/employees/employees.functions"
@@ -31,13 +32,46 @@ export const Route = createFileRoute("/e/$storeSlug/")({
         replace: true,
       })
     }
+
+    return employeeSession
   },
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
     const store = await storeApi.getBySlug({
       data: { slug: params.storeSlug },
     })
 
     if (!store.data) throw notFound()
+
+    if (context.data?.employeeId && !context.data.attendanceId) {
+      const activeAttendanceOfEmployee =
+        await attendanceApi.getActiveByEmployeeId({
+          data: { employeeId: context.data?.employeeId },
+        })
+
+      if (activeAttendanceOfEmployee.data && context.data.storeSlug) {
+        const attendance = activeAttendanceOfEmployee.data
+
+        if (attendance.timeIn) {
+          await employeesApi.updateSession({
+            data: {
+              attendanceId: attendance.id,
+              branchId: attendance.branchId,
+              branchName: attendance.branch.name,
+              timeIn: attendance.timeIn.toISOString(),
+            },
+          })
+
+          throw redirect({
+            to: "/e/$storeSlug/$employeeId",
+            params: {
+              storeSlug: context.data.storeSlug,
+              employeeId: attendance.employeeId,
+            },
+            replace: true,
+          })
+        }
+      }
+    }
 
     return store.data
   },

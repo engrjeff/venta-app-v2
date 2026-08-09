@@ -1,7 +1,4 @@
-import { useRouteContext } from "@tanstack/react-router"
-import { NavMain } from "./nav-main"
-import { StoreSwitcher } from "./store-switcher"
-import type { Store } from "@/features/store/store.types"
+import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -9,7 +6,10 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { NavUser } from "@/components/nav-user"
+import type { Store } from "@/features/store/store.types"
+import { useRouteContext } from "@tanstack/react-router"
+import { NavMain } from "./nav-main"
+import { StoreSwitcher } from "./store-switcher"
 
 interface AppSidebarProps {
   stores: Store[] | null
@@ -19,7 +19,7 @@ export function AppSidebar({ stores }: AppSidebarProps) {
   const { user, activeStoreId } = useRouteContext({ from: "/_protected" })
 
   return (
-    <Sidebar collapsible="icon" variant="inset">
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <StoreSwitcher stores={stores ?? []} activeStoreId={activeStoreId} />
       </SidebarHeader>

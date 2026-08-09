@@ -1,12 +1,12 @@
+import { AttendanceStatus } from "@/generated/prisma/enums"
+import type { Coordinates } from "@/lib/geo-fencing"
+import { performGeofenceCheck } from "@/lib/geo-fencing"
 import { useRouter } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
 import { formatDate } from "date-fns"
 import { useCallback, useMemo, useState } from "react"
 import { toast } from "sonner"
 import { attendanceApi } from "./attendance.functions"
-import type {Coordinates} from "@/lib/geo-fencing";
-import {  performGeofenceCheck } from "@/lib/geo-fencing"
-import { AttendanceStatus } from "@/generated/prisma/enums"
 
 export interface Attendance {
   id: string
@@ -128,7 +128,10 @@ export function useAttendanceSession({
 
   const clockOut = useCallback(
     async (center: Coordinates, radius: number) => {
-      if (saving || attendance.status === AttendanceStatus.CLOCKED_OUT) {
+      if (
+        savingClockout ||
+        attendance.status === AttendanceStatus.CLOCKED_OUT
+      ) {
         return
       }
 
@@ -181,7 +184,7 @@ export function useAttendanceSession({
         setSavingClockout(false)
       }
     },
-    [attendance, saving, savingClockout]
+    [attendance, savingClockout]
   )
 
   return {

@@ -11,6 +11,7 @@ import { Link, useNavigate, useSearch } from "@tanstack/react-router"
 import { useState } from "react"
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import z from "zod"
 import { PasswordInput } from "./password-input"
 import { SubmitButton } from "./submit-button"
@@ -27,11 +28,12 @@ export function SigninForm() {
   const { redirect: redirectTo } = useSearch({ from: "/(auth)/sign-in" })
   const navigate = useNavigate()
   const [serverError, setServerError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormInput>({
     resolver: zodResolver(schema as any),
   })
@@ -43,44 +45,58 @@ export function SigninForm() {
   const onSubmit: SubmitHandler<LoginFormInput> = async (
     data: LoginFormInput
   ) => {
-    setServerError(null)
+    try {
+      setServerError(null)
 
-    const { error } = await authClient.signIn.email({
-      email: data.email,
-      password: data.password,
-    })
+      setLoading(true)
 
-    if (error) {
-      setServerError(error.message ?? "Invalid email or password")
-      return
-    }
-
-    const orgs = await authClient.organization.list()
-
-    // if not yet onboarded, redirect to /onboarding
-    if (!orgs.data?.length) {
-      await navigate({ to: "/onboarding", replace: true })
-    } else {
-      const orgToSetActive = orgs.data[0]
-
-      const activeOrg = await authClient.organization.setActive({
-        organizationId: orgToSetActive.id,
-        organizationSlug: orgToSetActive.slug,
+      const { error } = await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
       })
 
-      if (activeOrg.data?.id) {
-        await navigate({
-          to: redirectTo ?? "/dashboard",
-          replace: true,
-          reloadDocument: true,
-        })
-      } else {
-        await navigate({
-          to: "/onboarding",
-          replace: true,
-          reloadDocument: true,
-        })
+      if (error) {
+        setServerError(error.message ?? "Invalid email or password")
+        setLoading(false)
+        return
       }
+
+      const orgs = await authClient.organization.list()
+
+      // if not yet onboarded, redirect to /onboarding
+      if (!orgs.data?.length) {
+        await navigate({ to: "/onboarding", replace: true })
+      } else {
+        const orgToSetActive = orgs.data[0]
+
+        const activeOrg = await authClient.organization.setActive({
+          organizationId: orgToSetActive.id,
+          organizationSlug: orgToSetActive.slug,
+        })
+
+        if (activeOrg.data?.id) {
+          await navigate({
+            to: redirectTo ?? "/dashboard",
+            replace: true,
+          })
+        } else {
+          await navigate({
+            to: "/onboarding",
+            replace: true,
+          })
+        }
+      }
+    } catch (error) {
+      console.error(`Sign In Error: `, error)
+      let msg = "An error occurred while signing in. Try again later."
+
+      if (error instanceof Error) {
+        msg = error.message
+      }
+
+      toast.error(msg)
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -122,8 +138,8 @@ export function SigninForm() {
         </Field>
 
         <div className="mt-4">
-          <SubmitButton loading={isSubmitting} className="w-full" size="lg">
-            {isSubmitting ? "Signing in…" : "Sign in"}
+          <SubmitButton loading={loading} className="w-full" size="lg">
+            {loading ? "Signing in…" : "Sign in"}
           </SubmitButton>
         </div>
 

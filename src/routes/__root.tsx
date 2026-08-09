@@ -23,11 +23,42 @@ export const Route = createRootRoute({
         name: "description",
         content: siteConfig.description,
       },
+      {
+        name: "apple-mobile-web-app-title",
+        content: siteConfig.title,
+      },
+      // Open Graph
+      { property: "og:title", content: siteConfig.title },
+      { property: "og:description", content: siteConfig.description },
+      { property: "og:image", content: siteConfig.coverImage },
+      // Twitter Card
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: siteConfig.title },
+      { name: "twitter:description", content: siteConfig.description },
+      { name: "twitter:image", content: siteConfig.coverImage },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
+      },
+      {
+        rel: "icon",
+        type: "image/svg+xml",
+        href: "/logo.svg",
+      },
+      {
+        rel: "shortcut icon",
+        href: "/favicon.ico",
+      },
+      {
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: "/apple-icon.png",
+      },
+      {
+        rel: "manifest",
+        href: "/manifest.json",
       },
     ],
   }),

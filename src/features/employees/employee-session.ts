@@ -7,7 +7,9 @@ export type EmployeeSessionData = {
   employeeUsername: string
   employeeFirstName: string
   employeeLastName: string
+
   storeId: string
+  storeSlug: string
 
   branchId: string
   branchName: string
@@ -17,8 +19,6 @@ export type EmployeeSessionData = {
 }
 
 export function useEmployeeSession() {
-  const today = new Intl.DateTimeFormat("en-CA").format(new Date())
-
   return useSession<EmployeeSessionData>({
     name: "tindanatin-employee-session",
     password: serverEnv.EMPLOYEE_SESSION_SECRET,
@@ -26,7 +26,7 @@ export function useEmployeeSession() {
       secure: serverEnv.NODE_ENV === "production",
       sameSite: "lax",
       httpOnly: true,
-      expires: endOfDay(new Date(today)),
+      expires: endOfDay(new Date()),
     },
   })
 }

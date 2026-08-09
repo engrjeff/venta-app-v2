@@ -7,12 +7,12 @@ import { createFileRoute } from "@tanstack/react-router"
 export const Route = createFileRoute("/onboarding/employees")({
   component: RouteComponent,
   loader: async ({ context }) => {
-    if (!context.organizationId) {
+    if (!context.storeId) {
       return { data: null, error: null }
     }
 
     const store = await storeApi.getFieldOptions({
-      data: { id: context.organizationId },
+      data: { id: context.storeId },
     })
 
     return store

@@ -1,5 +1,6 @@
+import { AppLogo } from "@/components/app-logo"
 import { employeesApi } from "@/features/employees/employees.functions"
-import { Outlet, createFileRoute } from "@tanstack/react-router"
+import { Link, Outlet, createFileRoute } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/e/$storeSlug")({
   beforeLoad: async () => {
@@ -23,7 +24,10 @@ export const Route = createFileRoute("/e/$storeSlug")({
 
 function RouteComponent() {
   return (
-    <main className="container mx-auto flex min-h-screen max-w-lg flex-col items-center justify-center px-4">
+    <main className="container mx-auto flex min-h-screen max-w-lg flex-col items-center justify-center px-6">
+      <Link to="/" className="fixed top-4 left-4">
+        <AppLogo />
+      </Link>
       <Outlet />
     </main>
   )

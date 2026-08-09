@@ -1,18 +1,4 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate, useRouter } from "@tanstack/react-router"
-import { useServerFn } from "@tanstack/react-start"
-import { ArrowRightIcon } from "lucide-react"
-import {
-  
-  
-  useForm
-} from "react-hook-form"
-import { toast } from "sonner"
-import { onboardingApi } from "./onboarding.functions"
-import {  storeSchema } from "./schema"
-import type {SubmitErrorHandler, SubmitHandler} from "react-hook-form";
-import type {CreateStoreInputs} from "./schema";
-import { Input } from "@/components/ui/input"
+import { SubmitButton } from "@/components/submit-button"
 import {
   Field,
   FieldDescription,
@@ -20,13 +6,22 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import { SubmitButton } from "@/components/submit-button"
+import { Input } from "@/components/ui/input"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useNavigate } from "@tanstack/react-router"
+import { useServerFn } from "@tanstack/react-start"
+import { ArrowRightIcon } from "lucide-react"
+import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { onboardingApi } from "./onboarding.functions"
+import type { CreateStoreInputs } from "./schema"
+import { storeSchema } from "./schema"
 
 export function CreateStoreForm() {
   const createStore = useServerFn(onboardingApi.create)
 
   const navigate = useNavigate()
-  const router = useRouter()
 
   const form = useForm({
     resolver: zodResolver(storeSchema),
@@ -57,8 +52,6 @@ export function CreateStoreForm() {
       }
 
       toast.success(`Your store ${result.data?.name} is successfully created!`)
-
-      await router.invalidate()
 
       navigate({
         to: "/onboarding/store-settings",

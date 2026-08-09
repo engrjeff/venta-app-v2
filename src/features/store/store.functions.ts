@@ -1,6 +1,11 @@
 import { createServerFn } from "@tanstack/react-start"
 import { storeIdSchema, storeSlugSchema } from "./schema"
-import { getStoreBySlug, getStoreFieldOptions, getStores } from "./store.server"
+import {
+  getStoreById,
+  getStoreBySlug,
+  getStoreFieldOptions,
+  getStores,
+} from "./store.server"
 
 export const getFieldOptions = createServerFn({ method: "GET" })
   .inputValidator(storeIdSchema)
@@ -14,4 +19,8 @@ export const getBySlug = createServerFn({ method: "GET" })
   .inputValidator(storeSlugSchema)
   .handler(async ({ data }) => getStoreBySlug(data.slug))
 
-export const storeApi = { getFieldOptions, getAll, getBySlug }
+export const getById = createServerFn({ method: "GET" })
+  .inputValidator(storeIdSchema)
+  .handler(async ({ data }) => getStoreById(data.id))
+
+export const storeApi = { getFieldOptions, getAll, getBySlug, getById }
