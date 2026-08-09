@@ -15,9 +15,9 @@ import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 import { Separator } from "@/components/ui/separator"
 import type { Branch, Designation } from "@/generated/prisma/client"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useNavigate } from "@tanstack/react-router"
+import { useNavigate, useRouter } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
-import { PlusIcon, SaveIcon, XIcon } from "lucide-react"
+import { PlusIcon, XIcon } from "lucide-react"
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
 import { Controller, useFieldArray, useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -41,35 +41,14 @@ export function AddEmployeesForm({
   const createManyEmployees = useServerFn(employeesApi.createMany)
 
   const navigate = useNavigate()
+  const router = useRouter()
 
   const form = useForm({
     resolver: zodResolver(employeeArraySchema),
     defaultValues: {
       storeId,
       storeName,
-      employees: [
-        // {
-        //   firstName: "Willana",
-        //   lastName: "Castello",
-        //   username: "yanacastello",
-        //   branchId: branches[0].id,
-        //   designationId: designations[1].id,
-        // },
-        // {
-        //   firstName: "Wryx",
-        //   lastName: "Castello",
-        //   username: "wryxcastello",
-        //   branchId: branches[0].id,
-        //   designationId: designations[1].id,
-        // },
-        // {
-        //   firstName: "Rosenel",
-        //   lastName: "Magday",
-        //   username: "rosenelmagday",
-        //   branchId: branches[0].id,
-        //   designationId: designations[0].id,
-        // },
-      ],
+      employees: [],
     },
   })
 
@@ -105,6 +84,8 @@ export function AddEmployeesForm({
 
       toast.success(`Employees are successfully saved!`)
 
+      await router.invalidate()
+
       navigate({
         to: "/onboarding/finish",
         replace: true,
@@ -129,10 +110,15 @@ export function AddEmployeesForm({
         onSubmit={form.handleSubmit(onSubmit, onFormError)}
       >
         <FieldSet>
-          <FieldLegend variant="label">Employees</FieldLegend>
+          <FieldLegend variant="label">
+            Employees{" "}
+            {currentEmployees.length ? (
+              <span>({currentEmployees.length})</span>
+            ) : null}
+          </FieldLegend>
           {currentEmployees.length > 0 ? (
             <>
-              <ul className="divide-y border bg-muted/30">
+              <ul className="divide-y rounded-md border bg-muted/30">
                 {currentEmployees.map((employee, employeeIndex) => (
                   <li key={`employee-${employeeIndex}`}>
                     <div className="flex items-center justify-between gap-4 p-3">
@@ -141,7 +127,7 @@ export function AddEmployeesForm({
                           {employee.firstName} {employee.lastName}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {getDesignation(employee.designationId)}{" "}
+                          {getDesignation(employee.designationId)} &bull;{" "}
                           {getBranch(employee.branchId)}
                         </p>
                       </div>
@@ -159,12 +145,12 @@ export function AddEmployeesForm({
               </ul>
               <div className="flex justify-end">
                 <SubmitButton loading={isSubmitting} size="xl">
-                  <SaveIcon /> {isSubmitting ? "Saving..." : "Save Employees"}
+                  {isSubmitting ? "Saving..." : "Save Employees"}
                 </SubmitButton>
               </div>
             </>
           ) : (
-            <div className="border border-dashed p-4">
+            <div className="rounded-md border border-dashed bg-card p-4">
               <p className="text-sm text-muted-foreground">
                 Employees you add will appear here.
               </p>

@@ -55,10 +55,17 @@ function App() {
               <HeaderUserMenu />
             </>
           ) : (
-            <Button
-              nativeButton={false}
-              render={<Link to="/sign-in">Sign In</Link>}
-            />
+            <>
+              <Button
+                nativeButton={false}
+                render={<Link to="/sign-in">Sign In</Link>}
+              />
+              <Button
+                nativeButton={false}
+                variant="outline"
+                render={<Link to="/sign-up">Sign Up</Link>}
+              />
+            </>
           )}
         </nav>
       </header>

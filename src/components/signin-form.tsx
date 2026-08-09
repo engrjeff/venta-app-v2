@@ -5,7 +5,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import { authClient } from "@/lib/auth-client"
+import { authClient, getAuthErrorMessage } from "@/lib/auth-client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Link, useNavigate, useSearch } from "@tanstack/react-router"
 import { useState } from "react"
@@ -15,7 +15,6 @@ import { toast } from "sonner"
 import z from "zod"
 import { PasswordInput } from "./password-input"
 import { SubmitButton } from "./submit-button"
-import { Alert, AlertDescription } from "./ui/alert"
 
 const schema = z.object({
   email: z.email("Enter a valid email address"),
@@ -27,7 +26,6 @@ type LoginFormInput = z.infer<typeof schema>
 export function SigninForm() {
   const { redirect: redirectTo } = useSearch({ from: "/(auth)/sign-in" })
   const navigate = useNavigate()
-  const [serverError, setServerError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
   const {
@@ -46,8 +44,6 @@ export function SigninForm() {
     data: LoginFormInput
   ) => {
     try {
-      setServerError(null)
-
       setLoading(true)
 
       const { error } = await authClient.signIn.email({
@@ -56,12 +52,14 @@ export function SigninForm() {
       })
 
       if (error) {
-        setServerError(error.message ?? "Invalid email or password")
-        setLoading(false)
-        return
+        throw error
       }
 
       const orgs = await authClient.organization.list()
+
+      if (orgs.error) {
+        throw orgs.error
+      }
 
       // if not yet onboarded, redirect to /onboarding
       if (!orgs.data?.length) {
@@ -88,13 +86,12 @@ export function SigninForm() {
       }
     } catch (error) {
       console.error(`Sign In Error: `, error)
-      let msg = "An error occurred while signing in. Try again later."
-
-      if (error instanceof Error) {
-        msg = error.message
-      }
-
-      toast.error(msg)
+      toast.error(
+        getAuthErrorMessage(
+          error,
+          "An error occurred while signing in. Try again later."
+        )
+      )
     } finally {
       setLoading(false)
     }
@@ -103,12 +100,6 @@ export function SigninForm() {
   return (
     <form onSubmit={handleSubmit(onSubmit, onFormError)} noValidate>
       <FieldGroup>
-        {serverError && (
-          <Alert variant="destructive">
-            <AlertDescription>{serverError}</AlertDescription>
-          </Alert>
-        )}
-
         <Field data-invalid={!!errors.email || undefined}>
           <FieldLabel htmlFor="email">Email</FieldLabel>
           <Input
