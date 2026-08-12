@@ -45,11 +45,16 @@ export function EmployeeActions({ employee }: { employee: ExtendedEmployee }) {
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <Button aria-label="Actions" variant="ghost" size="icon-sm">
+            <Button
+              type="button"
+              aria-label="Actions"
+              variant="ghost"
+              size="icon-sm"
+            >
               <MoreHorizontalIcon />
             </Button>
           }
-        ></DropdownMenuTrigger>
+        />
         <DropdownMenuContent className="min-w-max" side="right">
           <DropdownMenuGroup>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>

@@ -1,5 +1,5 @@
-import z from "zod"
 import { SalaryType } from "@/generated/prisma/enums"
+import z from "zod"
 
 // the storeId is the organizationId
 export const designationSchema = z.object({
@@ -21,6 +21,22 @@ export const designationArraySchema = z.object({
     .min(1, { error: "Provide at least 1 designation" }),
 })
 
+export const designationIdSchema = z.object({
+  id: z
+    .string({ error: "Designation ID is required" })
+    .min(1, "Designation ID is required"),
+})
+
+export const designationUpdateSchema = designationSchema.extend({
+  id: z
+    .string({ error: "Designation ID is required" })
+    .min(1, "Designation ID is required"),
+})
+
 export type CreateDesignationInput = z.infer<typeof designationSchema>
 
 export type CreateManyDesignationInput = z.infer<typeof designationArraySchema>
+
+export type DesignationIdInput = z.infer<typeof designationIdSchema>
+
+export type UpdateDesignationInput = z.infer<typeof designationUpdateSchema>
