@@ -47,7 +47,10 @@ export function EmployeesTable({
   )
 
   return (
-    <Card size="sm" className="h-full rounded-md pb-0">
+    <Card
+      size="sm"
+      className="h-full max-h-full overflow-hidden rounded-md pb-0"
+    >
       <CardHeader className="px-3">
         <SearchInput
           placeholder="Search employees"
@@ -56,8 +59,8 @@ export function EmployeesTable({
           onChange={handleSearch}
         />
       </CardHeader>
-      <CardContent className="flex-1 overflow-y-auto px-0">
-        <Table className="border-t">
+      <CardContent className="flex-1 overflow-y-auto border-t px-0">
+        <Table>
           <TableHeader className="font-semibold">
             <TableRow className="bg-muted/50">
               <TableHead className="w-9 border-r">#</TableHead>

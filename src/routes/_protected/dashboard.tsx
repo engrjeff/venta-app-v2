@@ -44,7 +44,7 @@ function RouteComponent() {
   const workingCount = working.length
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 p-4">
       {/* page header */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">

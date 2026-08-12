@@ -6,7 +6,6 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -145,18 +144,45 @@ function AddDesignationForm({
             </Field>
           )}
         />
+        {/* salary rate */}
+        <Controller
+          name="salaryRate"
+          control={form.control}
+          render={({ field: controllerField, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldContent>
+                <FieldLabel htmlFor={controllerField.name}>
+                  Salary Rate
+                </FieldLabel>
+                <NumberInput
+                  usePeso
+                  id={controllerField.name}
+                  placeholder="0.0"
+                  aria-invalid={fieldState.invalid}
+                  {...form.register("salaryRate", {
+                    valueAsNumber: true,
+                  })}
+                />
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </FieldContent>
+            </Field>
+          )}
+        />
         {/* salary type */}
         <Controller
           name="salaryType"
           control={form.control}
           render={({ field: controllerField, fieldState }) => (
-            <FieldSet className="w-full max-w-xs">
+            <FieldSet className="w-full">
               <FieldLegend variant="label">Salary Type</FieldLegend>
               <RadioGroup
                 name={controllerField.name}
                 value={controllerField.value}
                 onValueChange={controllerField.onChange}
                 aria-invalid={fieldState.invalid}
+                className="w-full gap-2"
               >
                 {[SalaryType.DAILY, SalaryType.HOURLY].map((salaryType) => (
                   <FieldLabel
@@ -185,34 +211,8 @@ function AddDesignationForm({
             </FieldSet>
           )}
         />
-        {/* salary rate */}
-        <Controller
-          name="salaryRate"
-          control={form.control}
-          render={({ field: controllerField, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldContent>
-                <FieldLabel htmlFor={controllerField.name}>
-                  Salary Rate
-                </FieldLabel>
-                <NumberInput
-                  usePeso
-                  id={controllerField.name}
-                  placeholder="0.0"
-                  aria-invalid={fieldState.invalid}
-                  {...form.register("salaryRate", {
-                    valueAsNumber: true,
-                  })}
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </FieldContent>
-            </Field>
-          )}
-        />
 
-        <DialogFooter>
+        <div className="flex items-center justify-end gap-3 pt-2">
           <DialogClose
             render={
               <Button type="button" variant="outline">
@@ -223,7 +223,7 @@ function AddDesignationForm({
           <SubmitButton type="submit" loading={form.formState.isSubmitting}>
             Save
           </SubmitButton>
-        </DialogFooter>
+        </div>
       </FieldGroup>
     </form>
   )
