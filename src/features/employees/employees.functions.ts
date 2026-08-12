@@ -13,9 +13,9 @@ import {
   updateEmployeeStatus,
 } from "./employees.server"
 import {
+  addEmployeeSchema,
   employeeArraySchema,
   employeeIdSchema,
-  employeeSchema,
   employeeUsernameSchema,
   getEmployeesInputSchema,
   updateEmployeeSchema,
@@ -30,7 +30,7 @@ export const getAll = createServerFn({ method: "GET" })
   })
 
 export const create = createServerFn({ method: "POST" })
-  .inputValidator(employeeSchema)
+  .inputValidator(addEmployeeSchema)
   .handler(async ({ data }) => {
     return createEmployee(data)
   })

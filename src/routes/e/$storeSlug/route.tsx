@@ -1,6 +1,8 @@
 import { AppLogo } from "@/components/app-logo"
+import { Button } from "@/components/ui/button"
 import { employeesApi } from "@/features/employees/employees.functions"
 import { Link, Outlet, createFileRoute } from "@tanstack/react-router"
+import { MenuIcon } from "lucide-react"
 
 export const Route = createFileRoute("/e/$storeSlug")({
   beforeLoad: async () => {
@@ -24,11 +26,20 @@ export const Route = createFileRoute("/e/$storeSlug")({
 
 function RouteComponent() {
   return (
-    <main className="container mx-auto flex min-h-screen max-w-lg flex-col items-center justify-center px-6">
-      <Link to="/" className="fixed top-4 left-4">
-        <AppLogo />
-      </Link>
-      <Outlet />
-    </main>
+    <>
+      <header className="fixed inset-x-0 top-0 z-10 flex h-16 w-full items-center border-b bg-background px-4">
+        <Link to="/">
+          <AppLogo />
+        </Link>
+        <div className="ml-auto flex items-center">
+          <Button variant="ghost" size="icon" className="lg:hidden">
+            <MenuIcon className="size-5" />
+          </Button>
+        </div>
+      </header>
+      <main className="container mx-auto w-full max-w-lg">
+        <Outlet />
+      </main>
+    </>
   )
 }

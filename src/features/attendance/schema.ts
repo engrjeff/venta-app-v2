@@ -1,3 +1,4 @@
+import { AttendanceStatus } from "@/generated/prisma/enums"
 import z from "zod"
 
 export const employeeClockInSchema = z.object({
@@ -60,6 +61,7 @@ export const attendanceByEmployeeSchema = z.object({
     .string({ error: "Employee ID is required" })
     .min(1, "Employee ID is required"),
   // date range filter
+  status: z.enum(AttendanceStatus).optional(),
   start: z.iso.date().optional(),
   end: z.iso.date().optional(),
 })

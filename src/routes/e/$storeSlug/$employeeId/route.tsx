@@ -1,19 +1,10 @@
 import { AppLogo } from "@/components/app-logo"
-import {
-  Empty,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty"
 import { siteConfig } from "@/config/site"
 import { attendanceApi } from "@/features/attendance/attendance.functions"
-import { WorkHours } from "@/features/attendance/work-hours"
 import { EmployeeMenu } from "@/features/employees/employee-menu"
 import { employeesApi } from "@/features/employees/employees.functions"
-import { formatScheduleTimeRange, generatePageTitle } from "@/lib/utils"
-import { createFileRoute, redirect } from "@tanstack/react-router"
-import { ClockIcon, ListIcon } from "lucide-react"
+import { generatePageTitle } from "@/lib/utils"
+import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
   beforeLoad: async (context) => {
@@ -66,7 +57,15 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
     return result.data
   },
   head: ({ loaderData }) => ({
-    meta: [{ title: generatePageTitle(loaderData?.employee?.firstName ?? "") }],
+    meta: [
+      {
+        title: loaderData
+          ? generatePageTitle(
+              `${loaderData?.employee?.lastName}, ${loaderData?.employee?.firstName}`
+            )
+          : "",
+      },
+    ],
   }),
   component: RouteComponent,
 })
@@ -74,17 +73,14 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
 function RouteComponent() {
   const data = Route.useLoaderData()
 
-  const { organization: store, employee, branch, ...serverAttendance } = data
-
-  const { formatted: branchSchedule } = formatScheduleTimeRange(
-    branch.scheduleStartTime,
-    branch.scheduleEndTime
-  )
+  const { organization: store, employee, branch } = data
 
   return (
-    <>
+    <div className="p-4 pt-20">
       <div className="w-full text-left">
-        <h1 className="text-2xl font-semibold">{store.name} Employee Portal</h1>
+        <h1 className="text-xl font-semibold lg:text-2xl">
+          {store.name} Employee Portal
+        </h1>
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           Powered by{" "}
           <span className="inline-flex items-center gap-1">
@@ -92,7 +88,7 @@ function RouteComponent() {
           </span>
         </p>
       </div>
-      <div className="w-full space-y-6 py-10">
+      <div className="w-full space-y-6 py-6 lg:py-10">
         <div className="flex items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-semibold">
@@ -104,28 +100,37 @@ function RouteComponent() {
           </div>
           <EmployeeMenu />
         </div>
+        {/* nav links */}
+        <nav className="flex items-center gap-2 border-b">
+          <Link
+            to="/e/$storeSlug/$employeeId"
+            activeOptions={{ exact: true }}
+            params={{ storeSlug: store.slug, employeeId: employee.id }}
+            activeProps={{ className: "border-white" }}
+            className="inline-flex items-center border-b-2 border-transparent px-3 py-2 text-sm font-medium hover:bg-accent"
+          >
+            Home
+          </Link>
+          <Link
+            to="/e/$storeSlug/$employeeId/logs"
+            params={{ storeSlug: store.slug, employeeId: employee.id }}
+            activeProps={{ className: "border-white" }}
+            className="inline-flex items-center border-b-2 border-transparent px-3 py-2 text-sm font-medium hover:bg-accent"
+          >
+            Logs
+          </Link>
+          <Link
+            to="/e/$storeSlug/$employeeId/requests"
+            params={{ storeSlug: store.slug, employeeId: employee.id }}
+            activeProps={{ className: "border-white" }}
+            className="inline-flex items-center border-b-2 border-transparent px-3 py-2 text-sm font-medium hover:bg-accent"
+          >
+            Requests
+          </Link>
+        </nav>
 
-        {/* Branch - Schedule */}
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <ClockIcon className="size-3" />
-          <p className="text-xs">Schedule: {branchSchedule}</p>
-        </div>
-
-        {/* work hours */}
-        <WorkHours branch={branch} serverAttendance={serverAttendance} />
-
-        <Empty className="hidden border border-dashed">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <ListIcon />
-            </EmptyMedia>
-            <EmptyTitle>No attendance logs yet</EmptyTitle>
-            <EmptyDescription>
-              Attendance logs will appear here.
-            </EmptyDescription>
-          </EmptyHeader>
-        </Empty>
+        <Outlet />
       </div>
-    </>
+    </div>
   )
 }

@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button"
 import { Spinner } from "@/components/ui/spinner"
 import type { Attendance, Branch } from "@/generated/prisma/browser"
 import { AttendanceStatus } from "@/generated/prisma/enums"
-import { LockIcon, LogOutIcon, PauseIcon, PlayIcon } from "lucide-react"
+import {
+  CheckIcon,
+  LockIcon,
+  LogOutIcon,
+  PauseIcon,
+  PlayIcon,
+} from "lucide-react"
 import { useState } from "react"
 import { useAttendanceSession } from "./use-attendance-session"
 import { useElapsedWorkTime } from "./use-elapsed-work-time"
@@ -18,6 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { formatTime } from "@/lib/utils"
 
 export function WorkHours({
   serverAttendance,
@@ -87,29 +94,40 @@ export function WorkHours({
 
   return (
     <>
-      <div className="space-y-4 rounded-md border bg-card p-4">
-        <div className="flex items-start justify-between">
-          <div className="space-y-1">
+      <div className="space-y-4 rounded-md bg-card p-4 shadow">
+        <div className="space-y-1">
+          <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">Work Hours</span>
-            <div className="font-mono text-4xl font-semibold">
-              {timer.formatted}
-            </div>
+            <Badge variant={serverAttendance.status}>
+              {serverAttendance.status === AttendanceStatus.CLOCKED_OUT ? (
+                <CheckIcon className="size-4 text-emerald-400" />
+              ) : null}{" "}
+              {serverAttendance.status.replaceAll("_", " ").toLowerCase()}
+            </Badge>
+          </div>
+          <div className="font-mono text-4xl font-semibold">
+            {serverAttendance.status === AttendanceStatus.CLOCKED_OUT ? (
+              <span>
+                {(serverAttendance.totalWorkedSeconds / 3600).toFixed(2)} hrs
+              </span>
+            ) : (
+              timer.formatted
+            )}
+          </div>
+          <div className="flex w-full items-center justify-between">
             <p className="text-xs text-muted-foreground">
               Clocked In:{" "}
               <span className="font-mono">{session.clockInString}</span>
             </p>
-          </div>
-
-          <div>
-            {serverAttendance.status === AttendanceStatus.WORKING && (
-              <Badge>Working</Badge>
-            )}
-            {serverAttendance.status === AttendanceStatus.ON_BREAK && (
-              <Badge variant="secondary">On Break</Badge>
-            )}
-            {serverAttendance.status === AttendanceStatus.CLOCKED_OUT && (
-              <Badge variant="outline">Clocked Out</Badge>
-            )}
+            {serverAttendance.status === AttendanceStatus.CLOCKED_OUT &&
+            serverAttendance.timeOut ? (
+              <p className="text-xs text-muted-foreground">
+                Clocked Out:{" "}
+                <span className="font-mono">
+                  {formatTime(serverAttendance.timeOut)}
+                </span>
+              </p>
+            ) : null}
           </div>
         </div>
 
@@ -255,7 +273,7 @@ export function WorkHours({
             <SubmitButton
               type="button"
               onClick={handeClockOut}
-              loading={session.saving}
+              loading={session.savingClockout}
             >
               Clock Out
             </SubmitButton>

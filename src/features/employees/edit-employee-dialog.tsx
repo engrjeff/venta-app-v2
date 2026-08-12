@@ -21,7 +21,7 @@ export function EditEmployeeDialog({
 }: EditEmployeeDialogProps) {
   return (
     <Sheet {...sheetProps}>
-      <SheetContent>
+      <SheetContent className="gap-0">
         <SheetHeader>
           <SheetTitle>
             Update {employee.firstName} {employee.lastName}

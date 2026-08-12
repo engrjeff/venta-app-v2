@@ -2,7 +2,7 @@ import { prisma } from "@/lib/db"
 import slugify from "slugify"
 import { useEmployeeSession } from "./employee-session"
 import type {
-  CreateEmployeeInput,
+  AddEmployeeInput,
   CreateManyEmployeeInput,
   EmployeeIdInput,
   GetEmployeesInput,
@@ -82,7 +82,7 @@ export async function createEmployees(
   }
 }
 
-export async function createEmployee(employee: CreateEmployeeInput) {
+export async function createEmployee(employee: AddEmployeeInput) {
   try {
     const store = await prisma.organization.findUnique({
       where: { id: employee.storeId },
@@ -103,7 +103,7 @@ export async function createEmployee(employee: CreateEmployeeInput) {
         designationId: employee.designationId,
         employeeNumber: generateEmployeeNumber(store.name, employee.username),
         branches: {
-          create: [{ branchId: employee.branchId }],
+          create: employee.branches.map((branchId) => ({ branchId })),
         },
       },
     })
@@ -151,14 +151,8 @@ export async function updateEmployee(employee: UpdateEmployeeInput) {
         designationId: employee.designationId,
         employeeNumber,
         branches: {
-          set: [
-            {
-              employeeId_branchId: {
-                branchId: employee.branchId,
-                employeeId: employee.id,
-              },
-            },
-          ],
+          deleteMany: {},
+          create: employee.branches.map((branchId) => ({ branchId })),
         },
       },
     })

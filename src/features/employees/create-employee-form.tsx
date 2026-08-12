@@ -1,5 +1,6 @@
 import { SubmitButton } from "@/components/submit-button"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Field,
   FieldContent,
@@ -7,6 +8,8 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
@@ -19,8 +22,8 @@ import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { employeesApi } from "./employees.functions"
-import type { CreateEmployeeInput } from "./schema"
-import { employeeSchema } from "./schema"
+import type { AddEmployeeInput } from "./schema"
+import { addEmployeeSchema } from "./schema"
 
 interface CreateEmployeeFormProps {
   storeId: string
@@ -38,7 +41,7 @@ export function CreateEmployeeForm({
   const router = useRouter()
 
   const form = useForm({
-    resolver: zodResolver(employeeSchema),
+    resolver: zodResolver(addEmployeeSchema),
     defaultValues: {
       storeId,
       firstName: "",
@@ -46,14 +49,15 @@ export function CreateEmployeeForm({
       email: "",
       phone: "",
       username: "",
+      branches: [],
     },
   })
 
-  const onFormError: SubmitErrorHandler<CreateEmployeeInput> = (formError) => {
+  const onFormError: SubmitErrorHandler<AddEmployeeInput> = (formError) => {
     console.error(`Create Employee Form Error: `, formError)
   }
 
-  const onSubmit: SubmitHandler<CreateEmployeeInput> = async (employeeData) => {
+  const onSubmit: SubmitHandler<AddEmployeeInput> = async (employeeData) => {
     try {
       const result = await createEmployee({ data: employeeData })
 
@@ -80,7 +84,7 @@ export function CreateEmployeeForm({
   }
 
   return (
-    <div className="flex-1 px-4">
+    <div className="flex-1 overflow-y-auto px-4">
       <form
         onChange={() => form.clearErrors()}
         onSubmit={form.handleSubmit(onSubmit, onFormError)}
@@ -211,7 +215,7 @@ export function CreateEmployeeForm({
 
           <Separator />
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4">
             <Controller
               name="designationId"
               control={form.control}
@@ -248,34 +252,54 @@ export function CreateEmployeeForm({
               )}
             />
             <Controller
-              name="branchId"
+              name="branches"
               control={form.control}
-              render={({ field: controllerField, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldContent>
-                    <FieldLabel htmlFor={controllerField.name}>
-                      Branch
-                    </FieldLabel>
-                    <NativeSelect
-                      id={controllerField.name}
-                      aria-invalid={fieldState.invalid}
-                      className="w-full"
-                      {...controllerField}
+              render={({ field, fieldState }) => (
+                <FieldGroup>
+                  <FieldSet data-invalid={fieldState.invalid}>
+                    <FieldLegend variant="label">Assigned Branches</FieldLegend>
+                    <FieldDescription>
+                      Select the branches where this employee is assigned
+                    </FieldDescription>
+                    <FieldGroup
+                      data-slot="checkbox-group"
+                      className="data-[slot=checkbox-group]:gap-1.5"
                     >
-                      <NativeSelectOption value="">
-                        Select branch
-                      </NativeSelectOption>
                       {storeOptions.branches.map((branch) => (
-                        <NativeSelectOption key={branch.id} value={branch.id}>
-                          {branch.name}
-                        </NativeSelectOption>
+                        <Field
+                          key={branch.id}
+                          orientation="horizontal"
+                          data-invalid={fieldState.invalid}
+                          className="cursor-pointer rounded-md border p-2 text-sm hover:bg-accent"
+                        >
+                          <Checkbox
+                            id={branch.id}
+                            name={field.name}
+                            aria-invalid={fieldState.invalid}
+                            checked={field.value.includes(branch.id)}
+                            onCheckedChange={(checked) => {
+                              const newValue = checked
+                                ? [...field.value, branch.id]
+                                : field.value.filter(
+                                    (value) => value !== branch.id
+                                  )
+                              field.onChange(newValue)
+                            }}
+                          />
+                          <FieldLabel
+                            htmlFor={branch.id}
+                            className="font-normal"
+                          >
+                            {branch.name}
+                          </FieldLabel>
+                        </Field>
                       ))}
-                    </NativeSelect>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </FieldContent>
-                </Field>
+                    </FieldGroup>
+                  </FieldSet>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </FieldGroup>
               )}
             />
           </div>
