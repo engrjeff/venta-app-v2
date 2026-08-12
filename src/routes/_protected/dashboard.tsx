@@ -1,4 +1,3 @@
-import { CopyEmployeePortalButton } from "@/components/copy-employee-portal-button"
 import { Button } from "@/components/ui/button"
 import { AttendanceTodayWidget } from "@/features/dashboard/attendance-today-widget"
 
@@ -53,7 +52,6 @@ function RouteComponent() {
           <h1 className="font-semibold">Dashboard</h1>
         </div>
         <div className="flex items-center gap-3">
-          <CopyEmployeePortalButton />
           <Button
             type="button"
             aria-label="Refresh"
@@ -67,35 +65,38 @@ function RouteComponent() {
       </div>
 
       {/* KPI cards */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-6">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <Link to="/employees" className="group">
-          <div className="space-y-4 rounded-md border bg-card p-3">
+          <div className="space-y-4 rounded-md border bg-card p-4">
             <h2 className="text-sm font-semibold underline decoration-dotted underline-offset-4 group-hover:text-blue-500">
               Employees
             </h2>
-            <p className="text-xl font-semibold">{employeeCount}</p>
+            <p className="text-2xl font-semibold">{employeeCount}</p>
           </div>
         </Link>
-        <div className="space-y-4 rounded-md border bg-card p-3">
+        <div className="space-y-4 rounded-md border bg-card p-4">
           <h2 className="text-sm font-semibold underline decoration-dotted underline-offset-4">
             Working Now
           </h2>
-          <p className="text-xl font-semibold">{workingCount}</p>
+          <p
+            data-active={workingCount > 0}
+            className="text-2xl font-semibold data-active:text-green-500"
+          >
+            {workingCount}
+          </p>
         </div>
-        <div className="space-y-4 rounded-md border bg-card p-3">
+        <div className="space-y-4 rounded-md border bg-card p-4">
           <h2 className="text-sm font-semibold underline decoration-dotted underline-offset-4">
             Not Clocked In
           </h2>
-          <p className="text-xl font-semibold">{notClockedInCount}</p>
+          <p className="text-2xl font-semibold">{notClockedInCount}</p>
         </div>
-        <Link to="/branches" className="group">
-          <div className="space-y-4 rounded-md border bg-card p-3">
-            <h2 className="text-sm font-semibold underline decoration-dotted underline-offset-4 group-hover:text-blue-500">
-              Branches
-            </h2>
-            <p className="text-xl font-semibold">{branchCount}</p>
-          </div>
-        </Link>
+        <div className="group space-y-4 rounded-md border bg-card p-4">
+          <h2 className="text-sm font-semibold underline decoration-dotted underline-offset-4 group-hover:text-blue-500">
+            Branches
+          </h2>
+          <p className="text-2xl font-semibold">{branchCount}</p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">

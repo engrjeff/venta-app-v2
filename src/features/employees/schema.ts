@@ -49,7 +49,13 @@ export const employeeIdSchema = z.object({
     .min(1, "Employee ID is required"),
 })
 
-export const updateEmployeeSchema = employeeSchema.extend({
+export const addEmployeeSchema = employeeSchema
+  .omit({ branchId: true })
+  .extend({
+    branches: z.array(z.string(), { error: "Assign at least 1 branch" }),
+  })
+
+export const updateEmployeeSchema = addEmployeeSchema.extend({
   id: z
     .string({ error: "Employee ID is required" })
     .min(1, "Employee ID is required"),
@@ -99,3 +105,5 @@ export type GetEmployeesInput = z.infer<typeof getEmployeesInputSchema>
 export type UpdateEmployeeSessionInput = z.infer<
   typeof updateEmployeeSessionSchema
 >
+
+export type AddEmployeeInput = z.infer<typeof addEmployeeSchema>

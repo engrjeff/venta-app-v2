@@ -146,7 +146,7 @@ export function AttendanceTodayWidget({
                   <TableCell>{attendance.branch.name}</TableCell>
                   <TableCell>
                     <Badge variant={attendance.status}>
-                      {attendance.status.replaceAll("_", " ")}
+                      {attendance.status.replaceAll("_", " ").toLowerCase()}
                     </Badge>
                   </TableCell>
                   <TableCell>

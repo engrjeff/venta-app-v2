@@ -125,7 +125,11 @@ export async function getActiveAttendance(inputs: ActiveAttendanceQueryInput) {
       include: {
         organization: true,
         branch: true,
-        breaks: true,
+        breaks: {
+          orderBy: {
+            createdAt: "desc",
+          },
+        },
         employee: {
           include: { designation: { select: { id: true, name: true } } },
         },
@@ -376,15 +380,17 @@ export async function getAttendanceRecordsByEmployee(
         designation: true,
         branches: { include: { branch: true } },
         attendance: {
-          where:
-            input.start && input.end
-              ? {
-                  date: {
+          where: {
+            status: input.status ? input.status : undefined,
+            date:
+              input.start && input.end
+                ? {
                     gte: new Date(input.start),
                     lte: new Date(input.end),
-                  },
-                }
-              : undefined,
+                  }
+                : undefined,
+          },
+          include: { branch: true },
           orderBy: { date: "desc" },
         },
       },

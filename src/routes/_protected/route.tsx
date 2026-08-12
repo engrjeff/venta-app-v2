@@ -46,15 +46,15 @@ function RouteComponent() {
     <SidebarProvider
       style={
         {
-          "--sidebar-width": "calc(var(--spacing) * 72)",
-          "--header-height": "calc(var(--spacing) * 12)",
+          "--sidebar-width": "calc(var(--spacing) * 60)",
+          "--header-height": "calc(var(--spacing) * 16)",
         } as React.CSSProperties
       }
     >
       <AppSidebar stores={loaderData.data} />
       <SidebarInset className="flex max-h-screen flex-col overflow-hidden">
         <AppHeader />
-        <div className="h-[calc(100%-48px)] max-h-[calc(100%-48px)] flex-1 p-4">
+        <div className="h-[calc(100%-48px)] max-h-[calc(100%-48px)] flex-1 px-6 py-4">
           <Outlet />
         </div>
       </SidebarInset>

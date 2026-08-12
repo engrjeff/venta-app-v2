@@ -28,7 +28,7 @@ export function AddEmployeeDialog() {
           </Button>
         }
       />
-      <SheetContent>
+      <SheetContent className="gap-0">
         <SheetHeader>
           <SheetTitle>Add Employee</SheetTitle>
           <SheetDescription>

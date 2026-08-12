@@ -22,7 +22,6 @@ import { ArrowRightIcon } from "lucide-react"
 import type { SubmitErrorHandler, SubmitHandler } from "react-hook-form"
 import { Controller, useForm } from "react-hook-form"
 import { toast } from "sonner"
-import { EmployeeMenu } from "../employees/employee-menu"
 import { attendanceApi } from "./attendance.functions"
 import type { EmployeeClockInFormInput } from "./schema"
 import { employeeClockInFormSchema } from "./schema"
@@ -33,15 +32,14 @@ export function EmployeeClockInForm() {
   if (!employee) return null
 
   return (
-    <div className="w-full space-y-6 py-10">
+    <div className="w-full space-y-6 py-6 lg:py-10">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-semibold">Hi, {employee.firstName} 👋</h2>
+          <h2 className="text-lg font-semibold">Hi, {employee.firstName} 👋</h2>
           <p className="text-xs text-muted-foreground">
             {employee.designation.name} @ {employee.organization.name}
           </p>
         </div>
-        <EmployeeMenu />
       </div>
       <ClockInForm
         storeId={employee.organizationId}

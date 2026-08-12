@@ -1,7 +1,11 @@
 import { createServerFn } from "@tanstack/react-start"
 import { storeIdSchema } from "../store/schema"
-import { createDesignations, getStoreDesignations } from "./designations.server"
-import { designationArraySchema } from "./schema"
+import {
+  createDesignation,
+  createDesignations,
+  getStoreDesignations,
+} from "./designations.server"
+import { designationArraySchema, designationSchema } from "./schema"
 
 export const createMany = createServerFn({ method: "POST" })
   .inputValidator(designationArraySchema)
@@ -15,4 +19,10 @@ export const getAll = createServerFn({ method: "GET" })
     return getStoreDesignations(data.id)
   })
 
-export const designationsApi = { createMany, getAll }
+export const create = createServerFn({ method: "POST" })
+  .inputValidator(designationSchema)
+  .handler(async ({ data }) => {
+    return createDesignation(data)
+  })
+
+export const designationsApi = { create, createMany, getAll }

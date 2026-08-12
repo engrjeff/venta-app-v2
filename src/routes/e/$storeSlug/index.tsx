@@ -88,9 +88,11 @@ function RouteComponent() {
   })
 
   return (
-    <>
+    <div className="p-4 pt-24">
       <div className="w-full text-left">
-        <h1 className="text-2xl font-semibold">{store.name} Employee Portal</h1>
+        <h1 className="text-xl font-semibold lg:text-2xl">
+          {store.name} Employee Portal
+        </h1>
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           Powered by{" "}
           <span className="inline-flex items-center gap-1">
@@ -103,6 +105,6 @@ function RouteComponent() {
       ) : (
         <EmployeePortalForm storeId={store.id} />
       )}
-    </>
+    </div>
   )
 }

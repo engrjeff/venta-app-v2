@@ -8,7 +8,14 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { Link, useLocation } from "@tanstack/react-router"
-import { FileClockIcon, HomeIcon, SettingsIcon, UsersIcon } from "lucide-react"
+import {
+  BoxIcon,
+  ClockIcon,
+  HomeIcon,
+  InboxIcon,
+  SettingsIcon,
+  UsersIcon,
+} from "lucide-react"
 
 const MAIN_NAV = [
   {
@@ -20,7 +27,7 @@ const MAIN_NAV = [
   {
     id: "timesheet",
     title: "Timesheet",
-    Icon: FileClockIcon,
+    Icon: ClockIcon,
     pathname: "/timesheet",
   },
 ]
@@ -31,6 +38,18 @@ const OPERATIONS_NAV = [
     title: "Employees",
     Icon: UsersIcon,
     pathname: "/employees",
+  },
+  {
+    id: "products",
+    title: "Products",
+    Icon: BoxIcon,
+    pathname: "/products",
+  },
+  {
+    id: "orders",
+    title: "Orders",
+    Icon: InboxIcon,
+    pathname: "/orders",
   },
 ]
 
