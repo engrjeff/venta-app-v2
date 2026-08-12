@@ -33,7 +33,7 @@ function RouteComponent() {
   }
 
   return (
-    <div className="grid h-full grid-cols-12 grid-rows-[1fr] gap-4">
+    <div className="grid h-full grid-cols-12 grid-rows-[1fr] gap-4 p-4">
       <aside className="col-span-3 min-h-0">
         <EmployeeList employees={employees.data ?? []} />
       </aside>

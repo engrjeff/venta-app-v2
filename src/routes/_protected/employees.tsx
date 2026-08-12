@@ -28,7 +28,7 @@ function RouteComponent() {
   const loader = Route.useLoaderData()
 
   return (
-    <div className="flex h-full flex-col space-y-4">
+    <div className="flex h-full flex-col space-y-4 p-4">
       {/* page header */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">

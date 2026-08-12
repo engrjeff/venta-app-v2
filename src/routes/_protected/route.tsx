@@ -54,7 +54,7 @@ function RouteComponent() {
       <AppSidebar stores={loaderData.data} />
       <SidebarInset className="flex max-h-screen flex-col overflow-hidden">
         <AppHeader />
-        <div className="h-[calc(100%-48px)] max-h-[calc(100%-48px)] flex-1 px-6 py-4">
+        <div className="h-[calc(100%-48px)] max-h-[calc(100%-var(--header-height))] flex-1">
           <Outlet />
         </div>
       </SidebarInset>

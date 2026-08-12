@@ -87,81 +87,119 @@ export function UpdateEmployeeForm({
   }
 
   return (
-    <div className="flex-1 px-4">
+    <div className="flex-1 overflow-y-auto px-4">
       <form
         onChange={() => form.clearErrors()}
         onSubmit={form.handleSubmit(onSubmit, onFormError)}
         className="grid h-full"
       >
         <FieldGroup className="gap-4">
-          <Controller
-            name="firstName"
-            control={form.control}
-            render={({ field: controllerField, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldContent>
-                  <FieldLabel htmlFor={controllerField.name}>
-                    First Name
-                  </FieldLabel>
-                  <Input
-                    id={controllerField.name}
-                    placeholder="First name"
-                    aria-invalid={fieldState.invalid}
-                    {...controllerField}
-                    autoFocus
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </FieldContent>
-              </Field>
-            )}
-          />
-          <Controller
-            name="lastName"
-            control={form.control}
-            render={({ field: controllerField, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldContent>
-                  <FieldLabel htmlFor={controllerField.name}>
-                    Last Name
-                  </FieldLabel>
-                  <Input
-                    id={controllerField.name}
-                    placeholder="Last name"
-                    aria-invalid={fieldState.invalid}
-                    {...controllerField}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </FieldContent>
-              </Field>
-            )}
-          />
-          <Controller
-            name="username"
-            control={form.control}
-            render={({ field: controllerField, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldContent>
-                  <FieldLabel htmlFor={controllerField.name}>
-                    Username
-                  </FieldLabel>
-                  <Input
-                    id={controllerField.name}
-                    placeholder="Username"
-                    aria-invalid={fieldState.invalid}
-                    {...controllerField}
-                  />
-                  <FieldDescription>Used in attendance</FieldDescription>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </FieldContent>
-              </Field>
-            )}
-          />
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <Controller
+              name="firstName"
+              control={form.control}
+              render={({ field: controllerField, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldContent>
+                    <FieldLabel htmlFor={controllerField.name}>
+                      First Name
+                    </FieldLabel>
+                    <Input
+                      id={controllerField.name}
+                      placeholder="First name"
+                      aria-invalid={fieldState.invalid}
+                      {...controllerField}
+                      autoFocus
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                </Field>
+              )}
+            />
+            <Controller
+              name="lastName"
+              control={form.control}
+              render={({ field: controllerField, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldContent>
+                    <FieldLabel htmlFor={controllerField.name}>
+                      Last Name
+                    </FieldLabel>
+                    <Input
+                      id={controllerField.name}
+                      placeholder="Last name"
+                      aria-invalid={fieldState.invalid}
+                      {...controllerField}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                </Field>
+              )}
+            />
+            <Controller
+              name="username"
+              control={form.control}
+              render={({ field: controllerField, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldContent>
+                    <FieldLabel htmlFor={controllerField.name}>
+                      Username
+                    </FieldLabel>
+                    <Input
+                      id={controllerField.name}
+                      placeholder="Username"
+                      aria-invalid={fieldState.invalid}
+                      {...controllerField}
+                    />
+                    <FieldDescription>Used in attendance</FieldDescription>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                </Field>
+              )}
+            />
+            <Controller
+              name="designationId"
+              control={form.control}
+              render={({ field: controllerField, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldContent>
+                    <FieldLabel htmlFor={controllerField.name}>
+                      Designation
+                    </FieldLabel>
+                    <NativeSelect
+                      id={controllerField.name}
+                      aria-invalid={fieldState.invalid}
+                      className="w-full"
+                      disabled={storeOptions.loading}
+                      {...controllerField}
+                    >
+                      <NativeSelectOption value="">
+                        Select designation
+                      </NativeSelectOption>
+                      {storeOptions.designations.map((designation) => (
+                        <NativeSelectOption
+                          key={designation.id}
+                          value={designation.id}
+                        >
+                          {designation.name}
+                        </NativeSelectOption>
+                      ))}
+                    </NativeSelect>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                </Field>
+              )}
+            />
+          </div>
+
           <Controller
             name="email"
             control={form.control}
@@ -204,7 +242,7 @@ export function UpdateEmployeeForm({
                     id={controllerField.name}
                     placeholder="+639XXXXXXXXX"
                     type="tel"
-                    className="w-1/2"
+                    className="md:w-1/2"
                     aria-invalid={fieldState.invalid}
                     {...controllerField}
                   />
@@ -218,94 +256,54 @@ export function UpdateEmployeeForm({
 
           <Separator />
 
-          <div className="grid grid-cols-1 gap-4">
-            <Controller
-              name="designationId"
-              control={form.control}
-              render={({ field: controllerField, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldContent>
-                    <FieldLabel htmlFor={controllerField.name}>
-                      Designation
-                    </FieldLabel>
-                    <NativeSelect
-                      id={controllerField.name}
-                      aria-invalid={fieldState.invalid}
-                      className="w-full"
-                      disabled={storeOptions.loading}
-                      {...controllerField}
-                    >
-                      <NativeSelectOption value="">
-                        Select designation
-                      </NativeSelectOption>
-                      {storeOptions.designations.map((designation) => (
-                        <NativeSelectOption
-                          key={designation.id}
-                          value={designation.id}
-                        >
-                          {designation.name}
-                        </NativeSelectOption>
-                      ))}
-                    </NativeSelect>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </FieldContent>
-                </Field>
-              )}
-            />
-            <Controller
-              name="branches"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <FieldGroup>
-                  <FieldSet data-invalid={fieldState.invalid}>
-                    <FieldLegend variant="label">Assigned Branches</FieldLegend>
-                    <FieldDescription>
-                      Select the branches where this employee is assigned
-                    </FieldDescription>
-                    <FieldGroup
-                      data-slot="checkbox-group"
-                      className="data-[slot=checkbox-group]:gap-1.5"
-                    >
-                      {storeOptions.branches.map((branch) => (
-                        <Field
-                          key={branch.id}
-                          orientation="horizontal"
-                          data-invalid={fieldState.invalid}
-                          className="cursor-pointer rounded-md border p-2 text-sm hover:bg-accent"
-                        >
-                          <Checkbox
-                            id={branch.id}
-                            name={field.name}
-                            aria-invalid={fieldState.invalid}
-                            checked={field.value.includes(branch.id)}
-                            onCheckedChange={(checked) => {
-                              const newValue = checked
-                                ? [...field.value, branch.id]
-                                : field.value.filter(
-                                    (value) => value !== branch.id
-                                  )
-                              field.onChange(newValue)
-                            }}
-                          />
-                          <FieldLabel
-                            htmlFor={branch.id}
-                            className="font-normal"
-                          >
-                            {branch.name}
-                          </FieldLabel>
-                        </Field>
-                      ))}
-                    </FieldGroup>
-                  </FieldSet>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </FieldGroup>
-              )}
-            />
-          </div>
+          <Controller
+            name="branches"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <FieldGroup>
+                <FieldSet data-invalid={fieldState.invalid}>
+                  <FieldLegend variant="label">Assigned Branches</FieldLegend>
+                  <FieldDescription>
+                    Select the branches where this employee is assigned
+                  </FieldDescription>
+                  <FieldGroup
+                    data-slot="checkbox-group"
+                    className="data-[slot=checkbox-group]:gap-1.5"
+                  >
+                    {storeOptions.branches.map((branch) => (
+                      <Field
+                        key={branch.id}
+                        orientation="horizontal"
+                        data-invalid={fieldState.invalid}
+                        className="cursor-pointer rounded-md border p-2 text-sm hover:bg-accent"
+                      >
+                        <Checkbox
+                          id={branch.id}
+                          name={field.name}
+                          aria-invalid={fieldState.invalid}
+                          checked={field.value.includes(branch.id)}
+                          onCheckedChange={(checked) => {
+                            const newValue = checked
+                              ? [...field.value, branch.id]
+                              : field.value.filter(
+                                  (value) => value !== branch.id
+                                )
+                            field.onChange(newValue)
+                          }}
+                        />
+                        <FieldLabel htmlFor={branch.id} className="font-normal">
+                          {branch.name}
+                        </FieldLabel>
+                      </Field>
+                    ))}
+                  </FieldGroup>
+                </FieldSet>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </FieldGroup>
+            )}
+          />
         </FieldGroup>
 
         <div className="mt-auto flex justify-end gap-4 py-4">

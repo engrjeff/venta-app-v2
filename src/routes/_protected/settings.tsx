@@ -43,7 +43,7 @@ function RouteComponent() {
   const { organizationSettings, branches, designations } = store
 
   return (
-    <div className="grid h-full flex-1 grid-cols-1 grid-rows-[1fr]">
+    <div className="grid h-full flex-1 grid-cols-1 grid-rows-[1fr] py-4">
       <div className="flex min-h-0 flex-col overflow-y-auto">
         <div className="container mx-auto max-w-3xl space-y-4">
           {/* page header */}
