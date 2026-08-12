@@ -76,8 +76,11 @@ export async function getStoreById(id: string) {
       where: { id },
       include: {
         organizationSettings: true,
-        branches: true,
-        designations: true,
+        branches: { where: { isActive: true }, orderBy: { name: "asc" } },
+        designations: {
+          where: { isActive: true },
+          orderBy: { name: "asc" },
+        },
       },
     })
 

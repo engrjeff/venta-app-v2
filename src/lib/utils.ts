@@ -77,3 +77,7 @@ export function formatPHP(amount: number): string {
     minimumFractionDigits: 2,
   }).format(amount)
 }
+
+export function dateToTimeInputValue(date: Date) {
+  return date.toISOString().slice(11, 16)
+}

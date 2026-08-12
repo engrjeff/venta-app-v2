@@ -3,6 +3,8 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client"
 import type {
   CreateDesignationInput,
   CreateManyDesignationInput,
+  DesignationIdInput,
+  UpdateDesignationInput,
 } from "./schema"
 
 export async function createDesignations(
@@ -78,6 +80,74 @@ export async function createDesignation(input: CreateDesignationInput) {
       }
     }
 
+    return { data: null, error: error as any }
+  }
+}
+
+export async function updateDesignation(input: UpdateDesignationInput) {
+  try {
+    const existing = await prisma.designation.findFirst({
+      where: {
+        organizationId: input.storeId,
+        id: { not: input.id },
+        name: { equals: input.name, mode: "insensitive" },
+      },
+      select: { id: true },
+    })
+
+    if (existing) {
+      return {
+        data: null,
+        error: new Error(`Designation ${input.name} already exists.`),
+      }
+    }
+
+    const designation = await prisma.designation.update({
+      where: { id: input.id },
+      data: {
+        organizationId: input.storeId,
+        name: input.name,
+        salaryType: input.salaryType,
+        salaryRate: input.salaryRate,
+      },
+    })
+
+    return { data: designation, error: null }
+  } catch (error) {
+    if (error instanceof PrismaClientKnownRequestError) {
+      if (
+        error.message.includes(
+          'Unique constraint failed on the fields: (`"organizationId"`, `name`)'
+        )
+      ) {
+        return {
+          data: null,
+          error: new Error(`Designation ${input.name} already exists.`),
+        }
+      }
+    }
+
+    return { data: null, error: error as any }
+  }
+}
+
+export async function softDeleteDesignation(input: DesignationIdInput) {
+  try {
+    const founddesignation = await prisma.designation.findUnique({
+      where: { id: input.id },
+    })
+
+    if (!founddesignation) {
+      throw new Error("Designation not found")
+    }
+
+    await prisma.designation.update({
+      where: { id: input.id },
+      data: { isActive: false },
+    })
+
+    return { data: { success: true }, error: null }
+  } catch (error) {
     return { data: null, error: error as any }
   }
 }

@@ -4,8 +4,15 @@ import {
   createDesignation,
   createDesignations,
   getStoreDesignations,
+  softDeleteDesignation,
+  updateDesignation,
 } from "./designations.server"
-import { designationArraySchema, designationSchema } from "./schema"
+import {
+  designationArraySchema,
+  designationIdSchema,
+  designationSchema,
+  designationUpdateSchema,
+} from "./schema"
 
 export const createMany = createServerFn({ method: "POST" })
   .inputValidator(designationArraySchema)
@@ -25,4 +32,16 @@ export const create = createServerFn({ method: "POST" })
     return createDesignation(data)
   })
 
-export const designationsApi = { create, createMany, getAll }
+export const update = createServerFn({ method: "POST" })
+  .inputValidator(designationUpdateSchema)
+  .handler(async ({ data }) => {
+    return updateDesignation(data)
+  })
+
+export const remove = createServerFn({ method: "POST" })
+  .inputValidator(designationIdSchema)
+  .handler(async ({ data }) => {
+    return softDeleteDesignation(data)
+  })
+
+export const designationsApi = { create, createMany, getAll, update, remove }

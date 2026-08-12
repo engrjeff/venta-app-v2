@@ -7,14 +7,20 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { AddBranchDialog } from "@/features/branch/add-branch-dialog"
+import { BranchActions } from "@/features/branch/branch-actions"
 import { AddDesignationDialog } from "@/features/designations/add-designation-dialog"
+import { DesignationActions } from "@/features/designations/designation-actions"
 import { storeApi } from "@/features/store/store.functions"
-import { formatPHP, generatePageTitle } from "@/lib/utils"
+import {
+  formatPHP,
+  formatScheduleTimeRange,
+  generatePageTitle,
+} from "@/lib/utils"
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import {
+  ClockIcon,
   EditIcon,
   MapPinIcon,
-  MoreHorizontalIcon,
   NetworkIcon,
   PhoneIcon,
   SettingsIcon,
@@ -139,19 +145,21 @@ function RouteComponent() {
                   >
                     <div>
                       <p className="text-sm font-semibold">{branch.name}</p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="mb-1 text-xs text-muted-foreground">
                         {branch.gmFormattedAddress}
+                      </p>
+                      <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <ClockIcon className="size-3" />
+                        {
+                          formatScheduleTimeRange(
+                            branch.scheduleStartTime,
+                            branch.scheduleEndTime
+                          ).formatted
+                        }
                       </p>
                     </div>
                     <div>
-                      <Button
-                        type="button"
-                        size="icon-sm"
-                        variant="ghost"
-                        aria-label="Actions"
-                      >
-                        <MoreHorizontalIcon />
-                      </Button>
+                      <BranchActions branch={branch} />
                     </div>
                   </div>
                 ))}
@@ -190,14 +198,7 @@ function RouteComponent() {
                       </p>
                     </div>
                     <div>
-                      <Button
-                        type="button"
-                        size="icon-sm"
-                        variant="ghost"
-                        aria-label="Actions"
-                      >
-                        <MoreHorizontalIcon />
-                      </Button>
+                      <DesignationActions designation={designation} />
                     </div>
                   </div>
                 ))}
