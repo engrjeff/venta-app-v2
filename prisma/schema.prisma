@@ -92,6 +92,7 @@ model Organization {
   designations         Designation[]
   employees            Employee[]
   attendances          Attendance[]
+  attendanceSnapshots  AttendanceSnapshot[]
 
   @@unique([slug])
   @@map("organization")
@@ -342,6 +343,15 @@ model Attendance {
   totalWorkedSeconds Int @default(0)
   totalBreakSeconds  Int @default(0)
 
+  /// Calculated fields
+  regularWorkedSeconds Int @default(0)
+  overtimeSeconds      Int @default(0)
+  undertimeSeconds     Int @default(0)
+
+  regularPay  Float?
+  overtimePay Float?
+  totalPay    Float?
+
   /// Current working segment
   workStartedAt DateTime?
 
@@ -358,11 +368,52 @@ model Attendance {
   /// Break history
   breaks AttendanceBreak[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  attendanceSnapshot AttendanceSnapshot?
 
   @@unique([employeeId, date])
   @@index([organizationId])
   @@index([branchId])
   @@map("attendance")
+}
+
+model AttendanceSnapshot {
+  id String @id @default(cuid())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  attendanceId String     @unique
+  attendance   Attendance @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
+
+  // Employee snapshot
+  employeeId        String
+  employeeNumber    String?
+  employeeFirstName String
+  employeeLastName  String
+
+  // Branch snapshot
+  branchId   String
+  branchName String
+
+  // Location snapshot
+
+  // Designation snapshot
+  designationId   String
+  designationName String
+  salaryType      SalaryType
+  salaryRate      Float
+
+  // Schedule snapshot
+  scheduleStartTime DateTime @db.Time(0)
+  scheduleEndTime   DateTime @db.Time(0)
+
+  createdAt DateTime @default(now())
+
+  @@index([employeeId])
+  @@index([branchId])
+  @@index([designationId])
+  @@index([organizationId])
+  @@map("attendance_snapshot")
 }

@@ -19,17 +19,15 @@ import { Route as OnboardingFinishRouteImport } from './routes/onboarding/finish
 import { Route as OnboardingEmployeesRouteImport } from './routes/onboarding/employees'
 import { Route as OnboardingDesignationsRouteImport } from './routes/onboarding/designations'
 import { Route as OnboardingBranchRouteImport } from './routes/onboarding/branch'
+import { Route as ProtectedTimesheetRouteImport } from './routes/_protected/timesheet'
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
 import { Route as ProtectedEmployeesRouteImport } from './routes/_protected/employees'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
 import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
 import { Route as EStoreSlugRouteRouteImport } from './routes/e/$storeSlug/route'
-import { Route as ProtectedTimesheetRouteRouteImport } from './routes/_protected/timesheet/route'
 import { Route as EStoreSlugIndexRouteImport } from './routes/e/$storeSlug/index'
-import { Route as ProtectedTimesheetIndexRouteImport } from './routes/_protected/timesheet/index'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as ProtectedTimesheetEmployeeIdRouteImport } from './routes/_protected/timesheet/$employeeId'
 import { Route as EStoreSlugEmployeeIdRouteRouteImport } from './routes/e/$storeSlug/$employeeId/route'
 import { Route as EStoreSlugEmployeeIdIndexRouteImport } from './routes/e/$storeSlug/$employeeId/index'
 import { Route as EStoreSlugEmployeeIdRequestsRouteImport } from './routes/e/$storeSlug/$employeeId/requests'
@@ -84,6 +82,11 @@ const OnboardingBranchRoute = OnboardingBranchRouteImport.update({
   path: '/branch',
   getParentRoute: () => OnboardingRouteRoute,
 } as any)
+const ProtectedTimesheetRoute = ProtectedTimesheetRouteImport.update({
+  id: '/timesheet',
+  path: '/timesheet',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
 const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -114,32 +117,16 @@ const EStoreSlugRouteRoute = EStoreSlugRouteRouteImport.update({
   path: '/e/$storeSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedTimesheetRouteRoute = ProtectedTimesheetRouteRouteImport.update({
-  id: '/timesheet',
-  path: '/timesheet',
-  getParentRoute: () => ProtectedRouteRoute,
-} as any)
 const EStoreSlugIndexRoute = EStoreSlugIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => EStoreSlugRouteRoute,
-} as any)
-const ProtectedTimesheetIndexRoute = ProtectedTimesheetIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProtectedTimesheetRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProtectedTimesheetEmployeeIdRoute =
-  ProtectedTimesheetEmployeeIdRouteImport.update({
-    id: '/$employeeId',
-    path: '/$employeeId',
-    getParentRoute: () => ProtectedTimesheetRouteRoute,
-  } as any)
 const EStoreSlugEmployeeIdRouteRoute =
   EStoreSlugEmployeeIdRouteRouteImport.update({
     id: '/$employeeId',
@@ -174,13 +161,13 @@ const ApiResourcesStoreIdFieldOptionsRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRouteRouteWithChildren
-  '/timesheet': typeof ProtectedTimesheetRouteRouteWithChildren
   '/e/$storeSlug': typeof EStoreSlugRouteRouteWithChildren
   '/sign-in': typeof authSignInRoute
   '/sign-up': typeof authSignUpRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/employees': typeof ProtectedEmployeesRoute
   '/settings': typeof ProtectedSettingsRoute
+  '/timesheet': typeof ProtectedTimesheetRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
@@ -188,9 +175,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/store-settings': typeof OnboardingStoreSettingsRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRouteRouteWithChildren
-  '/timesheet/$employeeId': typeof ProtectedTimesheetEmployeeIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/timesheet/': typeof ProtectedTimesheetIndexRoute
   '/e/$storeSlug/': typeof EStoreSlugIndexRoute
   '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
   '/e/$storeSlug/$employeeId/logs': typeof EStoreSlugEmployeeIdLogsRoute
@@ -204,15 +189,14 @@ export interface FileRoutesByTo {
   '/dashboard': typeof ProtectedDashboardRoute
   '/employees': typeof ProtectedEmployeesRoute
   '/settings': typeof ProtectedSettingsRoute
+  '/timesheet': typeof ProtectedTimesheetRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
   '/onboarding/finish': typeof OnboardingFinishRoute
   '/onboarding/store-settings': typeof OnboardingStoreSettingsRoute
   '/onboarding': typeof OnboardingIndexRoute
-  '/timesheet/$employeeId': typeof ProtectedTimesheetEmployeeIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/timesheet': typeof ProtectedTimesheetIndexRoute
   '/e/$storeSlug': typeof EStoreSlugIndexRoute
   '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
   '/e/$storeSlug/$employeeId/logs': typeof EStoreSlugEmployeeIdLogsRoute
@@ -225,13 +209,13 @@ export interface FileRoutesById {
   '/(auth)': typeof authRouteRouteWithChildren
   '/_protected': typeof ProtectedRouteRouteWithChildren
   '/onboarding': typeof OnboardingRouteRouteWithChildren
-  '/_protected/timesheet': typeof ProtectedTimesheetRouteRouteWithChildren
   '/e/$storeSlug': typeof EStoreSlugRouteRouteWithChildren
   '/(auth)/sign-in': typeof authSignInRoute
   '/(auth)/sign-up': typeof authSignUpRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_protected/employees': typeof ProtectedEmployeesRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
+  '/_protected/timesheet': typeof ProtectedTimesheetRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
   '/onboarding/designations': typeof OnboardingDesignationsRoute
   '/onboarding/employees': typeof OnboardingEmployeesRoute
@@ -239,9 +223,7 @@ export interface FileRoutesById {
   '/onboarding/store-settings': typeof OnboardingStoreSettingsRoute
   '/onboarding/': typeof OnboardingIndexRoute
   '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRouteRouteWithChildren
-  '/_protected/timesheet/$employeeId': typeof ProtectedTimesheetEmployeeIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/_protected/timesheet/': typeof ProtectedTimesheetIndexRoute
   '/e/$storeSlug/': typeof EStoreSlugIndexRoute
   '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
   '/e/$storeSlug/$employeeId/logs': typeof EStoreSlugEmployeeIdLogsRoute
@@ -253,13 +235,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/onboarding'
-    | '/timesheet'
     | '/e/$storeSlug'
     | '/sign-in'
     | '/sign-up'
     | '/dashboard'
     | '/employees'
     | '/settings'
+    | '/timesheet'
     | '/onboarding/branch'
     | '/onboarding/designations'
     | '/onboarding/employees'
@@ -267,9 +249,7 @@ export interface FileRouteTypes {
     | '/onboarding/store-settings'
     | '/onboarding/'
     | '/e/$storeSlug/$employeeId'
-    | '/timesheet/$employeeId'
     | '/api/auth/$'
-    | '/timesheet/'
     | '/e/$storeSlug/'
     | '/api/resources/$storeId/field-options'
     | '/e/$storeSlug/$employeeId/logs'
@@ -283,15 +263,14 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/employees'
     | '/settings'
+    | '/timesheet'
     | '/onboarding/branch'
     | '/onboarding/designations'
     | '/onboarding/employees'
     | '/onboarding/finish'
     | '/onboarding/store-settings'
     | '/onboarding'
-    | '/timesheet/$employeeId'
     | '/api/auth/$'
-    | '/timesheet'
     | '/e/$storeSlug'
     | '/api/resources/$storeId/field-options'
     | '/e/$storeSlug/$employeeId/logs'
@@ -303,13 +282,13 @@ export interface FileRouteTypes {
     | '/(auth)'
     | '/_protected'
     | '/onboarding'
-    | '/_protected/timesheet'
     | '/e/$storeSlug'
     | '/(auth)/sign-in'
     | '/(auth)/sign-up'
     | '/_protected/dashboard'
     | '/_protected/employees'
     | '/_protected/settings'
+    | '/_protected/timesheet'
     | '/onboarding/branch'
     | '/onboarding/designations'
     | '/onboarding/employees'
@@ -317,9 +296,7 @@ export interface FileRouteTypes {
     | '/onboarding/store-settings'
     | '/onboarding/'
     | '/e/$storeSlug/$employeeId'
-    | '/_protected/timesheet/$employeeId'
     | '/api/auth/$'
-    | '/_protected/timesheet/'
     | '/e/$storeSlug/'
     | '/api/resources/$storeId/field-options'
     | '/e/$storeSlug/$employeeId/logs'
@@ -409,6 +386,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingBranchRouteImport
       parentRoute: typeof OnboardingRouteRoute
     }
+    '/_protected/timesheet': {
+      id: '/_protected/timesheet'
+      path: '/timesheet'
+      fullPath: '/timesheet'
+      preLoaderRoute: typeof ProtectedTimesheetRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
     '/_protected/settings': {
       id: '/_protected/settings'
       path: '/settings'
@@ -451,13 +435,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EStoreSlugRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_protected/timesheet': {
-      id: '/_protected/timesheet'
-      path: '/timesheet'
-      fullPath: '/timesheet'
-      preLoaderRoute: typeof ProtectedTimesheetRouteRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
     '/e/$storeSlug/': {
       id: '/e/$storeSlug/'
       path: '/'
@@ -465,26 +442,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EStoreSlugIndexRouteImport
       parentRoute: typeof EStoreSlugRouteRoute
     }
-    '/_protected/timesheet/': {
-      id: '/_protected/timesheet/'
-      path: '/'
-      fullPath: '/timesheet/'
-      preLoaderRoute: typeof ProtectedTimesheetIndexRouteImport
-      parentRoute: typeof ProtectedTimesheetRouteRoute
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_protected/timesheet/$employeeId': {
-      id: '/_protected/timesheet/$employeeId'
-      path: '/$employeeId'
-      fullPath: '/timesheet/$employeeId'
-      preLoaderRoute: typeof ProtectedTimesheetEmployeeIdRouteImport
-      parentRoute: typeof ProtectedTimesheetRouteRoute
     }
     '/e/$storeSlug/$employeeId': {
       id: '/e/$storeSlug/$employeeId'
@@ -538,34 +501,18 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
   authRouteRouteChildren,
 )
 
-interface ProtectedTimesheetRouteRouteChildren {
-  ProtectedTimesheetEmployeeIdRoute: typeof ProtectedTimesheetEmployeeIdRoute
-  ProtectedTimesheetIndexRoute: typeof ProtectedTimesheetIndexRoute
-}
-
-const ProtectedTimesheetRouteRouteChildren: ProtectedTimesheetRouteRouteChildren =
-  {
-    ProtectedTimesheetEmployeeIdRoute: ProtectedTimesheetEmployeeIdRoute,
-    ProtectedTimesheetIndexRoute: ProtectedTimesheetIndexRoute,
-  }
-
-const ProtectedTimesheetRouteRouteWithChildren =
-  ProtectedTimesheetRouteRoute._addFileChildren(
-    ProtectedTimesheetRouteRouteChildren,
-  )
-
 interface ProtectedRouteRouteChildren {
-  ProtectedTimesheetRouteRoute: typeof ProtectedTimesheetRouteRouteWithChildren
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedEmployeesRoute: typeof ProtectedEmployeesRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
+  ProtectedTimesheetRoute: typeof ProtectedTimesheetRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
-  ProtectedTimesheetRouteRoute: ProtectedTimesheetRouteRouteWithChildren,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedEmployeesRoute: ProtectedEmployeesRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
+  ProtectedTimesheetRoute: ProtectedTimesheetRoute,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(

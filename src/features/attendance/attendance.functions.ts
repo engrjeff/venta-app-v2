@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start"
 import {
   getActiveAttendance,
   getActiveAttendanceByEmployeeId,
+  getAttendanceHistoryByEmployee,
   getAttendanceRecordsByEmployee,
   getAttendanceRecordsToday,
   submitAttendanceTransition,
@@ -51,6 +52,12 @@ export const getRecordsByEmployee = createServerFn({ method: "GET" })
     return getAttendanceRecordsByEmployee(data)
   })
 
+export const getHistoryByEmployee = createServerFn({ method: "GET" })
+  .inputValidator(attendanceByEmployeeSchema)
+  .handler(async ({ data }) => {
+    return getAttendanceHistoryByEmployee(data)
+  })
+
 export const attendanceApi = {
   clockIn,
   getActive,
@@ -58,4 +65,5 @@ export const attendanceApi = {
   transition,
   getRecordsToday,
   getRecordsByEmployee,
+  getHistoryByEmployee,
 }

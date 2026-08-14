@@ -13,10 +13,7 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 import { attendanceApi } from "@/features/attendance/attendance.functions"
-import {
-  calculatePay,
-  getAttendanceRemark,
-} from "@/features/timesheet/timesheet.utils"
+import { getAttendanceRemark } from "@/features/timesheet/timesheet.utils"
 import { AttendanceStatus } from "@/generated/prisma/enums"
 import { formatPHP, formatTime } from "@/lib/utils"
 import { createFileRoute } from "@tanstack/react-router"
@@ -34,7 +31,7 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId/logs")({
   validateSearch: logsSearchSchema,
   loaderDeps: ({ search: { start, end } }) => ({ start, end }),
   loader: async ({ params, deps: { start, end } }) => {
-    const logs = await attendanceApi.getRecordsByEmployee({
+    const logs = await attendanceApi.getHistoryByEmployee({
       data: {
         employeeId: params.employeeId,
         status: AttendanceStatus.CLOCKED_OUT,
@@ -56,7 +53,7 @@ function RouteComponent() {
 
   if (loaderData.error) return <p>An error occured</p>
 
-  if (!loaderData.data?.attendance?.length)
+  if (!loaderData.data?.length)
     return (
       <Empty>
         <EmptyHeader>
@@ -69,7 +66,7 @@ function RouteComponent() {
       </Empty>
     )
 
-  const { attendance: logs, designation } = loaderData.data
+  const logs = loaderData.data
 
   return (
     <>
@@ -90,14 +87,13 @@ function RouteComponent() {
       </div>
       <ul className="space-y-3">
         {logs.map((log) => {
-          const payData = calculatePay(
-            log.totalWorkedSeconds,
-            designation.salaryRate,
-            designation.salaryType
-          )
+          if (!log.attendanceSnapshot) return null
 
           const remark = log.timeIn
-            ? getAttendanceRemark(log.timeIn, log.branch.scheduleStartTime)
+            ? getAttendanceRemark(
+                log.timeIn,
+                log.attendanceSnapshot.scheduleStartTime
+              )
             : null
 
           return (
@@ -144,7 +140,7 @@ function RouteComponent() {
                       Work Hrs
                     </span>
                     <span className="font-mono">
-                      {payData.time.workedHours.toFixed(2)}
+                      {(log.totalWorkedSeconds / 3600).toFixed(2)}
                     </span>
                   </div>
                   <div className="flex flex-col items-center">
@@ -152,7 +148,7 @@ function RouteComponent() {
                       Pay
                     </span>
                     <span className="font-mono">
-                      {formatPHP(payData.pay.total)}
+                      {formatPHP(log.regularPay ?? 0)}
                     </span>
                   </div>
                 </div>

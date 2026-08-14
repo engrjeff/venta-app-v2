@@ -1,8 +1,9 @@
-import type { Attendance } from "@/generated/prisma/client"
+import type { Attendance, AttendanceSnapshot } from "@/generated/prisma/client"
 import { AttendanceStatus } from "@/generated/prisma/enums"
 import { prisma } from "@/lib/db"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client"
 import { useEmployeeSession } from "../employees/employee-session"
+import { calculateAttendancePay, secondsBetween } from "./attendance.utils"
 import type {
   ActiveAttendanceQueryInput,
   AttendanceByEmployeeInput,
@@ -27,20 +28,58 @@ export async function submitClockInAttendance(
 
     const clockInDate = new Date(timeIn)
 
-    const attendance = await prisma.attendance.create({
-      data: {
-        organizationId: storeId,
-        branchId,
-        employeeId,
-        timeIn: clockInDate,
-        timeInLatitude: timeInLat,
-        timeInLongitude: timeInLng,
-        date: getToday(),
-        workStartedAt: clockInDate,
-      },
-      include: {
-        branch: { select: { name: true } },
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const branch = await tx.branch.findUniqueOrThrow({
+        where: { id: branchId },
+      })
+
+      const employee = await tx.employee.findUniqueOrThrow({
+        where: { id: employeeId },
+        include: { designation: true },
+      })
+
+      const attendance = await tx.attendance.create({
+        data: {
+          organizationId: storeId,
+          branchId,
+          employeeId,
+          timeIn: clockInDate,
+          timeInLatitude: timeInLat,
+          timeInLongitude: timeInLng,
+          date: getToday(),
+          workStartedAt: clockInDate,
+
+          // snapshot
+          attendanceSnapshot: {
+            create: {
+              organizationId: employee.organizationId,
+
+              // employee snapshot
+              employeeId: employee.id,
+              employeeNumber: employee.employeeNumber,
+              employeeFirstName: employee.firstName,
+              employeeLastName: employee.lastName,
+
+              // branch snapshot
+              branchId: branch.id,
+              branchName: branch.name,
+              scheduleEndTime: branch.scheduleStartTime,
+              scheduleStartTime: branch.scheduleEndTime,
+
+              // designation snapshot
+              designationId: employee.designationId,
+              designationName: employee.designation.name,
+              salaryType: employee.designation.salaryType,
+              salaryRate: employee.designation.salaryRate,
+            },
+          },
+        },
+        include: {
+          branch: { select: { name: true } },
+        },
+      })
+
+      return attendance
     })
 
     // update the employee session cookie with the clock-in data
@@ -50,13 +89,13 @@ export async function submitClockInAttendance(
       ...employeeSession.data,
 
       branchId,
-      branchName: attendance.branch.name,
+      branchName: result.branch.name,
 
-      attendanceId: attendance.id,
+      attendanceId: result.id,
       timeInString: timeIn,
     })
 
-    return { data: attendance, error: null }
+    return { data: result, error: null }
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
@@ -163,9 +202,6 @@ export async function getActiveAttendanceByEmployeeId(
 }
 
 // ATTENDANCE TRANSITION
-function secondsBetween(start: Date, end: Date) {
-  return Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000))
-}
 
 export function pauseAttendance(attendance: Attendance, at: Date): Attendance {
   if (attendance.status !== AttendanceStatus.WORKING) {
@@ -213,12 +249,35 @@ export function resumeAttendance(attendance: Attendance, at: Date): Attendance {
   }
 }
 
+type ClockOutResult = {
+  status: AttendanceStatus
+  timeOut: Date
+
+  workStartedAt: null
+  breakStartedAt: null
+
+  totalWorkedSeconds: number
+  totalBreakSeconds: number
+
+  timeOutLatitude: number
+  timeOutLongitude: number
+
+  regularWorkedSeconds: number
+  overtimeSeconds: number
+  undertimeSeconds: number
+
+  regularPay: number
+  overtimePay: number
+  totalPay: number
+}
+
 export function clockOutAttendance(
   attendance: Attendance,
+  snapshot: AttendanceSnapshot,
   at: Date,
   lat: number,
   lng: number
-): Attendance {
+): ClockOutResult {
   if (attendance.status === AttendanceStatus.CLOCKED_OUT) {
     throw new Error("Employee already clocked out.")
   }
@@ -237,9 +296,27 @@ export function clockOutAttendance(
     throw new Error("Missing breakStartedAt.")
   }
 
-  return {
-    ...attendance,
+  const workedSeconds =
+    attendance.totalWorkedSeconds +
+    (attendance.status === AttendanceStatus.WORKING
+      ? secondsBetween(attendance.workStartedAt!, at)
+      : 0)
 
+  const breakSeconds =
+    attendance.totalBreakSeconds +
+    (attendance.status === AttendanceStatus.ON_BREAK
+      ? secondsBetween(attendance.breakStartedAt!, at)
+      : 0)
+
+  const calculation = calculateAttendancePay({
+    totalWorkedSeconds: workedSeconds,
+    scheduleStartTime: snapshot.scheduleStartTime,
+    scheduleEndTime: snapshot.scheduleEndTime,
+    salaryType: snapshot.salaryType,
+    salaryRate: snapshot.salaryRate,
+  })
+
+  return {
     status: AttendanceStatus.CLOCKED_OUT,
 
     timeOut: at,
@@ -247,25 +324,19 @@ export function clockOutAttendance(
     workStartedAt: null,
     breakStartedAt: null,
 
-    totalWorkedSeconds:
-      attendance.totalWorkedSeconds +
-      (attendance.status === AttendanceStatus.WORKING
-        ? secondsBetween(attendance.workStartedAt!, at)
-        : 0),
-
-    totalBreakSeconds:
-      attendance.totalBreakSeconds +
-      (attendance.status === AttendanceStatus.ON_BREAK
-        ? secondsBetween(attendance.breakStartedAt!, at)
-        : 0),
+    totalWorkedSeconds: workedSeconds,
+    totalBreakSeconds: breakSeconds,
 
     timeOutLatitude: lat,
     timeOutLongitude: lng,
+
+    ...calculation,
   }
 }
 
 export function transitionAttendance(
   attendance: Attendance,
+  snapshot: AttendanceSnapshot,
   input: AttendanceTransitionInput
 ) {
   switch (input.action) {
@@ -278,6 +349,7 @@ export function transitionAttendance(
     case "clockOut":
       return clockOutAttendance(
         attendance,
+        snapshot,
         new Date(input.at),
         input.timeOutLatitude,
         input.timeOutLongitude
@@ -290,13 +362,21 @@ export async function submitAttendanceTransition(
 ) {
   return prisma.$transaction(
     async (tx) => {
-      const attendance = await tx.attendance.findUniqueOrThrow({
-        where: {
-          id: input.attendanceId,
-        },
-      })
+      const { attendanceSnapshot, ...attendance } =
+        await tx.attendance.findUniqueOrThrow({
+          where: {
+            id: input.attendanceId,
+          },
+          include: {
+            attendanceSnapshot: true,
+          },
+        })
 
-      const next = transitionAttendance(attendance, input)
+      if (!attendanceSnapshot) {
+        throw new Error("Attendance snapshot is missing.")
+      }
+
+      const next = transitionAttendance(attendance, attendanceSnapshot, input)
 
       await tx.attendance.update({
         where: {
@@ -341,6 +421,7 @@ export async function submitAttendanceTransition(
               },
             })
           }
+
           break
       }
 
@@ -350,7 +431,10 @@ export async function submitAttendanceTransition(
         },
       })
     },
-    { maxWait: 5000, timeout: 10000 }
+    {
+      maxWait: 5000,
+      timeout: 10000,
+    }
   )
 }
 
@@ -398,6 +482,39 @@ export async function getAttendanceRecordsByEmployee(
     return { data: employeeWithAttendance, error: null }
   } catch (error) {
     console.log("Get Attendance by Employee Error: ", error)
+    return { data: null, error: error as any }
+  }
+}
+
+export async function getAttendanceHistoryByEmployee(
+  input: AttendanceByEmployeeInput
+) {
+  try {
+    const attendances = await prisma.attendance.findMany({
+      where: {
+        employeeId: input.employeeId,
+        status: input.status ? input.status : undefined,
+        attendanceSnapshot: { isNot: null },
+        date:
+          input.start && input.end
+            ? {
+                gte: new Date(input.start),
+                lte: new Date(input.end),
+              }
+            : undefined,
+      },
+      include: {
+        attendanceSnapshot: true,
+        breaks: true,
+      },
+      orderBy: {
+        date: "desc",
+      },
+    })
+
+    return { data: attendances, error: null }
+  } catch (error) {
+    console.log("Get Attendance History by Employee Error: ", error)
     return { data: null, error: error as any }
   }
 }
