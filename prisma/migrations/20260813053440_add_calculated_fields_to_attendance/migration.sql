@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "attendance" ADD COLUMN     "overtimePay" DOUBLE PRECISION,
+ADD COLUMN     "overtimeSeconds" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "regularPay" DOUBLE PRECISION,
+ADD COLUMN     "regularWorkedSeconds" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "totalPay" DOUBLE PRECISION,
+ADD COLUMN     "undertimeSeconds" INTEGER NOT NULL DEFAULT 0;
