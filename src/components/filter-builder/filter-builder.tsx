@@ -363,10 +363,7 @@ function ValuePopover({
           </Button>
         }
       />
-      <PopoverContent
-        align="start"
-        className="max-h-75 w-auto min-w-40 gap-0 overflow-y-auto p-0"
-      >
+      <PopoverContent align="start" className="w-auto min-w-40 gap-0 p-0">
         <PopoverHeader className="px-3 py-2">
           <PopoverTitle>{field.label}</PopoverTitle>
           <PopoverDescription className="sr-only">
@@ -374,7 +371,7 @@ function ValuePopover({
           </PopoverDescription>
         </PopoverHeader>
         <Separator />
-        <ul className="space-y-0.5 p-1">
+        <ul className="max-h-75 space-y-0.5 overflow-y-auto p-1">
           {field.options?.map((option) => {
             const checked = draft.value.includes(option.value)
 
