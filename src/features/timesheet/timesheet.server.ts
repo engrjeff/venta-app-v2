@@ -9,7 +9,25 @@ export async function getTimesheet(input: TimesheetQueryOptions) {
 
     const timesheets = await prisma.attendance.findMany({
       where: {
-        employeeId: input.employeeId,
+        AND: [],
+        employeeId: input.employees
+          ? input.employees.operator === "is"
+            ? { in: input.employees.value }
+            : { notIn: input.employees.value }
+          : undefined,
+        branchId: input.branches
+          ? input.branches.operator === "is"
+            ? { in: input.branches.value }
+            : { notIn: input.branches.value }
+          : undefined,
+        employee: input.designations
+          ? {
+              designationId:
+                input.designations.operator === "is"
+                  ? { in: input.designations.value }
+                  : { notIn: input.designations.value },
+            }
+          : undefined,
         attendanceSnapshot: { isNot: null },
         status: AttendanceStatus.CLOCKED_OUT,
         date:

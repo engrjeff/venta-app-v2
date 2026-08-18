@@ -100,56 +100,64 @@ function RouteComponent() {
             <li key={log.id}>
               <div
                 data-remark={remark}
-                className="space-y-2 rounded-md border-l-4 border-emerald-500 bg-card p-3 shadow data-[remark=LATE]:border-red-400"
+                className="group rounded-md bg-card p-3 shadow"
               >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold">
-                    {formatDate(log.date, "MMM dd, yyy")}
-                  </span>
-                  {remark && (
-                    <Badge variant={remark}>
-                      {remark.replaceAll("_", " ").toLowerCase()}
-                    </Badge>
-                  )}
-                </div>
-                <div className="grid grid-cols-4 text-sm">
-                  <div className="flex flex-col items-center">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase">
-                      In
-                    </span>
-                    {log.timeIn && (
-                      <span className="font-mono">
-                        {formatTime(log.timeIn)}
+                <div className="flex w-full gap-4">
+                  <div>
+                    <span className="block h-full w-1 rounded bg-emerald-400 group-data-[remark=LATE]:bg-red-400" />
+                  </div>
+
+                  <div className="flex-1 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold">
+                        {formatDate(log.date, "MMM dd, yyy")}
                       </span>
-                    )}
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase">
-                      Out
-                    </span>
-                    {log.timeOut ? (
-                      <span className="font-mono">
-                        {formatTime(log.timeOut)}
-                      </span>
-                    ) : (
-                      "--"
-                    )}
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase">
-                      Work Hrs
-                    </span>
-                    <span className="font-mono">
-                      {(log.totalWorkedSeconds / 3600).toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="flex flex-col items-center">
-                    <span className="text-xs font-semibold text-muted-foreground uppercase">
-                      Pay
-                    </span>
-                    <span className="font-mono">
-                      {formatPHP(log.regularPay ?? 0)}
-                    </span>
+                      {remark && (
+                        <Badge variant={remark}>
+                          {remark.replaceAll("_", " ").toLowerCase()}
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-4 text-sm">
+                      <div className="flex flex-col items-center">
+                        <span className="text-xs font-semibold text-muted-foreground uppercase">
+                          In
+                        </span>
+                        {log.timeIn && (
+                          <span className="font-mono">
+                            {formatTime(log.timeIn)}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-xs font-semibold text-muted-foreground uppercase">
+                          Out
+                        </span>
+                        {log.timeOut ? (
+                          <span className="font-mono">
+                            {formatTime(log.timeOut)}
+                          </span>
+                        ) : (
+                          "--"
+                        )}
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-xs font-semibold text-muted-foreground uppercase">
+                          Work Hrs
+                        </span>
+                        <span className="font-mono">
+                          {(log.totalWorkedSeconds / 3600).toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="text-xs font-semibold text-muted-foreground uppercase">
+                          Pay
+                        </span>
+                        <span className="font-mono">
+                          {formatPHP(log.regularPay ?? 0)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -81,3 +81,23 @@ export function formatPHP(amount: number): string {
 export function dateToTimeInputValue(date: Date) {
   return date.toISOString().slice(11, 16)
 }
+
+const ALPHABET =
+  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+
+export function generateId(length = 6): string {
+  const bytes = new Uint8Array(length)
+  crypto.getRandomValues(bytes)
+
+  return Array.from(bytes, (byte) => ALPHABET[byte % ALPHABET.length]).join("")
+}
+
+export function formatDurationFromSeconds(totalSeconds: number) {
+  const sign = totalSeconds < 0 ? "-" : ""
+  const abs = Math.abs(Math.floor(totalSeconds))
+
+  const hours = Math.floor(abs / 3600)
+  const minutes = Math.floor((abs % 3600) / 60)
+
+  return `${sign}${hours}h ${String(minutes).padStart(2, "0")}m`
+}

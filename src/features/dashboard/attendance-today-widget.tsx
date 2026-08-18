@@ -129,8 +129,13 @@ export function AttendanceTodayWidget({
                   className="group cursor-pointer"
                   onClick={() =>
                     navigate({
-                      to: "/timesheet/$employeeId",
-                      params: { employeeId: attendance.employeeId },
+                      to: "/timesheet",
+                      search: {
+                        employees: {
+                          operator: "is",
+                          value: [attendance.employeeId],
+                        },
+                      },
                     })
                   }
                 >
