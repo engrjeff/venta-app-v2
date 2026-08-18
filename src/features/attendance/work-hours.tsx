@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { formatTime } from "@/lib/utils"
+import { formatDurationFromSeconds, formatTime } from "@/lib/utils"
 
 export function WorkHours({
   serverAttendance,
@@ -97,7 +97,11 @@ export function WorkHours({
       <div className="space-y-4 rounded-md bg-card p-4 shadow">
         <div className="space-y-1">
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">Work Hours</span>
+            <span className="text-xs text-muted-foreground">
+              {serverAttendance.status === AttendanceStatus.CLOCKED_OUT
+                ? "Total Worked Today"
+                : "Work Hours"}
+            </span>
             <Badge variant={serverAttendance.status}>
               {serverAttendance.status === AttendanceStatus.CLOCKED_OUT ? (
                 <CheckIcon className="size-4 text-emerald-400" />
@@ -108,7 +112,7 @@ export function WorkHours({
           <div className="font-mono text-4xl font-semibold">
             {serverAttendance.status === AttendanceStatus.CLOCKED_OUT ? (
               <span>
-                {(serverAttendance.totalWorkedSeconds / 3600).toFixed(2)} hrs
+                {formatDurationFromSeconds(serverAttendance.totalWorkedSeconds)}
               </span>
             ) : (
               timer.formatted

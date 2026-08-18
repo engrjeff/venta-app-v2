@@ -30,6 +30,8 @@ const badgeVariants = cva(
           "border-none bg-yellow-900/50 text-yellow-500 capitalize dark:bg-yellow-900/40",
         CLOCKED_OUT:
           "border-none bg-accent text-gray-400 capitalize dark:bg-muted/50",
+        SUCCESS:
+          "border-none bg-emerald-900/50 text-emerald-500 capitalize dark:bg-emerald-900/40",
       },
     },
     defaultVariants: {

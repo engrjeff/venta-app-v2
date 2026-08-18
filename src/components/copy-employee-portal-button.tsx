@@ -1,5 +1,5 @@
 import { authClient } from "@/lib/auth-client"
-import { LinkIcon } from "lucide-react"
+import { ClipboardIcon } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "./ui/button"
 
@@ -34,7 +34,7 @@ export function CopyEmployeePortalButton() {
         }
       }}
     >
-      Employee Portal <LinkIcon />
+      Employee Portal <ClipboardIcon />
     </Button>
   )
 }
