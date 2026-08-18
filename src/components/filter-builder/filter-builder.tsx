@@ -20,6 +20,7 @@ import { Badge } from "../ui/badge"
 export type FilterOption = {
   label: string
   value: string
+  renderAs?: ReactNode
 }
 
 export type FilterFieldType = "select"
@@ -362,7 +363,10 @@ function ValuePopover({
           </Button>
         }
       />
-      <PopoverContent align="start" className="w-auto min-w-40 gap-0 p-0">
+      <PopoverContent
+        align="start"
+        className="max-h-75 w-auto min-w-40 gap-0 overflow-y-auto p-0"
+      >
         <PopoverHeader className="px-3 py-2">
           <PopoverTitle>{field.label}</PopoverTitle>
           <PopoverDescription className="sr-only">
@@ -381,7 +385,11 @@ function ValuePopover({
                     checked={checked}
                     onCheckedChange={() => toggleValue(option.value)}
                   />
-                  <span>{option.label}</span>
+                  {option.renderAs ? (
+                    option.renderAs
+                  ) : (
+                    <span>{option.label}</span>
+                  )}
                 </label>
               </li>
             )
@@ -509,7 +517,7 @@ function AddFilterPopover({
               </ul>
 
               {/* options */}
-              <ul className="space-y-0.5 p-1">
+              <ul className="max-h-75 space-y-0.5 overflow-y-auto p-1">
                 {openedField.options?.map((option) => {
                   const checked = draft.value.includes(option.value)
 
@@ -525,7 +533,11 @@ function AddFilterPopover({
                             })
                           }
                         />
-                        <span>{option.label}</span>
+                        {option.renderAs ? (
+                          option.renderAs
+                        ) : (
+                          <span>{option.label}</span>
+                        )}
                       </label>
                     </li>
                   )
