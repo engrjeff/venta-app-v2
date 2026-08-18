@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { employeesApi } from "@/features/employees/employees.functions"
 import { storeApi } from "@/features/store/store.functions"
@@ -58,24 +52,29 @@ export const Route = createFileRoute("/_protected/timesheet")({
   },
   component: RouteComponent,
   pendingComponent: () => (
-    <Card size="sm" className="h-full flex-1 rounded-md">
-      <CardHeader className="flex items-center justify-between gap-4">
-        <div className="space-y-1">
-          <CardTitle>
-            <Skeleton className="h-4 w-36" />
-          </CardTitle>
-          <CardDescription className="text-xs">
-            <Skeleton className="h-3 w-40" />
-          </CardDescription>
+    <div className="flex h-full flex-col space-y-4 p-4">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <ClockIcon className="size-4" />{" "}
+          <h1 className="font-semibold">Timesheet</h1>
         </div>
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-4 w-32" />
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col items-center justify-center">
-        <Skeleton className="size-full" />
-      </CardContent>
-    </Card>
+      </div>
+      <Card size="sm" className="h-full flex-1 rounded-md">
+        <CardHeader className="flex items-center justify-between gap-4">
+          <div className="space-y-1">
+            <CardTitle>
+              <Skeleton className="h-8 w-36" />
+            </CardTitle>
+          </div>
+          <div className="flex items-center gap-4">
+            <Skeleton className="h-8 w-32" />
+          </div>
+        </CardHeader>
+        <CardContent className="flex flex-1 flex-col items-center justify-center">
+          <Skeleton className="size-full" />
+        </CardContent>
+      </Card>
+    </div>
   ),
 })
 

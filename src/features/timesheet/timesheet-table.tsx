@@ -25,7 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { formatPHP, formatTime } from "@/lib/utils"
+import { formatDurationFromSeconds, formatPHP, formatTime } from "@/lib/utils"
 import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router"
 import { formatDate } from "date-fns"
 import { SearchIcon } from "lucide-react"
@@ -76,8 +76,16 @@ export function TimesheetTable() {
     label: "Employee",
     type: "select",
     options: employees.map((e) => ({
-      label: `${e.firstName} ${e.lastName}`,
       value: e.id,
+      label: `${e.firstName} ${e.lastName}`,
+      renderAs: (
+        <div className="flex flex-col">
+          <span className="text-xs">{`${e.firstName} ${e.lastName}`}</span>
+          <span className="text-xs text-muted-foreground">
+            {e.designation.name}
+          </span>
+        </div>
+      ),
     })),
   }
 
@@ -225,16 +233,14 @@ export function TimesheetTable() {
                       </TableCell>
 
                       <TableCell className="text-center font-mono">
-                        {(attendance.totalWorkedSeconds / 3600).toFixed(2)}{" "}
-                        <span className="text-xs text-muted-foreground">
-                          hrs
-                        </span>
+                        {formatDurationFromSeconds(
+                          attendance.totalWorkedSeconds
+                        )}
                       </TableCell>
                       <TableCell className="text-center font-mono">
-                        {(attendance.totalBreakSeconds / 3600).toFixed(2)}{" "}
-                        <span className="text-xs text-muted-foreground">
-                          hrs
-                        </span>
+                        {formatDurationFromSeconds(
+                          attendance.totalBreakSeconds
+                        )}
                       </TableCell>
                       <TableCell className="text-center font-mono">
                         {formatPHP(attendance.totalPay ?? 0)}
