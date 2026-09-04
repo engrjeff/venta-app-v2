@@ -16,7 +16,7 @@
     "db:generate": "pnpm dlx prisma@7 generate",
     "db:studio": "pnpm dlx prisma@7 studio",
     "postinstall": "prisma@7 generate",
-    "vercel-build": "prisma generate && prisma@7 migrate deploy && vite build"
+    "vercel-build": "prisma@7 generate && prisma@7 migrate deploy && vite build"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
