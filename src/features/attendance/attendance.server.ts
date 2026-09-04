@@ -3,7 +3,11 @@ import { AttendanceStatus } from "@/generated/prisma/enums"
 import { prisma } from "@/lib/db"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client"
 import { useEmployeeSession } from "../employees/employee-session"
-import { calculateAttendancePay, secondsBetween } from "./attendance.utils"
+import {
+  MANILA_UTC_OFFSET_HOURS,
+  calculateAttendancePay,
+  secondsBetween,
+} from "./attendance.utils"
 import type {
   ActiveAttendanceQueryInput,
   AttendanceByEmployeeInput,
@@ -13,7 +17,12 @@ import type {
 } from "./schema"
 
 export function getToday() {
-  const today = new Date().toISOString().split("T")[0]
+  const manilaNow = new Date(
+    Date.now() + MANILA_UTC_OFFSET_HOURS * 60 * 60 * 1000
+  )
+
+  const today = manilaNow.toISOString().split("T")[0]
+
   return new Date(today)
 }
 

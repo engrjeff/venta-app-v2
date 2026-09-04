@@ -5,7 +5,7 @@ export function secondsBetween(start: Date, end: Date) {
 }
 
 /** The app operates in a single fixed timezone (no DST). */
-const MANILA_UTC_OFFSET_HOURS = 8
+export const MANILA_UTC_OFFSET_HOURS = 8
 
 /**
  * Combines a business date with the time-of-day portion of a UTC
