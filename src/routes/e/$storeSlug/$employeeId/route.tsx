@@ -4,22 +4,14 @@ import { attendanceApi } from "@/features/attendance/attendance.functions"
 import { EmployeePortalBottomNav } from "@/features/employees/employee-portal-bottom-nav"
 import { employeesApi } from "@/features/employees/employees.functions"
 import { generatePageTitle } from "@/lib/utils"
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useLoaderData,
+} from "@tanstack/react-router"
 
 export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
-  beforeLoad: async (context) => {
-    const employeeSession = await employeesApi.getSession()
-
-    if (!employeeSession.data?.attendanceId) {
-      throw redirect({
-        to: "/e/$storeSlug",
-        params: {
-          storeSlug: context.params.storeSlug,
-        },
-        replace: true,
-      })
-    }
-  },
   loader: async ({ context, params }) => {
     if (!context.employee?.employeeId) {
       await employeesApi.clearSession()
@@ -30,16 +22,34 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
       })
     }
 
-    if (!context.employee.attendanceId) {
-      await employeesApi.clearSession()
+    const { employeeId } = context.employee
 
-      throw redirect({
-        to: "/e/$storeSlug",
-        params: { storeSlug: params.storeSlug },
+    // a session created right after logging in (before ever clocking in)
+    // has no attendanceId yet - check the db in case it's just stale
+    let attendanceId = context.employee.attendanceId
+
+    if (!attendanceId) {
+      const activeByEmployee = await attendanceApi.getActiveByEmployeeId({
+        data: { employeeId },
       })
+
+      if (activeByEmployee.data?.timeIn) {
+        await employeesApi.updateSession({
+          data: {
+            attendanceId: activeByEmployee.data.id,
+            branchId: activeByEmployee.data.branchId,
+            branchName: activeByEmployee.data.branch.name,
+            timeIn: activeByEmployee.data.timeIn.toISOString(),
+          },
+        })
+
+        attendanceId = activeByEmployee.data.id
+      }
     }
 
-    const { employeeId, attendanceId } = context.employee
+    if (!attendanceId) {
+      return { activeAttendance: null }
+    }
 
     const result = await attendanceApi.getActive({
       data: { attendanceId, employeeId },
@@ -54,14 +64,14 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
       })
     }
 
-    return result.data
+    return { activeAttendance: result.data }
   },
   head: ({ loaderData }) => ({
     meta: [
       {
-        title: loaderData
+        title: loaderData?.activeAttendance
           ? generatePageTitle(
-              `${loaderData?.employee?.lastName}, ${loaderData?.employee?.firstName}`
+              `${loaderData.activeAttendance.employee?.lastName}, ${loaderData.activeAttendance.employee?.firstName}`
             )
           : "",
       },
@@ -71,15 +81,13 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId")({
 })
 
 function RouteComponent() {
-  const data = Route.useLoaderData()
-
-  const { organization: store } = data
+  const employee = useLoaderData({ from: "/e/$storeSlug" })
 
   return (
     <div className="py-20">
       <div className="w-full text-left">
         <h1 className="text-xl font-semibold lg:text-2xl">
-          {store.name} Employee Portal
+          {employee?.organization.name} Employee Portal
         </h1>
         <p className="flex items-center gap-2 text-sm text-muted-foreground">
           Powered by{" "}

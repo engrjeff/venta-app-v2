@@ -1,13 +1,29 @@
 import { buttonVariants } from "@/components/ui/button"
+import { employeesApi } from "@/features/employees/employees.functions"
 import { generatePageTitle } from "@/lib/utils"
 import {
   Link,
   Outlet,
   createFileRoute,
+  redirect,
   useParams,
 } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/e/$storeSlug/$employeeId/daily-sales")({
+  beforeLoad: async (context) => {
+    const employeeSession = await employeesApi.getSession()
+
+    if (!employeeSession.data?.attendanceId) {
+      throw redirect({
+        to: "/e/$storeSlug/$employeeId",
+        params: {
+          storeSlug: context.params.storeSlug,
+          employeeId: context.params.employeeId,
+        },
+        replace: true,
+      })
+    }
+  },
   head: () => ({
     meta: [{ title: generatePageTitle("Daily Sales") }],
   }),

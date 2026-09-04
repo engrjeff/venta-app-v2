@@ -1,17 +1,10 @@
 import { AppLogo } from "@/components/app-logo"
 import { siteConfig } from "@/config/site"
-import { attendanceApi } from "@/features/attendance/attendance.functions"
-import { EmployeeClockInForm } from "@/features/attendance/employee-clock-in-form"
 import { EmployeePortalForm } from "@/features/employees/employee-portal-form"
 import { employeesApi } from "@/features/employees/employees.functions"
 import { storeApi } from "@/features/store/store.functions"
 import { generatePageTitle } from "@/lib/utils"
-import {
-  createFileRoute,
-  notFound,
-  redirect,
-  useRouteContext,
-} from "@tanstack/react-router"
+import { createFileRoute, notFound, redirect } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/e/$storeSlug/")({
   component: RouteComponent,
@@ -19,10 +12,7 @@ export const Route = createFileRoute("/e/$storeSlug/")({
   beforeLoad: async (context) => {
     const employeeSession = await employeesApi.getSession()
 
-    if (
-      employeeSession.data?.attendanceId &&
-      employeeSession.data?.employeeId
-    ) {
+    if (employeeSession.data?.employeeId) {
       throw redirect({
         to: "/e/$storeSlug/$employeeId",
         params: {
@@ -32,46 +22,13 @@ export const Route = createFileRoute("/e/$storeSlug/")({
         replace: true,
       })
     }
-
-    return employeeSession
   },
-  loader: async ({ params, context }) => {
+  loader: async ({ params }) => {
     const store = await storeApi.getBySlug({
       data: { slug: params.storeSlug },
     })
 
     if (!store.data) throw notFound()
-
-    if (context.data?.employeeId && !context.data.attendanceId) {
-      const activeAttendanceOfEmployee =
-        await attendanceApi.getActiveByEmployeeId({
-          data: { employeeId: context.data?.employeeId },
-        })
-
-      if (activeAttendanceOfEmployee.data && context.data.storeSlug) {
-        const attendance = activeAttendanceOfEmployee.data
-
-        if (attendance.timeIn) {
-          await employeesApi.updateSession({
-            data: {
-              attendanceId: attendance.id,
-              branchId: attendance.branchId,
-              branchName: attendance.branch.name,
-              timeIn: attendance.timeIn.toISOString(),
-            },
-          })
-
-          throw redirect({
-            to: "/e/$storeSlug/$employeeId",
-            params: {
-              storeSlug: context.data.storeSlug,
-              employeeId: attendance.employeeId,
-            },
-            replace: true,
-          })
-        }
-      }
-    }
 
     return store.data
   },
@@ -82,10 +39,6 @@ export const Route = createFileRoute("/e/$storeSlug/")({
 
 function RouteComponent() {
   const store = Route.useLoaderData()
-
-  const { employee: employeeSession } = useRouteContext({
-    from: "/e/$storeSlug/",
-  })
 
   return (
     <div className="flex h-full flex-col justify-center gap-6 p-4 pt-24">
@@ -100,11 +53,7 @@ function RouteComponent() {
           </span>
         </p>
       </div>
-      {employeeSession ? (
-        <EmployeeClockInForm />
-      ) : (
-        <EmployeePortalForm storeId={store.id} />
-      )}
+      <EmployeePortalForm storeId={store.id} />
     </div>
   )
 }

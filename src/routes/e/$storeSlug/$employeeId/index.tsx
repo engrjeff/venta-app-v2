@@ -1,39 +1,31 @@
 import { Badge } from "@/components/ui/badge"
+import { EmployeeClockInForm } from "@/features/attendance/employee-clock-in-form"
 import { WorkHours } from "@/features/attendance/work-hours"
-import { employeesApi } from "@/features/employees/employees.functions"
 import {
   formatDurationFromSeconds,
   formatScheduleTimeRange,
   formatTime,
 } from "@/lib/utils"
-import {
-  createFileRoute,
-  redirect,
-  useLoaderData,
-} from "@tanstack/react-router"
+import { createFileRoute, useLoaderData } from "@tanstack/react-router"
 import { CircleStopIcon, ClockIcon, MapPinIcon } from "lucide-react"
 
 export const Route = createFileRoute("/e/$storeSlug/$employeeId/")({
-  beforeLoad: async (context) => {
-    const employeeSession = await employeesApi.getSession()
-
-    if (!employeeSession.data?.attendanceId) {
-      throw redirect({
-        to: "/e/$storeSlug",
-        params: {
-          storeSlug: context.params.storeSlug,
-        },
-        replace: true,
-      })
-    }
-  },
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const data = useLoaderData({ from: "/e/$storeSlug/$employeeId" })
+  const loaderData = useLoaderData({ from: "/e/$storeSlug/$employeeId" })
 
-  const { organization: store, employee, branch, ...serverAttendance } = data
+  if (!loaderData.activeAttendance) {
+    return <EmployeeClockInForm />
+  }
+
+  const {
+    organization: store,
+    employee,
+    branch,
+    ...serverAttendance
+  } = loaderData.activeAttendance
 
   const { formatted: branchSchedule } = formatScheduleTimeRange(
     branch.scheduleStartTime,
