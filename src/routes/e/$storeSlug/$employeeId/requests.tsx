@@ -1,7 +1,5 @@
-import { Button } from "@/components/ui/button"
 import {
   Empty,
-  EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
@@ -27,11 +25,6 @@ function RouteComponent() {
             Requests to admin will appear here
           </EmptyDescription>
         </EmptyHeader>
-        <EmptyContent>
-          <Button type="button" size="sm">
-            Create a Request
-          </Button>
-        </EmptyContent>
       </Empty>
     </>
   )

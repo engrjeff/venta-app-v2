@@ -12,11 +12,11 @@
     "check": "prettier --check \"**/*.{ts,tsx,js,jsx}\"",
     "typecheck": "tsc --noEmit",
     "db:seed": "tsx prisma/seed.ts",
-    "db:migrate": "pnpm dlx prisma migrate dev",
-    "db:generate": "pnpm dlx prisma generate",
-    "db:studio": "pnpm dlx prisma studio",
-    "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && prisma migrate deploy && vite build"
+    "db:migrate": "pnpm dlx prisma@7 migrate dev",
+    "db:generate": "pnpm dlx prisma@7 generate",
+    "db:studio": "pnpm dlx prisma@7 studio",
+    "postinstall": "prisma@7 generate",
+    "vercel-build": "prisma generate && prisma@7 migrate deploy && vite build"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

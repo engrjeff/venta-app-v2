@@ -1,13 +1,17 @@
 import { Badge } from "@/components/ui/badge"
 import { WorkHours } from "@/features/attendance/work-hours"
 import { employeesApi } from "@/features/employees/employees.functions"
-import { formatScheduleTimeRange, formatTime } from "@/lib/utils"
+import {
+  formatDurationFromSeconds,
+  formatScheduleTimeRange,
+  formatTime,
+} from "@/lib/utils"
 import {
   createFileRoute,
   redirect,
   useLoaderData,
 } from "@tanstack/react-router"
-import { CircleStopIcon, ClockIcon } from "lucide-react"
+import { CircleStopIcon, ClockIcon, MapPinIcon } from "lucide-react"
 
 export const Route = createFileRoute("/e/$storeSlug/$employeeId/")({
   beforeLoad: async (context) => {
@@ -38,11 +42,18 @@ function RouteComponent() {
 
   return (
     <>
-      {/* Branch - Schedule */}
-      <Badge variant="secondary" className="p-3">
-        <ClockIcon className="size-3" />
-        Schedule: {branchSchedule}
-      </Badge>
+      <div className="flex flex-wrap items-center gap-2">
+        {/* Branch name */}
+        <Badge variant="secondary" className="px-1.5">
+          <MapPinIcon className="size-3" />
+          {branch.name}
+        </Badge>
+        {/* Branch - Schedule */}
+        <Badge variant="secondary" className="px-1.5">
+          <ClockIcon className="size-3" />
+          {branchSchedule}
+        </Badge>
+      </div>
 
       {/* work hours */}
       <WorkHours branch={branch} serverAttendance={serverAttendance} />
@@ -55,7 +66,7 @@ function RouteComponent() {
             <p>
               Total Break Hours:{" "}
               <span className="font-semibold text-yellow-400">
-                {(serverAttendance.totalBreakSeconds / 3600).toFixed(2)} hrs
+                {formatDurationFromSeconds(serverAttendance.totalBreakSeconds)}
               </span>{" "}
             </p>
           </div>
@@ -77,7 +88,7 @@ function RouteComponent() {
                         <span className="text-muted-foreground">
                           Duration:{" "}
                         </span>
-                        {(breakItem.durationSeconds / 60).toFixed(1)} min
+                        {formatDurationFromSeconds(breakItem.durationSeconds)}
                       </>
                     ) : (
                       <span className="text-sm text-yellow-400">On Going</span>

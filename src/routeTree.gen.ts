@@ -33,6 +33,11 @@ import { Route as EStoreSlugEmployeeIdIndexRouteImport } from './routes/e/$store
 import { Route as EStoreSlugEmployeeIdRequestsRouteImport } from './routes/e/$storeSlug/$employeeId/requests'
 import { Route as EStoreSlugEmployeeIdLogsRouteImport } from './routes/e/$storeSlug/$employeeId/logs'
 import { Route as ApiResourcesStoreIdFieldOptionsRouteImport } from './routes/api/resources/$storeId.field-options'
+import { Route as EStoreSlugEmployeeIdDailySalesRouteRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/route'
+import { Route as EStoreSlugEmployeeIdDailySalesIndexRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/index'
+import { Route as EStoreSlugEmployeeIdDailySalesSalesRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/sales'
+import { Route as EStoreSlugEmployeeIdDailySalesExpensesRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/expenses'
+import { Route as EStoreSlugEmployeeIdDailySalesCashOnHandRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
 
 const OnboardingRouteRoute = OnboardingRouteRouteImport.update({
   id: '/onboarding',
@@ -157,6 +162,36 @@ const ApiResourcesStoreIdFieldOptionsRoute =
     path: '/api/resources/$storeId/field-options',
     getParentRoute: () => rootRouteImport,
   } as any)
+const EStoreSlugEmployeeIdDailySalesRouteRoute =
+  EStoreSlugEmployeeIdDailySalesRouteRouteImport.update({
+    id: '/daily-sales',
+    path: '/daily-sales',
+    getParentRoute: () => EStoreSlugEmployeeIdRouteRoute,
+  } as any)
+const EStoreSlugEmployeeIdDailySalesIndexRoute =
+  EStoreSlugEmployeeIdDailySalesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
+  } as any)
+const EStoreSlugEmployeeIdDailySalesSalesRoute =
+  EStoreSlugEmployeeIdDailySalesSalesRouteImport.update({
+    id: '/sales',
+    path: '/sales',
+    getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
+  } as any)
+const EStoreSlugEmployeeIdDailySalesExpensesRoute =
+  EStoreSlugEmployeeIdDailySalesExpensesRouteImport.update({
+    id: '/expenses',
+    path: '/expenses',
+    getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
+  } as any)
+const EStoreSlugEmployeeIdDailySalesCashOnHandRoute =
+  EStoreSlugEmployeeIdDailySalesCashOnHandRouteImport.update({
+    id: '/cash-on-hand',
+    path: '/cash-on-hand',
+    getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -177,10 +212,15 @@ export interface FileRoutesByFullPath {
   '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/e/$storeSlug/': typeof EStoreSlugIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales': typeof EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren
   '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
   '/e/$storeSlug/$employeeId/logs': typeof EStoreSlugEmployeeIdLogsRoute
   '/e/$storeSlug/$employeeId/requests': typeof EStoreSlugEmployeeIdRequestsRoute
   '/e/$storeSlug/$employeeId/': typeof EStoreSlugEmployeeIdIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand': typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
+  '/e/$storeSlug/$employeeId/daily-sales/expenses': typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/sales': typeof EStoreSlugEmployeeIdDailySalesSalesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/': typeof EStoreSlugEmployeeIdDailySalesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -202,6 +242,10 @@ export interface FileRoutesByTo {
   '/e/$storeSlug/$employeeId/logs': typeof EStoreSlugEmployeeIdLogsRoute
   '/e/$storeSlug/$employeeId/requests': typeof EStoreSlugEmployeeIdRequestsRoute
   '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand': typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
+  '/e/$storeSlug/$employeeId/daily-sales/expenses': typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/sales': typeof EStoreSlugEmployeeIdDailySalesSalesRoute
+  '/e/$storeSlug/$employeeId/daily-sales': typeof EStoreSlugEmployeeIdDailySalesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -225,10 +269,15 @@ export interface FileRoutesById {
   '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRouteRouteWithChildren
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/e/$storeSlug/': typeof EStoreSlugIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales': typeof EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren
   '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
   '/e/$storeSlug/$employeeId/logs': typeof EStoreSlugEmployeeIdLogsRoute
   '/e/$storeSlug/$employeeId/requests': typeof EStoreSlugEmployeeIdRequestsRoute
   '/e/$storeSlug/$employeeId/': typeof EStoreSlugEmployeeIdIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand': typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
+  '/e/$storeSlug/$employeeId/daily-sales/expenses': typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/sales': typeof EStoreSlugEmployeeIdDailySalesSalesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/': typeof EStoreSlugEmployeeIdDailySalesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -251,10 +300,15 @@ export interface FileRouteTypes {
     | '/e/$storeSlug/$employeeId'
     | '/api/auth/$'
     | '/e/$storeSlug/'
+    | '/e/$storeSlug/$employeeId/daily-sales'
     | '/api/resources/$storeId/field-options'
     | '/e/$storeSlug/$employeeId/logs'
     | '/e/$storeSlug/$employeeId/requests'
     | '/e/$storeSlug/$employeeId/'
+    | '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+    | '/e/$storeSlug/$employeeId/daily-sales/expenses'
+    | '/e/$storeSlug/$employeeId/daily-sales/sales'
+    | '/e/$storeSlug/$employeeId/daily-sales/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -276,6 +330,10 @@ export interface FileRouteTypes {
     | '/e/$storeSlug/$employeeId/logs'
     | '/e/$storeSlug/$employeeId/requests'
     | '/e/$storeSlug/$employeeId'
+    | '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+    | '/e/$storeSlug/$employeeId/daily-sales/expenses'
+    | '/e/$storeSlug/$employeeId/daily-sales/sales'
+    | '/e/$storeSlug/$employeeId/daily-sales'
   id:
     | '__root__'
     | '/'
@@ -298,10 +356,15 @@ export interface FileRouteTypes {
     | '/e/$storeSlug/$employeeId'
     | '/api/auth/$'
     | '/e/$storeSlug/'
+    | '/e/$storeSlug/$employeeId/daily-sales'
     | '/api/resources/$storeId/field-options'
     | '/e/$storeSlug/$employeeId/logs'
     | '/e/$storeSlug/$employeeId/requests'
     | '/e/$storeSlug/$employeeId/'
+    | '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+    | '/e/$storeSlug/$employeeId/daily-sales/expenses'
+    | '/e/$storeSlug/$employeeId/daily-sales/sales'
+    | '/e/$storeSlug/$employeeId/daily-sales/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -484,6 +547,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiResourcesStoreIdFieldOptionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/e/$storeSlug/$employeeId/daily-sales': {
+      id: '/e/$storeSlug/$employeeId/daily-sales'
+      path: '/daily-sales'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRouteImport
+      parentRoute: typeof EStoreSlugEmployeeIdRouteRoute
+    }
+    '/e/$storeSlug/$employeeId/daily-sales/': {
+      id: '/e/$storeSlug/$employeeId/daily-sales/'
+      path: '/'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales/'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesIndexRouteImport
+      parentRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRoute
+    }
+    '/e/$storeSlug/$employeeId/daily-sales/sales': {
+      id: '/e/$storeSlug/$employeeId/daily-sales/sales'
+      path: '/sales'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales/sales'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesSalesRouteImport
+      parentRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRoute
+    }
+    '/e/$storeSlug/$employeeId/daily-sales/expenses': {
+      id: '/e/$storeSlug/$employeeId/daily-sales/expenses'
+      path: '/expenses'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales/expenses'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesExpensesRouteImport
+      parentRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRoute
+    }
+    '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand': {
+      id: '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+      path: '/cash-on-hand'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesCashOnHandRouteImport
+      parentRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRoute
+    }
   }
 }
 
@@ -541,7 +639,32 @@ const OnboardingRouteRouteWithChildren = OnboardingRouteRoute._addFileChildren(
   OnboardingRouteRouteChildren,
 )
 
+interface EStoreSlugEmployeeIdDailySalesRouteRouteChildren {
+  EStoreSlugEmployeeIdDailySalesCashOnHandRoute: typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
+  EStoreSlugEmployeeIdDailySalesExpensesRoute: typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
+  EStoreSlugEmployeeIdDailySalesSalesRoute: typeof EStoreSlugEmployeeIdDailySalesSalesRoute
+  EStoreSlugEmployeeIdDailySalesIndexRoute: typeof EStoreSlugEmployeeIdDailySalesIndexRoute
+}
+
+const EStoreSlugEmployeeIdDailySalesRouteRouteChildren: EStoreSlugEmployeeIdDailySalesRouteRouteChildren =
+  {
+    EStoreSlugEmployeeIdDailySalesCashOnHandRoute:
+      EStoreSlugEmployeeIdDailySalesCashOnHandRoute,
+    EStoreSlugEmployeeIdDailySalesExpensesRoute:
+      EStoreSlugEmployeeIdDailySalesExpensesRoute,
+    EStoreSlugEmployeeIdDailySalesSalesRoute:
+      EStoreSlugEmployeeIdDailySalesSalesRoute,
+    EStoreSlugEmployeeIdDailySalesIndexRoute:
+      EStoreSlugEmployeeIdDailySalesIndexRoute,
+  }
+
+const EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren =
+  EStoreSlugEmployeeIdDailySalesRouteRoute._addFileChildren(
+    EStoreSlugEmployeeIdDailySalesRouteRouteChildren,
+  )
+
 interface EStoreSlugEmployeeIdRouteRouteChildren {
+  EStoreSlugEmployeeIdDailySalesRouteRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren
   EStoreSlugEmployeeIdLogsRoute: typeof EStoreSlugEmployeeIdLogsRoute
   EStoreSlugEmployeeIdRequestsRoute: typeof EStoreSlugEmployeeIdRequestsRoute
   EStoreSlugEmployeeIdIndexRoute: typeof EStoreSlugEmployeeIdIndexRoute
@@ -549,6 +672,8 @@ interface EStoreSlugEmployeeIdRouteRouteChildren {
 
 const EStoreSlugEmployeeIdRouteRouteChildren: EStoreSlugEmployeeIdRouteRouteChildren =
   {
+    EStoreSlugEmployeeIdDailySalesRouteRoute:
+      EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren,
     EStoreSlugEmployeeIdLogsRoute: EStoreSlugEmployeeIdLogsRoute,
     EStoreSlugEmployeeIdRequestsRoute: EStoreSlugEmployeeIdRequestsRoute,
     EStoreSlugEmployeeIdIndexRoute: EStoreSlugEmployeeIdIndexRoute,

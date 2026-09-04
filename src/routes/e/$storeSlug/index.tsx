@@ -88,7 +88,7 @@ function RouteComponent() {
   })
 
   return (
-    <div className="p-4 pt-24">
+    <div className="flex h-full flex-col justify-center gap-6 p-4 pt-24">
       <div className="w-full text-left">
         <h1 className="text-xl font-semibold lg:text-2xl">
           {store.name} Employee Portal

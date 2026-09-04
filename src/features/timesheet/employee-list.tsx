@@ -77,8 +77,13 @@ export function EmployeeList({
             {filteredEmployees.map((employee) => (
               <li key={employee.id}>
                 <Link
-                  to="/timesheet/$employeeId"
-                  params={{ employeeId: employee.id }}
+                  to="/timesheet"
+                  search={{
+                    employees: {
+                      operator: "is",
+                      value: [employee.id],
+                    },
+                  }}
                   preload={false}
                   className="group"
                 >
