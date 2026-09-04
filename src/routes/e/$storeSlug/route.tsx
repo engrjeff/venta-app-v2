@@ -37,7 +37,7 @@ function RouteComponent() {
           {employee ? (
             <div className="flex items-center gap-3">
               <Avatar>
-                <AvatarFallback className="font-bold">
+                <AvatarFallback className="bg-primary font-bold text-primary-foreground">
                   {getInitials(employee.firstName, employee.lastName)}
                 </AvatarFallback>
               </Avatar>
@@ -63,7 +63,7 @@ function RouteComponent() {
           </div>
         </div>
       </header>
-      <main className="container mx-auto h-screen min-h-screen w-full max-w-lg">
+      <main className="container mx-auto h-screen min-h-screen w-full max-w-lg px-4">
         <Outlet />
       </main>
     </>

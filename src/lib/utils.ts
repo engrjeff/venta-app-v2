@@ -40,6 +40,23 @@ export interface ScheduleTimeRange {
   end: number
 }
 
+/**
+ * Formats a time-only `DateTime` (e.g. schedule or requested clock-out
+ * times, stored as UTC time-only fields) without shifting for local
+ * timezone, since only the hour/minute portion is meaningful.
+ */
+export function formatTimeOfDay(time: string | Date) {
+  const date = time instanceof Date ? time : new Date(time)
+
+  const hours = date.getUTCHours()
+  const minutes = date.getUTCMinutes()
+
+  const period = hours >= 12 ? "PM" : "AM"
+  const hour12 = hours % 12 || 12
+
+  return `${hour12}:${String(minutes).padStart(2, "0")} ${period}`
+}
+
 export function formatScheduleTimeRange(
   startTime: string | Date,
   endTime: string | Date
@@ -47,18 +64,8 @@ export function formatScheduleTimeRange(
   const start = startTime instanceof Date ? startTime : new Date(startTime)
   const end = endTime instanceof Date ? endTime : new Date(endTime)
 
-  const format = (date: Date) => {
-    const hours = date.getUTCHours()
-    const minutes = date.getUTCMinutes()
-
-    const period = hours >= 12 ? "PM" : "AM"
-    const hour12 = hours % 12 || 12
-
-    return `${hour12}:${String(minutes).padStart(2, "0")} ${period}`
-  }
-
   return {
-    formatted: `${format(start)} to ${format(end)}`,
+    formatted: `${formatTimeOfDay(start)} to ${formatTimeOfDay(end)}`,
     start: start.getUTCHours(),
     end: end.getUTCHours(),
   }

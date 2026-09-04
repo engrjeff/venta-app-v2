@@ -4,6 +4,23 @@ export function secondsBetween(start: Date, end: Date) {
   return Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000))
 }
 
+/**
+ * Combines a business date with the time-of-day portion of a UTC
+ * time-only `DateTime` field (e.g. a schedule or requested clock-out time).
+ */
+export function combineDateAndTime(date: Date, time: Date): Date {
+  const combined = new Date(date)
+
+  combined.setUTCHours(
+    time.getUTCHours(),
+    time.getUTCMinutes(),
+    time.getUTCSeconds(),
+    0
+  )
+
+  return combined
+}
+
 export type AttendanceCalculation = {
   regularWorkedSeconds: number
   overtimeSeconds: number

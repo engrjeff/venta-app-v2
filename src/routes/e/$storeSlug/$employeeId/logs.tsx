@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import {
   Empty,
   EmptyDescription,
@@ -6,12 +5,10 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
+import { AttendanceLogItem } from "@/features/attendance/attendance-log-item"
 import { attendanceApi } from "@/features/attendance/attendance.functions"
-import { AttendanceStatus } from "@/generated/prisma/enums"
-import { formatDurationFromSeconds, formatPHP, formatTime } from "@/lib/utils"
 import { createFileRoute } from "@tanstack/react-router"
-import { formatDate, isToday } from "date-fns"
-import { InboxIcon, MoreHorizontalIcon } from "lucide-react"
+import { InboxIcon } from "lucide-react"
 import z from "zod"
 
 const logsSearchSchema = z.object({
@@ -56,6 +53,8 @@ function RouteComponent() {
 
   const logs = loaderData.data
 
+  const { employeeId } = Route.useParams()
+
   return (
     <>
       <div>
@@ -67,55 +66,7 @@ function RouteComponent() {
 
           return (
             <li key={log.id}>
-              <div className="group relative space-y-0.5 rounded-md bg-card p-3 text-sm shadow">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-xs"
-                  className="absolute top-0.5 right-0.5"
-                >
-                  <MoreHorizontalIcon />
-                </Button>
-                <div className="flex items-center justify-between">
-                  <p className="font-medium">
-                    {formatDate(log.date, "MMM dd, yyy")}
-                  </p>
-                </div>
-                <div className="flex items-center justify-between">
-                  {log.timeIn &&
-                    log.timeOut &&
-                    log.status === AttendanceStatus.CLOCKED_OUT && (
-                      <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <span>{formatTime(log.timeIn)}</span>
-                        <span>-</span>
-                        <span>{formatTime(log.timeOut)}</span>
-                      </p>
-                    )}
-                  {!log.timeOut && log.timeIn && !isToday(log.date) && (
-                    <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <span>{formatTime(log.timeIn)}</span>
-                      <span>-</span>
-                      <span className="text-destructive">Not clocked out</span>
-                    </p>
-                  )}
-                  {!log.timeOut && log.timeIn && isToday(log.date) && (
-                    <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <span>{formatTime(log.timeIn)}</span>
-                      <span>-</span>
-                      <span className="text-emerald-500">Working</span>
-                    </p>
-                  )}
-                  <p className="ml-auto flex items-center gap-1 text-xs text-muted-foreground">
-                    Work:
-                    <span className="font-mono">
-                      {formatDurationFromSeconds(log.totalWorkedSeconds)} /
-                    </span>
-                    <span className="font-mono font-medium text-emerald-500">
-                      {formatPHP(log.regularPay ?? 0)}
-                    </span>
-                  </p>
-                </div>
-              </div>
+              <AttendanceLogItem log={log} employeeId={employeeId} />
             </li>
           )
         })}

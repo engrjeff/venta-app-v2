@@ -94,6 +94,7 @@ model Organization {
   attendances          Attendance[]
   attendanceSnapshots  AttendanceSnapshot[]
   expenses             Expense[]
+  attendanceRequests   AttendanceRequest[]
 
   @@unique([slug])
   @@map("organization")
@@ -263,9 +264,10 @@ model Employee {
 
   hiredAt DateTime?
 
-  branches   EmployeeBranch[]
-  attendance Attendance[]
-  expenses   Expense[]
+  branches           EmployeeBranch[]
+  attendance         Attendance[]
+  expenses           Expense[]
+  attendanceRequests AttendanceRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -375,6 +377,7 @@ model Attendance {
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
   attendanceSnapshot AttendanceSnapshot?
+  requests           AttendanceRequest[]
 
   @@unique([employeeId, date])
   @@index([organizationId])
@@ -450,4 +453,46 @@ model Expense {
   @@index([branchId])
   @@index([employeeId])
   @@map("expense")
+}
+
+enum AttendanceRequestType {
+  FORGOT_TO_CLOCK_OUT
+}
+
+enum AttendanceRequestStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  CANCELLED
+}
+
+model AttendanceRequest {
+  id String @id @default(cuid())
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  employeeId String
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  attendanceId String
+  attendance   Attendance @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
+
+  type   AttendanceRequestType
+  reason String
+
+  /// Employee-specified clock-out time, used by FORGOT_TO_CLOCK_OUT requests
+  clockOutTime DateTime? @db.Time(0)
+
+  status AttendanceRequestStatus @default(PENDING)
+
+  reviewedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([employeeId])
+  @@index([attendanceId])
+  @@map("attendance_request")
 }

@@ -506,6 +506,11 @@ export async function getAttendanceHistoryByEmployee(
       include: {
         attendanceSnapshot: true,
         breaks: true,
+        requests: {
+          select: { id: true, status: true },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+        },
       },
       orderBy: {
         date: "desc",

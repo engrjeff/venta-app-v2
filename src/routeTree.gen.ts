@@ -21,6 +21,7 @@ import { Route as OnboardingDesignationsRouteImport } from './routes/onboarding/
 import { Route as OnboardingBranchRouteImport } from './routes/onboarding/branch'
 import { Route as ProtectedTimesheetRouteImport } from './routes/_protected/timesheet'
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
+import { Route as ProtectedRequestsRouteImport } from './routes/_protected/requests'
 import { Route as ProtectedEmployeesRouteImport } from './routes/_protected/employees'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
@@ -95,6 +96,11 @@ const ProtectedTimesheetRoute = ProtectedTimesheetRouteImport.update({
 const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedRequestsRoute = ProtectedRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const ProtectedEmployeesRoute = ProtectedEmployeesRouteImport.update({
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/sign-up': typeof authSignUpRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/employees': typeof ProtectedEmployeesRoute
+  '/requests': typeof ProtectedRequestsRoute
   '/settings': typeof ProtectedSettingsRoute
   '/timesheet': typeof ProtectedTimesheetRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/sign-up': typeof authSignUpRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/employees': typeof ProtectedEmployeesRoute
+  '/requests': typeof ProtectedRequestsRoute
   '/settings': typeof ProtectedSettingsRoute
   '/timesheet': typeof ProtectedTimesheetRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/(auth)/sign-up': typeof authSignUpRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_protected/employees': typeof ProtectedEmployeesRoute
+  '/_protected/requests': typeof ProtectedRequestsRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/_protected/timesheet': typeof ProtectedTimesheetRoute
   '/onboarding/branch': typeof OnboardingBranchRoute
@@ -289,6 +298,7 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/dashboard'
     | '/employees'
+    | '/requests'
     | '/settings'
     | '/timesheet'
     | '/onboarding/branch'
@@ -316,6 +326,7 @@ export interface FileRouteTypes {
     | '/sign-up'
     | '/dashboard'
     | '/employees'
+    | '/requests'
     | '/settings'
     | '/timesheet'
     | '/onboarding/branch'
@@ -345,6 +356,7 @@ export interface FileRouteTypes {
     | '/(auth)/sign-up'
     | '/_protected/dashboard'
     | '/_protected/employees'
+    | '/_protected/requests'
     | '/_protected/settings'
     | '/_protected/timesheet'
     | '/onboarding/branch'
@@ -461,6 +473,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof ProtectedSettingsRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/requests': {
+      id: '/_protected/requests'
+      path: '/requests'
+      fullPath: '/requests'
+      preLoaderRoute: typeof ProtectedRequestsRouteImport
       parentRoute: typeof ProtectedRouteRoute
     }
     '/_protected/employees': {
@@ -602,6 +621,7 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 interface ProtectedRouteRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedEmployeesRoute: typeof ProtectedEmployeesRoute
+  ProtectedRequestsRoute: typeof ProtectedRequestsRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
   ProtectedTimesheetRoute: typeof ProtectedTimesheetRoute
 }
@@ -609,6 +629,7 @@ interface ProtectedRouteRouteChildren {
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedEmployeesRoute: ProtectedEmployeesRoute,
+  ProtectedRequestsRoute: ProtectedRequestsRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
   ProtectedTimesheetRoute: ProtectedTimesheetRoute,
 }
