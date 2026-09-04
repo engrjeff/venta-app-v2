@@ -18,9 +18,15 @@ import { DATE_PRESETS, getThisWeekRange, isPresetSelected } from "./presets"
 type Props = {
   value?: DateRange
   onApply?: (range: DateRange | undefined) => void
+  /**
+   * Renders only the preset list (no calendar UI). Selecting a preset
+   * applies it immediately and closes the popover — there's no draft
+   * state to combine with a calendar selection.
+   */
+  presetsOnly?: boolean
 }
 
-export function DateRangeFilter({ value, onApply }: Props) {
+export function DateRangeFilter({ value, onApply, presetsOnly }: Props) {
   const initialRange = React.useMemo(() => value ?? getThisWeekRange(), [value])
 
   const [open, setOpen] = React.useState(false)
@@ -29,6 +35,16 @@ export function DateRangeFilter({ value, onApply }: Props) {
   React.useEffect(() => {
     setDraft(value ?? getThisWeekRange())
   }, [value])
+
+  function selectPreset(range: DateRange) {
+    if (presetsOnly) {
+      onApply?.(range)
+      setOpen(false)
+      return
+    }
+
+    setDraft(range)
+  }
 
   function label() {
     if (!value?.from) {
@@ -69,61 +85,82 @@ export function DateRangeFilter({ value, onApply }: Props) {
         }
       />
 
-      <PopoverContent align="start" className="w-auto p-0">
-        <div className="flex">
-          <div className="w-44 border-r p-2">
+      <PopoverContent
+        align="start"
+        className={cn("w-auto p-0", presetsOnly && "w-44")}
+      >
+        {presetsOnly ? (
+          <div className="p-2">
             {DATE_PRESETS.map((preset) => (
               <Button
                 key={preset.label}
                 size="sm"
                 variant={
-                  isPresetSelected(preset, draft) ? "secondary" : "ghost"
+                  isPresetSelected(preset, value) ? "secondary" : "ghost"
                 }
-                className="mb-1 w-full justify-start"
-                onClick={() => setDraft(preset.getRange())}
+                className="mb-1 w-full justify-start last:mb-0"
+                onClick={() => selectPreset(preset.getRange())}
               >
                 {preset.label}
               </Button>
             ))}
           </div>
-
-          <div className="flex flex-col">
-            <Calendar
-              mode="range"
-              defaultMonth={draft?.from}
-              selected={draft}
-              onSelect={setDraft}
-              numberOfMonths={2}
-            />
-
-            <div className="flex items-center justify-between border-t p-3">
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setDraft(value)
-                  setOpen(false)
-                }}
-              >
-                Cancel
-              </Button>
-
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={() => setDraft(undefined)}>
-                  Clear
-                </Button>
-
+        ) : (
+          <div className="flex">
+            <div className="w-44 border-r p-2">
+              {DATE_PRESETS.map((preset) => (
                 <Button
+                  key={preset.label}
+                  size="sm"
+                  variant={
+                    isPresetSelected(preset, draft) ? "secondary" : "ghost"
+                  }
+                  className="mb-1 w-full justify-start"
+                  onClick={() => selectPreset(preset.getRange())}
+                >
+                  {preset.label}
+                </Button>
+              ))}
+            </div>
+
+            <div className="flex flex-col">
+              <Calendar
+                mode="range"
+                defaultMonth={draft?.from}
+                selected={draft}
+                onSelect={setDraft}
+                numberOfMonths={2}
+              />
+
+              <div className="flex items-center justify-between border-t p-3">
+                <Button
+                  variant="ghost"
                   onClick={() => {
-                    onApply?.(draft)
+                    setDraft(value)
                     setOpen(false)
                   }}
                 >
-                  Apply
+                  Cancel
                 </Button>
+
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => setDraft(undefined)}>
+                    Clear
+                  </Button>
+
+                  <Button
+                    onClick={() => {
+                      onApply?.(draft)
+                      setOpen(false)
+                    }}
+                  >
+                    Apply
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </PopoverContent>
     </Popover>
   )

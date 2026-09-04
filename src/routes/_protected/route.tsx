@@ -1,3 +1,4 @@
+import { AppBottomNav } from "@/components/app-bottom-nav"
 import { AppHeader } from "@/components/app-header"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
@@ -54,9 +55,10 @@ function RouteComponent() {
       <AppSidebar stores={loaderData.data} />
       <SidebarInset className="flex max-h-screen flex-col overflow-hidden">
         <AppHeader />
-        <div className="h-[calc(100%-48px)] max-h-[calc(100%-var(--header-height))] flex-1">
+        <div className="h-[calc(100%-48px-80px)] max-h-[calc(100%-var(--header-height)-80px)] flex-1 overflow-y-auto pb-20 md:pb-0 lg:h-[calc(100%-48px)] lg:max-h-[calc(100%-var(--header-height))]">
           <Outlet />
         </div>
+        <AppBottomNav />
       </SidebarInset>
     </SidebarProvider>
   )
