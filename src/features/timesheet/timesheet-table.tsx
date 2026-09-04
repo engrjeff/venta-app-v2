@@ -255,12 +255,12 @@ export function TimesheetTable() {
                   </TableCell>
                   <TableCell colSpan={1} className="text-center">
                     <span className="text-center font-mono font-semibold text-emerald-500">
-                      {totals.workHours.toFixed(2)} hrs
+                      {formatDurationFromSeconds(totals.workHours * 3600)}
                     </span>
                   </TableCell>
                   <TableCell colSpan={1} className="text-center">
                     <span className="text-center font-mono font-semibold text-emerald-500">
-                      {totals.breakHours.toFixed(2)} hrs
+                      {formatDurationFromSeconds(totals.breakHours * 3600)}
                     </span>
                   </TableCell>
                   <TableCell colSpan={1} className="text-center">

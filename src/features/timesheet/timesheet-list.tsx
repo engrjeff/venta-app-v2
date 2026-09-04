@@ -10,6 +10,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import { formatDurationFromSeconds, formatPHP, formatTime } from "@/lib/utils"
 import { useLoaderData } from "@tanstack/react-router"
+import { formatDate } from "date-fns"
 import { ArrowRightIcon } from "lucide-react"
 
 export function TimesheetList() {
@@ -21,8 +22,51 @@ export function TimesheetList() {
     return <p>An Error has occured</p>
   }
 
+  const totals = timesheets.data?.reduce<{
+    workHours: number
+    breakHours: number
+    earnings: number
+  }>(
+    (acc, attendance) => {
+      const breakHours = attendance.totalBreakSeconds / 3600
+      const workHours = attendance.totalWorkedSeconds / 3600
+      const pay = attendance.totalPay ?? 0
+
+      return {
+        workHours: acc.workHours + workHours,
+        breakHours: acc.breakHours + breakHours,
+        earnings: acc.earnings + pay,
+      }
+    },
+    {
+      workHours: 0,
+      breakHours: 0,
+      earnings: 0,
+    }
+  ) ?? {
+    workHours: 0,
+    breakHours: 0,
+    earnings: 0,
+  }
+
   return (
-    <div className="lg:hidden">
+    <div className="space-y-5 lg:hidden">
+      {/* total working hours and total pay */}
+      <div className="space-y-2 rounded-md bg-card p-4 shadow">
+        <div className="flex items-center justify-between gap-4 text-sm font-semibold">
+          <span>Total Working Hours</span>
+          <span className="font-mono text-emerald-500">
+            {formatDurationFromSeconds(totals.workHours * 3600)}
+          </span>
+        </div>
+        <Separator />
+        <div className="flex items-center justify-between gap-4 text-sm font-semibold">
+          <span>Total Pay</span>
+          <span className="font-mono text-emerald-500">
+            {formatPHP(totals.earnings)}
+          </span>
+        </div>
+      </div>
       {/* list */}
       <ul className="space-y-3">
         {timesheets.data?.map((attendance) => {
@@ -45,9 +89,9 @@ export function TimesheetList() {
                     </Badge>
                   </CardAction>
                 </CardHeader>
-                <CardContent className="space-y-3 p-0">
+                <CardContent className="space-y-2 p-0">
                   <div className="flex items-center justify-between gap-4 text-xs">
-                    <p className="font-semibold">Shift</p>
+                    <p>{formatDate(attendance.date, "EE, MMM dd, yyyy")}</p>
                     {attendance.timeIn && attendance.timeOut ? (
                       <div className="ml-auto flex items-center gap-1 font-mono">
                         <span>{formatTime(attendance.timeIn)}</span>
@@ -56,12 +100,15 @@ export function TimesheetList() {
                       </div>
                     ) : null}
                   </div>
-                  <Separator />
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-mono">
+                    <p>
                       Worked for{" "}
-                      {formatDurationFromSeconds(attendance.totalWorkedSeconds)}
-                    </span>
+                      <span className="font-mono">
+                        {formatDurationFromSeconds(
+                          attendance.totalWorkedSeconds
+                        )}
+                      </span>
+                    </p>
                     <span className="text-right font-semibold text-emerald-400">
                       {formatPHP(attendance.totalPay ?? 0)}
                     </span>
