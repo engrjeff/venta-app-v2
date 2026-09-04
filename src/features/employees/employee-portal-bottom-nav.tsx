@@ -43,24 +43,28 @@ const navItems = [
     to: "/e/$storeSlug/$employeeId",
     icon: HomeIcon,
     exact: true,
+    requiresActiveAttendance: false,
   },
   {
     label: "Daily Sales",
     to: "/e/$storeSlug/$employeeId/daily-sales",
     icon: ChartNoAxesColumnIcon,
     exact: false,
+    requiresActiveAttendance: true,
   },
   {
     label: "Logs",
     to: "/e/$storeSlug/$employeeId/logs",
     icon: ClipboardListIcon,
     exact: false,
+    requiresActiveAttendance: false,
   },
   {
     label: "Requests",
     to: "/e/$storeSlug/$employeeId/requests",
     icon: FileTextIcon,
     exact: false,
+    requiresActiveAttendance: false,
   },
 ] as const
 
@@ -69,11 +73,21 @@ export function EmployeePortalBottomNav() {
   const [sheetView, setSheetView] = useState<"menu" | "profile">("menu")
 
   const params = useParams({ from: "/e/$storeSlug/$employeeId" })
-  const data = useLoaderData({ from: "/e/$storeSlug/$employeeId" })
+  const { activeAttendance } = useLoaderData({
+    from: "/e/$storeSlug/$employeeId",
+  })
+  const employee = useLoaderData({ from: "/e/$storeSlug" })
   const employeeSession = useEmployeeSession()
   const router = useRouter()
 
-  const { employee, organization, branch } = data
+  if (!employee) return null
+
+  const branchName =
+    activeAttendance?.branch.name ?? employee.branches[0]?.branch.name
+
+  const visibleNavItems = navItems.filter(
+    (item) => !item.requiresActiveAttendance || activeAttendance
+  )
 
   const handleOpenChange = (open: boolean) => {
     setMoreOpen(open)
@@ -97,7 +111,7 @@ export function EmployeePortalBottomNav() {
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="mx-auto flex h-16 max-w-lg items-stretch justify-around">
-          {navItems.map((item) => (
+          {visibleNavItems.map((item) => (
             <Link
               key={item.to}
               to={item.to}
@@ -222,13 +236,13 @@ export function EmployeePortalBottomNav() {
                 <Item size="sm">
                   <ItemContent>
                     <ItemDescription>Branch</ItemDescription>
-                    <ItemTitle>{branch.name}</ItemTitle>
+                    <ItemTitle>{branchName}</ItemTitle>
                   </ItemContent>
                 </Item>
                 <Item size="sm">
                   <ItemContent>
                     <ItemDescription>Organization</ItemDescription>
-                    <ItemTitle>{organization.name}</ItemTitle>
+                    <ItemTitle>{employee.organization.name}</ItemTitle>
                   </ItemContent>
                 </Item>
               </ItemGroup>

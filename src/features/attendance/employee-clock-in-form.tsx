@@ -66,7 +66,7 @@ function ClockInForm({
 
   const navigate = useNavigate()
 
-  const params = useParams({ from: "/e/$storeSlug/" })
+  const params = useParams({ from: "/e/$storeSlug" })
 
   const form = useForm({
     resolver: zodResolver(employeeClockInFormSchema),

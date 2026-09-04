@@ -4,6 +4,7 @@ import { employeesApi } from "@/features/employees/employees.functions"
 import { storeApi } from "@/features/store/store.functions"
 import { timesheetQueryOptionsSchema } from "@/features/timesheet/schema"
 import { TimesheetList } from "@/features/timesheet/timesheet-list"
+import { TimesheetMobileFilters } from "@/features/timesheet/timesheet-mobile-filters"
 import { TimesheetTable } from "@/features/timesheet/timesheet-table"
 import { timesheetApi } from "@/features/timesheet/timesheet.functions"
 import { generatePageTitle } from "@/lib/utils"
@@ -89,6 +90,7 @@ function RouteComponent() {
         </div>
       </div>
       {/* content on mobile */}
+      <TimesheetMobileFilters />
       <TimesheetList />
       {/* content on desktop */}
       <TimesheetTable />
