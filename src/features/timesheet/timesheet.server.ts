@@ -9,7 +9,7 @@ export async function getTimesheet(input: TimesheetQueryOptions) {
 
     const timesheets = await prisma.attendance.findMany({
       where: {
-        AND: [],
+        organizationId: input.storeId,
         employeeId: input.employees
           ? input.employees.operator === "is"
             ? { in: input.employees.value }
