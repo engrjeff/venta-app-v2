@@ -302,6 +302,7 @@ enum AttendanceStatus {
   WORKING
   ON_BREAK
   CLOCKED_OUT
+  VOID
 }
 
 model AttendanceBreak {
