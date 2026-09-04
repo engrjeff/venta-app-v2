@@ -11,6 +11,7 @@ import { Link, useLocation } from "@tanstack/react-router"
 import {
   BoxIcon,
   ClockIcon,
+  FileTextIcon,
   HomeIcon,
   InboxIcon,
   SettingsIcon,
@@ -29,6 +30,12 @@ const MAIN_NAV = [
     title: "Timesheet",
     Icon: ClockIcon,
     pathname: "/timesheet",
+  },
+  {
+    id: "requests",
+    title: "Requests",
+    Icon: FileTextIcon,
+    pathname: "/requests",
   },
 ]
 

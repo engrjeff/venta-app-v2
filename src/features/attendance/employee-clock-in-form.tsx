@@ -32,15 +32,7 @@ export function EmployeeClockInForm() {
   if (!employee) return null
 
   return (
-    <div className="w-full space-y-6 py-6 lg:py-10">
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <h2 className="text-lg font-semibold">Hi, {employee.firstName} 👋</h2>
-          <p className="text-xs text-muted-foreground">
-            {employee.designation.name} @ {employee.organization.name}
-          </p>
-        </div>
-      </div>
+    <div className="w-full">
       <ClockInForm
         storeId={employee.organizationId}
         employeeId={employee.id}
@@ -168,7 +160,7 @@ function ClockInForm({
   }
 
   return (
-    <>
+    <div className="space-y-6">
       <MapEmbed location={selectedBranch.address} />
       <form onSubmit={form.handleSubmit(handleClockIn, onFormError)}>
         <FieldGroup>
@@ -234,6 +226,6 @@ function ClockInForm({
           </SubmitButton>
         </div>
       </form>
-    </>
+    </div>
   )
 }

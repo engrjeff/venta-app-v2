@@ -1,7 +1,7 @@
 import type { FilterField } from "@/components/filter-builder/filter-builder"
 import { FilterBuilder } from "@/components/filter-builder/filter-builder"
 
-const filterFields: FilterField<unknown>[] = [
+const filterFields: FilterField[] = [
   {
     id: "employees",
     label: "Employee",

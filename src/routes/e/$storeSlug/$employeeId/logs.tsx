@@ -1,10 +1,3 @@
-import { DateRangeFilter } from "@/components/date-range-filter/date-range-filter"
-import { getThisWeekRange } from "@/components/date-range-filter/presets"
-import {
-  rangeToSearch,
-  searchToRange,
-} from "@/components/date-range-filter/utils"
-import { Badge } from "@/components/ui/badge"
 import {
   Empty,
   EmptyDescription,
@@ -12,12 +5,9 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
+import { AttendanceLogItem } from "@/features/attendance/attendance-log-item"
 import { attendanceApi } from "@/features/attendance/attendance.functions"
-import { getAttendanceRemark } from "@/features/timesheet/timesheet.utils"
-import { AttendanceStatus } from "@/generated/prisma/enums"
-import { formatPHP, formatTime } from "@/lib/utils"
 import { createFileRoute } from "@tanstack/react-router"
-import { formatDate } from "date-fns"
 import { InboxIcon } from "lucide-react"
 import z from "zod"
 
@@ -34,7 +24,6 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId/logs")({
     const logs = await attendanceApi.getHistoryByEmployee({
       data: {
         employeeId: params.employeeId,
-        status: AttendanceStatus.CLOCKED_OUT,
         start,
         end,
       },
@@ -46,10 +35,6 @@ export const Route = createFileRoute("/e/$storeSlug/$employeeId/logs")({
 
 function RouteComponent() {
   const loaderData = Route.useLoaderData()
-  const search = Route.useSearch()
-  const navigate = Route.useNavigate()
-
-  const range = searchToRange(search) ?? getThisWeekRange()
 
   if (loaderData.error) return <p>An error occured</p>
 
@@ -68,99 +53,20 @@ function RouteComponent() {
 
   const logs = loaderData.data
 
+  const { employeeId } = Route.useParams()
+
   return (
     <>
       <div>
-        <div className="hidden items-center gap-4">
-          <DateRangeFilter
-            value={range}
-            onApply={(rangeQuery) => {
-              navigate({
-                search: (prev) => ({
-                  ...prev,
-                  ...rangeToSearch(rangeQuery),
-                }),
-              })
-            }}
-          />
-        </div>
+        <h2 className="font-bold">Attendance Logs</h2>
       </div>
       <ul className="space-y-3">
         {logs.map((log) => {
           if (!log.attendanceSnapshot) return null
 
-          const remark = log.timeIn
-            ? getAttendanceRemark(
-                log.timeIn,
-                log.attendanceSnapshot.scheduleStartTime
-              )
-            : null
-
           return (
             <li key={log.id}>
-              <div
-                data-remark={remark}
-                className="group rounded-md bg-card p-3 shadow"
-              >
-                <div className="flex w-full gap-4">
-                  <div>
-                    <span className="block h-full w-1 rounded bg-emerald-400 group-data-[remark=LATE]:bg-red-400" />
-                  </div>
-
-                  <div className="flex-1 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold">
-                        {formatDate(log.date, "MMM dd, yyy")}
-                      </span>
-                      {remark && (
-                        <Badge variant={remark}>
-                          {remark.replaceAll("_", " ").toLowerCase()}
-                        </Badge>
-                      )}
-                    </div>
-                    <div className="grid grid-cols-4 text-sm">
-                      <div className="flex flex-col items-center">
-                        <span className="text-xs font-semibold text-muted-foreground uppercase">
-                          In
-                        </span>
-                        {log.timeIn && (
-                          <span className="font-mono">
-                            {formatTime(log.timeIn)}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className="text-xs font-semibold text-muted-foreground uppercase">
-                          Out
-                        </span>
-                        {log.timeOut ? (
-                          <span className="font-mono">
-                            {formatTime(log.timeOut)}
-                          </span>
-                        ) : (
-                          "--"
-                        )}
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className="text-xs font-semibold text-muted-foreground uppercase">
-                          Work Hrs
-                        </span>
-                        <span className="font-mono">
-                          {(log.totalWorkedSeconds / 3600).toFixed(2)}
-                        </span>
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className="text-xs font-semibold text-muted-foreground uppercase">
-                          Pay
-                        </span>
-                        <span className="font-mono">
-                          {formatPHP(log.regularPay ?? 0)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <AttendanceLogItem log={log} employeeId={employeeId} />
             </li>
           )
         })}

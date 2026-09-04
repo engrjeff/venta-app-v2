@@ -169,13 +169,12 @@ export function TimesheetTable() {
               <TableHead className="text-center">Total Work Hours</TableHead>
               <TableHead className="text-center">Total Break Hours</TableHead>
               <TableHead className="text-center">Earnings</TableHead>
-              <TableHead className="text-center">Remarks</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {!timesheets.data?.length ? (
               <TableRow className="pointer-events-none">
-                <TableCell colSpan={9}>
+                <TableCell colSpan={8}>
                   <Empty>
                     <EmptyHeader>
                       <EmptyMedia variant="icon" className="size-4">
@@ -212,10 +211,10 @@ export function TimesheetTable() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <p>{attendance.attendanceSnapshot?.branchName}</p>
+                        {formatDate(attendance.date, "EE, MMM dd, yyyy")}
                       </TableCell>
                       <TableCell>
-                        {formatDate(attendance.date, "EE, MMM dd, yyyy")}
+                        <p>{attendance.attendanceSnapshot?.branchName}</p>
                       </TableCell>
                       <TableCell className="text-center">
                         <p className="font-mono">
@@ -231,7 +230,6 @@ export function TimesheetTable() {
                             : "--"}
                         </p>
                       </TableCell>
-
                       <TableCell className="text-center font-mono">
                         {formatDurationFromSeconds(
                           attendance.totalWorkedSeconds
@@ -245,7 +243,6 @@ export function TimesheetTable() {
                       <TableCell className="text-center font-mono">
                         {formatPHP(attendance.totalPay ?? 0)}
                       </TableCell>
-                      <TableCell className="text-center"></TableCell>
                     </TableRow>
                   )
                 })}
@@ -257,21 +254,20 @@ export function TimesheetTable() {
                     Total
                   </TableCell>
                   <TableCell colSpan={1} className="text-center">
-                    <span className="text-center font-mono font-semibold text-green-500">
+                    <span className="text-center font-mono font-semibold text-emerald-500">
                       {totals.workHours.toFixed(2)} hrs
                     </span>
                   </TableCell>
                   <TableCell colSpan={1} className="text-center">
-                    <span className="text-center font-mono font-semibold text-green-500">
+                    <span className="text-center font-mono font-semibold text-emerald-500">
                       {totals.breakHours.toFixed(2)} hrs
                     </span>
                   </TableCell>
                   <TableCell colSpan={1} className="text-center">
-                    <span className="text-center font-mono font-semibold text-green-500">
+                    <span className="text-center font-mono font-semibold text-emerald-500">
                       {formatPHP(totals.earnings)}
                     </span>
                   </TableCell>
-                  <TableCell></TableCell>
                 </TableRow>
               </>
             )}

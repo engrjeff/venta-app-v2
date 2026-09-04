@@ -64,8 +64,13 @@ export function EmployeeActions({ employee }: { employee: ExtendedEmployee }) {
             <DropdownMenuItem
               onClick={() =>
                 navigate({
-                  to: "/timesheet/$employeeId",
-                  params: { employeeId: employee.id },
+                  to: "/timesheet",
+                  search: {
+                    employees: {
+                      operator: "is",
+                      value: [employee.id],
+                    },
+                  },
                 })
               }
             >
