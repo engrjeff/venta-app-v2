@@ -4,15 +4,19 @@ export function secondsBetween(start: Date, end: Date) {
   return Math.max(0, Math.floor((end.getTime() - start.getTime()) / 1000))
 }
 
+/** The app operates in a single fixed timezone (no DST). */
+const MANILA_UTC_OFFSET_HOURS = 8
+
 /**
  * Combines a business date with the time-of-day portion of a UTC
- * time-only `DateTime` field (e.g. a schedule or requested clock-out time).
+ * time-only `DateTime` field (e.g. a requested clock-out time), producing
+ * the real UTC instant that wall-clock time represents in Asia/Manila.
  */
 export function combineDateAndTime(date: Date, time: Date): Date {
   const combined = new Date(date)
 
   combined.setUTCHours(
-    time.getUTCHours(),
+    time.getUTCHours() - MANILA_UTC_OFFSET_HOURS,
     time.getUTCMinutes(),
     time.getUTCSeconds(),
     0
