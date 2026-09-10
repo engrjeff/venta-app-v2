@@ -1,12 +1,7 @@
 import { siteConfig } from "@/config/site"
-import type { ClassValue } from "clsx"
-import { clsx } from "clsx"
 import { formatDate } from "date-fns"
-import { twMerge } from "tailwind-merge"
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
+export { cn } from "cn"
 
 export function getInitials(
   firstName?: string | null,
