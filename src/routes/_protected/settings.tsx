@@ -1,6 +1,8 @@
+import { PageHeader } from "@/components/page-header"
 import { Button } from "@/components/ui/button"
 import {
   Card,
+  CardAction,
   CardContent,
   CardFooter,
   CardHeader,
@@ -19,11 +21,10 @@ import {
 import { createFileRoute, notFound } from "@tanstack/react-router"
 import {
   ClockIcon,
-  EditIcon,
   MapPinIcon,
   NetworkIcon,
+  PencilIcon,
   PhoneIcon,
-  SettingsIcon,
   StoreIcon,
 } from "lucide-react"
 
@@ -49,27 +50,26 @@ function RouteComponent() {
   const { organizationSettings, branches, designations } = store
 
   return (
-    <div className="grid h-full flex-1 grid-cols-1 grid-rows-[1fr] px-4 py-4 lg:px-0">
-      <div className="flex min-h-0 flex-col overflow-y-auto">
+    <>
+      <PageHeader>
+        <PageHeader.Heading>
+          <PageHeader.Title>Store Settings</PageHeader.Title>
+        </PageHeader.Heading>
+      </PageHeader>
+
+      <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pb-4">
         <div className="container mx-auto max-w-3xl space-y-4">
-          {/* page header */}
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <SettingsIcon className="size-4" />{" "}
-              <h1 className="font-semibold">
-                Store Settings for {store?.name}
-              </h1>
-            </div>
-          </div>
           {/* general info */}
           <Card size="sm" className="rounded-md">
-            <CardHeader className="flex items-center justify-between">
+            <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <StoreIcon className="size-4" /> General Info
               </CardTitle>
-              <Button type="button" size="sm" variant="secondary">
-                <EditIcon /> Edit
-              </Button>
+              <CardAction>
+                <Button type="button" size="sm" variant="outline">
+                  <PencilIcon /> Update
+                </Button>
+              </CardAction>
             </CardHeader>
             <CardContent className="px-4">
               <div className="divide-y rounded-md border bg-card">
@@ -94,6 +94,7 @@ function RouteComponent() {
               </div>
             </CardContent>
           </Card>
+
           {/* contact info */}
           <Card size="sm" className="rounded-md">
             <CardHeader className="flex items-center justify-between">
@@ -102,7 +103,7 @@ function RouteComponent() {
               </CardTitle>
 
               <Button type="button" size="sm" variant="secondary">
-                <EditIcon /> Edit
+                <PencilIcon /> Edit
               </Button>
             </CardHeader>
             <CardContent className="px-4">
@@ -207,6 +208,6 @@ function RouteComponent() {
           </Card>
         </div>
       </div>
-    </div>
+    </>
   )
 }

@@ -39,3 +39,10 @@ Run these commands if necessary but make sure the action is confirmed first by t
 Seed the database: `pnpm run db:seed`
 Execute migrations: `pnpm run db:migrate`
 Generate Prisma client: `pnpm run db:generate`
+
+## Workflow & Definition of Done
+
+- Always output a plan - a bulleted list of tasks that will be done one by one.
+- Do NOT run `pnpm run lint` or `pnpm run typecheck` after every single file edit.
+- Only run lint and typechecks as a final review pass AFTER the entire task or series of code changes is fully complete.
+- Verify all checks pass before declaring the task done.

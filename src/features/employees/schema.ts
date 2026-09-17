@@ -84,6 +84,18 @@ export const updateEmployeeSessionSchema = z.object({
 export const getEmployeesInputSchema = z.object({
   storeId: z.string({ error: "Store is required" }).min(1, "Store is required"),
   q: z.string().optional(), // search query
+  branches: z
+    .object({
+      operator: z.enum(["is", "is_not"]),
+      value: z.array(z.string()),
+    })
+    .optional(),
+  designations: z
+    .object({
+      operator: z.enum(["is", "is_not"]),
+      value: z.array(z.string()),
+    })
+    .optional(),
 })
 
 export type EmployeeIdInput = z.infer<typeof employeeIdSchema>

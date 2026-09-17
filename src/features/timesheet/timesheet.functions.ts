@@ -3,7 +3,7 @@ import { timesheetQueryOptionsSchema } from "./schema"
 import { getTimesheet } from "./timesheet.server"
 
 const getMany = createServerFn({ method: "GET" })
-  .inputValidator(timesheetQueryOptionsSchema)
+  .validator(timesheetQueryOptionsSchema)
   .handler(async ({ data }) => {
     return getTimesheet(data)
   })

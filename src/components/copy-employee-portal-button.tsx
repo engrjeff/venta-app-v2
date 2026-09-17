@@ -1,5 +1,5 @@
 import { authClient } from "@/lib/auth-client"
-import { ClipboardIcon } from "lucide-react"
+import { UserIcon } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "./ui/button"
 
@@ -25,7 +25,7 @@ export function CopyEmployeePortalButton() {
     <Button
       key={store.data?.id}
       type="button"
-      variant="secondary"
+      variant="outline"
       size="sm"
       disabled={store.isPending}
       onClick={() => {
@@ -34,7 +34,7 @@ export function CopyEmployeePortalButton() {
         }
       }}
     >
-      Employee Portal <ClipboardIcon />
+      <UserIcon /> Employee Portal
     </Button>
   )
 }

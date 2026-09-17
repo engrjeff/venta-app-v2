@@ -29,7 +29,13 @@ export async function getTimesheet(input: TimesheetQueryOptions) {
             }
           : undefined,
         attendanceSnapshot: { isNot: null },
-        status: AttendanceStatus.CLOCKED_OUT,
+        status: {
+          in: [
+            AttendanceStatus.CLOCKED_OUT,
+            AttendanceStatus.WORKING,
+            AttendanceStatus.ON_BREAK,
+          ],
+        },
         date:
           input.start && input.end
             ? {
@@ -44,6 +50,11 @@ export async function getTimesheet(input: TimesheetQueryOptions) {
       include: {
         attendanceSnapshot: true,
         breaks: true,
+        requests: {
+          select: { id: true, status: true },
+          orderBy: { createdAt: "desc" },
+          take: 1,
+        },
       },
       orderBy: {
         date: "desc",

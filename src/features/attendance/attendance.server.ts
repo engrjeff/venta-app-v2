@@ -3,6 +3,7 @@ import { AttendanceStatus } from "@/generated/prisma/enums"
 import { prisma } from "@/lib/db"
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client"
 import { useEmployeeSession } from "../employees/employee-session"
+import { getDateRange } from "../timesheet/timesheet.utils"
 import {
   MANILA_UTC_OFFSET_HOURS,
   calculateAttendancePay,
@@ -499,6 +500,8 @@ export async function getAttendanceHistoryByEmployee(
   input: AttendanceByEmployeeInput
 ) {
   try {
+    const range = getDateRange({ type: "range", preset: "this_week" })
+
     const attendances = await prisma.attendance.findMany({
       where: {
         employeeId: input.employeeId,
@@ -510,7 +513,10 @@ export async function getAttendanceHistoryByEmployee(
                 gte: new Date(input.start),
                 lte: new Date(input.end),
               }
-            : undefined,
+            : {
+                gte: range.start,
+                lte: range.end,
+              },
       },
       include: {
         attendanceSnapshot: true,

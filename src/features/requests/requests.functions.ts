@@ -11,34 +11,35 @@ import {
   attendanceRequestsByEmployeeSchema,
   attendanceRequestsByStoreSchema,
   createAttendanceRequestSchema,
+  declineAttendanceRequestSchema,
 } from "./schema"
 
 export const createRequestFn = createServerFn({ method: "POST" })
-  .inputValidator(createAttendanceRequestSchema)
+  .validator(createAttendanceRequestSchema)
   .handler(async ({ data }) => {
     return createAttendanceRequest(data)
   })
 
 export const getByEmployeeFn = createServerFn({ method: "GET" })
-  .inputValidator(attendanceRequestsByEmployeeSchema)
+  .validator(attendanceRequestsByEmployeeSchema)
   .handler(async ({ data }) => {
     return getAttendanceRequestsByEmployee(data)
   })
 
 export const getByStoreFn = createServerFn({ method: "GET" })
-  .inputValidator(attendanceRequestsByStoreSchema)
+  .validator(attendanceRequestsByStoreSchema)
   .handler(async ({ data }) => {
     return getAttendanceRequestsByStore(data)
   })
 
 export const approveFn = createServerFn({ method: "POST" })
-  .inputValidator(attendanceRequestIdSchema)
+  .validator(attendanceRequestIdSchema)
   .handler(async ({ data }) => {
     return approveAttendanceRequest(data)
   })
 
 export const declineFn = createServerFn({ method: "POST" })
-  .inputValidator(attendanceRequestIdSchema)
+  .validator(declineAttendanceRequestSchema)
   .handler(async ({ data }) => {
     return declineAttendanceRequest(data)
   })

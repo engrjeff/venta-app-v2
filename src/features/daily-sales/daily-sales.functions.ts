@@ -13,25 +13,25 @@ import {
 } from "./schema"
 
 export const createExpenseFn = createServerFn({ method: "POST" })
-  .inputValidator(expenseSchema)
+  .validator(expenseSchema)
   .handler(async ({ data }) => {
     return createExpense(data)
   })
 
 export const getByBranchAndDate = createServerFn({ method: "GET" })
-  .inputValidator(expensesByBranchAndDateSchema)
+  .validator(expensesByBranchAndDateSchema)
   .handler(async ({ data }) => {
     return getExpensesByBranchAndDate(data)
   })
 
 export const updateExpenseFn = createServerFn({ method: "POST" })
-  .inputValidator(expenseUpdateSchema)
+  .validator(expenseUpdateSchema)
   .handler(async ({ data }) => {
     return updateExpense(data)
   })
 
 export const deleteExpenseFn = createServerFn({ method: "POST" })
-  .inputValidator(expenseIdSchema)
+  .validator(expenseIdSchema)
   .handler(async ({ data }) => {
     return deleteExpense(data)
   })

@@ -1,5 +1,4 @@
-import { SearchInput } from "@/components/search-input"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import {
   Empty,
   EmptyDescription,
@@ -14,10 +13,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { formatPHP } from "@/lib/utils"
-import { useNavigate, useSearch } from "@tanstack/react-router"
+import { formatPHP, formatSalaryType } from "@/lib/utils"
+import { useNavigate } from "@tanstack/react-router"
 import { SearchIcon } from "lucide-react"
-import { useCallback, useState } from "react"
 import { EmployeeActions } from "./employee-actions"
 import type { ExtendedEmployee } from "./employee.types"
 
@@ -26,54 +24,25 @@ export function EmployeesTable({
 }: {
   employees: Array<ExtendedEmployee>
 }) {
-  const search = useSearch({ from: "/_protected/employees" })
-  const navigate = useNavigate({ from: "/employees" })
-
-  const [query, setQuery] = useState(search.q ?? "")
-
-  const handleSearch = useCallback(
-    (q: string) => {
-      if ((search.q ?? "") === q) return
-
-      navigate({
-        search: (prev) => ({
-          ...prev,
-          q: q || undefined,
-        }),
-        replace: true,
-      })
-    },
-    [navigate, search.q]
-  )
+  const navigate = useNavigate()
 
   return (
-    <Card
-      size="sm"
-      className="h-full max-h-full overflow-hidden rounded-md pb-0"
-    >
-      <CardHeader className="px-3">
-        <SearchInput
-          placeholder="Search employees"
-          value={query}
-          onValueChange={setQuery}
-          onChange={handleSearch}
-        />
-      </CardHeader>
-      <CardContent className="flex-1 overflow-y-auto border-t px-0">
+    <div className="flex h-full flex-col overflow-hidden rounded-md border bg-card">
+      <div className="min-h-0 flex-1 overflow-y-auto">
         <Table>
           <TableHeader className="font-semibold">
             <TableRow className="bg-muted/50">
               <TableHead className="w-9 border-r">#</TableHead>
-              <TableHead>Name</TableHead>
+              <TableHead>Employee</TableHead>
+              <TableHead>Username</TableHead>
+              <TableHead>Designation</TableHead>
               <TableHead>Contact Info</TableHead>
               <TableHead>Branches</TableHead>
-              <TableHead>Designation</TableHead>
-              <TableHead className="text-right">Rate</TableHead>
               <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {employees.length === 0 && query ? (
+            {employees.length === 0 ? (
               <TableRow className="pointer-events-none">
                 <TableCell colSpan={7}>
                   <Empty>
@@ -82,7 +51,7 @@ export function EmployeesTable({
                         <SearchIcon size={16} className="size-4" />
                       </EmptyMedia>
                       <EmptyDescription>
-                        No employees found for query "{query}""
+                        No employee records found
                       </EmptyDescription>
                     </EmptyHeader>
                   </Empty>
@@ -90,7 +59,16 @@ export function EmployeesTable({
               </TableRow>
             ) : (
               employees.map((employee, index) => (
-                <TableRow key={employee.id}>
+                <TableRow
+                  key={employee.id}
+                  className="cursor-pointer"
+                  onClick={() =>
+                    navigate({
+                      to: "/employees/$employeeId",
+                      params: { employeeId: employee.id },
+                    })
+                  }
+                >
                   <TableCell className="border-r">{index + 1}</TableCell>
                   <TableCell>
                     <div>
@@ -98,59 +76,50 @@ export function EmployeesTable({
                         {employee.lastName}, {employee.firstName}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        @{employee.username}
+                        {employee.email ? employee.email : "No email provided"}
                       </p>
                     </div>
                   </TableCell>
+
                   <TableCell>
-                    <div className="text-xs">
-                      <p className="font-semibold">
-                        Email:{" "}
-                        {employee.email ? (
-                          <a
-                            href={`mailto:${employee.email}`}
-                            className="font-normal text-muted-foreground hover:underline"
-                          >
-                            {employee.email}
-                          </a>
-                        ) : (
-                          <span className="font-normal text-muted-foreground">
-                            None provided
-                          </span>
-                        )}
-                      </p>
-                      <p className="font-semibold">
-                        Phone:{" "}
-                        {employee.phone ? (
-                          <a
-                            href={`tel:+${employee.phone}`}
-                            className="font-normal text-muted-foreground hover:underline"
-                          >
-                            {employee.phone}
-                          </a>
-                        ) : (
-                          <span className="font-normal text-muted-foreground">
-                            None provided
-                          </span>
-                        )}
-                      </p>
-                    </div>
+                    <span className="font-mono">{employee.username}</span>
+                  </TableCell>
+
+                  <TableCell>
+                    <p>
+                      {employee.designation.name} &middot;{" "}
+                      <span className="font-mono text-xs text-muted-foreground">
+                        {formatPHP(employee.designation.salaryRate)}/
+                        {formatSalaryType(employee.designation.salaryType)}
+                      </span>
+                    </p>
+                  </TableCell>
+                  <TableCell>
+                    <p className="text-xs font-semibold">
+                      Phone:{" "}
+                      {employee.phone ? (
+                        <a
+                          href={`tel:+${employee.phone}`}
+                          className="font-normal text-muted-foreground hover:underline"
+                        >
+                          {employee.phone}
+                        </a>
+                      ) : (
+                        <span className="font-normal text-muted-foreground">
+                          None provided
+                        </span>
+                      )}
+                    </p>
                   </TableCell>
                   <TableCell>
                     {employee.branches
                       .map((branch) => branch.branch.name)
                       .join(", ")}
                   </TableCell>
-                  <TableCell>{employee.designation.name}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="font-mono">
-                      <p>{formatPHP(employee.designation.salaryRate)}</p>
-                      <span className="text-xs text-muted-foreground">
-                        {employee.designation.salaryType.toLowerCase()}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center">
+                  <TableCell
+                    className="text-center"
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <EmployeeActions employee={employee} />
                   </TableCell>
                 </TableRow>
@@ -158,7 +127,20 @@ export function EmployeesTable({
             )}
           </TableBody>
         </Table>
-      </CardContent>
-    </Card>
+      </div>
+      <div className="flex items-center justify-between border-t px-4 py-3">
+        <p className="text-sm text-muted-foreground">
+          {employees.length} of {employees.length} rows
+        </p>
+        <div className="flex items-center gap-2">
+          <Button type="button" variant="outline" size="sm">
+            Previous
+          </Button>
+          <Button type="button" variant="outline" size="sm">
+            Next
+          </Button>
+        </div>
+      </div>
+    </div>
   )
 }

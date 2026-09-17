@@ -8,7 +8,7 @@ import {
 } from "./store.server"
 
 export const getFieldOptions = createServerFn({ method: "GET" })
-  .inputValidator(storeIdSchema)
+  .validator(storeIdSchema)
   .handler(async ({ data }) => {
     return getStoreFieldOptions(data.id)
   })
@@ -16,11 +16,11 @@ export const getFieldOptions = createServerFn({ method: "GET" })
 export const getAll = createServerFn({ method: "GET" }).handler(getStores)
 
 export const getBySlug = createServerFn({ method: "GET" })
-  .inputValidator(storeSlugSchema)
+  .validator(storeSlugSchema)
   .handler(async ({ data }) => getStoreBySlug(data.slug))
 
 export const getById = createServerFn({ method: "GET" })
-  .inputValidator(storeIdSchema)
+  .validator(storeIdSchema)
   .handler(async ({ data }) => getStoreById(data.id))
 
 export const storeApi = { getFieldOptions, getAll, getBySlug, getById }

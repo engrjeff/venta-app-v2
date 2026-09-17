@@ -1,5 +1,3 @@
-import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router"
-
 import { DateRangeFilter } from "@/components/date-range-filter/date-range-filter"
 import { getThisWeekRange } from "@/components/date-range-filter/presets"
 import {
@@ -12,13 +10,21 @@ import {
   queryToFilterRules,
   rulesToQuery,
 } from "@/components/filter-builder/filter-builder"
+import { AttendanceRequestType } from "@/generated/prisma/enums"
+import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router"
+import { ATTENDANCE_REQUEST_TYPE_LABELS } from "./request-labels"
 
-export function TimesheetMobileFilters() {
-  const { employees, branches, designations } = useLoaderData({
-    from: "/_protected/timesheet",
+export function RequestsFilters() {
+  const { requests, employees, branches } = useLoaderData({
+    from: "/_protected/requests",
   })
-  const search = useSearch({ from: "/_protected/timesheet" })
-  const navigate = useNavigate({ from: "/timesheet" })
+
+  const search = useSearch({ from: "/_protected/requests" })
+  const navigate = useNavigate({ from: "/requests" })
+
+  if (requests.error) {
+    return <p>An Error has occured</p>
+  }
 
   const range = searchToRange(search) ?? getThisWeekRange()
 
@@ -50,35 +56,38 @@ export function TimesheetMobileFilters() {
     })),
   }
 
-  const designationFilter: FilterField = {
-    id: "designations",
-    label: "Designation",
+  const typeFilter: FilterField = {
+    id: "type",
+    label: "Request Type",
     type: "select",
-    options: designations.map((d) => ({
-      label: d.name,
-      value: d.id,
+    options: Object.values(AttendanceRequestType).map((type) => ({
+      label: ATTENDANCE_REQUEST_TYPE_LABELS[type],
+      value: type,
     })),
   }
 
-  const filterFields = [employeeFilter, branchFilter, designationFilter]
+  const filterFields = [employeeFilter, branchFilter, typeFilter]
 
   const activeFilters = queryToFilterRules(
     {
       employees: search.employees,
       branches: search.branches,
-      designations: search.designations,
+      type: search.type,
     },
     filterFields
   )
 
   return (
-    <div className="flex flex-wrap items-center gap-2 lg:hidden">
+    <div className="flex items-center justify-between gap-4 px-6">
       <FilterBuilder
         fields={filterFields}
         value={activeFilters}
         onApply={(filterRules) =>
           navigate({
-            search: (prev) => ({ ...prev, ...rulesToQuery(filterRules) }),
+            search: (prev) => ({
+              ...prev,
+              ...rulesToQuery(filterRules),
+            }),
           })
         }
         onChange={(filterRules) =>
@@ -91,15 +100,16 @@ export function TimesheetMobileFilters() {
           })
         }
       />
-
       <DateRangeFilter
         value={range}
-        presetsOnly
-        onApply={(rangeQuery) =>
+        onApply={(rangeQuery) => {
           navigate({
-            search: (prev) => ({ ...prev, ...rangeToSearch(rangeQuery) }),
+            search: (prev) => ({
+              ...prev,
+              ...rangeToSearch(rangeQuery),
+            }),
           })
-        }
+        }}
       />
     </div>
   )

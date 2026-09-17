@@ -29,7 +29,7 @@ export function AddEmployeeDialog() {
         }
       />
       <SheetContent className="gap-0">
-        <SheetHeader>
+        <SheetHeader className="border-b">
           <SheetTitle>Add Employee</SheetTitle>
           <SheetDescription>
             Fill in the form below to add an employee.

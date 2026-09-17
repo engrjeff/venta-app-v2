@@ -239,7 +239,7 @@ function renderFilterValue(filterRule: FilterRule, field: FilterField) {
   const MORE_COUNT = labels.length > MAX_DISP ? labels.length - MAX_DISP : 0
 
   return (
-    <Badge className="rounded bg-blue-900/60 text-blue-400">
+    <Badge className="rounded bg-violet-900/40 text-chart-1">
       {labels.slice(0, MAX_DISP).join(", ")}{" "}
       {MORE_COUNT > 0 ? `+${MORE_COUNT} more` : null}
     </Badge>
@@ -473,7 +473,7 @@ function AddFilterPopover({
       >
         <ListFilterIcon /> Filters{" "}
         {appliedFiltersCount ? (
-          <Badge className="ml-1 rounded bg-blue-900/60 text-blue-400">
+          <Badge className="ml-1 rounded bg-violet-900/40 text-chart-1">
             {appliedFiltersCount}
           </Badge>
         ) : null}

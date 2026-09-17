@@ -3,7 +3,7 @@ import { getDashboardData } from "./dashboard.server"
 import { dashboardDataInputSchema } from "./schema"
 
 export const get = createServerFn({ method: "GET" })
-  .inputValidator(dashboardDataInputSchema)
+  .validator(dashboardDataInputSchema)
   .handler(async ({ data }) => {
     return getDashboardData(data)
   })

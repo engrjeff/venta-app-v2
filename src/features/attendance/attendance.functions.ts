@@ -17,43 +17,43 @@ import {
 } from "./schema"
 
 export const clockIn = createServerFn({ method: "POST" })
-  .inputValidator(employeeClockInSchema)
+  .validator(employeeClockInSchema)
   .handler(async ({ data }) => {
     return submitClockInAttendance(data)
   })
 
 export const getActive = createServerFn({ method: "GET" })
-  .inputValidator(activeAttendanceSchema)
+  .validator(activeAttendanceSchema)
   .handler(async ({ data }) => {
     return getActiveAttendance(data)
   })
 
 export const getActiveByEmployeeId = createServerFn({ method: "GET" })
-  .inputValidator(activeAttendanceSchema.pick({ employeeId: true }))
+  .validator(activeAttendanceSchema.pick({ employeeId: true }))
   .handler(async ({ data }) => {
     return getActiveAttendanceByEmployeeId(data)
   })
 
 export const transition = createServerFn({ method: "POST" })
-  .inputValidator(attendanceTransitionSchema)
+  .validator(attendanceTransitionSchema)
   .handler(async ({ data }) => {
     return submitAttendanceTransition(data)
   })
 
 export const getRecordsToday = createServerFn({ method: "GET" })
-  .inputValidator(attendanceTodaySchema)
+  .validator(attendanceTodaySchema)
   .handler(async ({ data }) => {
     return getAttendanceRecordsToday(data)
   })
 
 export const getRecordsByEmployee = createServerFn({ method: "GET" })
-  .inputValidator(attendanceByEmployeeSchema)
+  .validator(attendanceByEmployeeSchema)
   .handler(async ({ data }) => {
     return getAttendanceRecordsByEmployee(data)
   })
 
 export const getHistoryByEmployee = createServerFn({ method: "GET" })
-  .inputValidator(attendanceByEmployeeSchema)
+  .validator(attendanceByEmployeeSchema)
   .handler(async ({ data }) => {
     return getAttendanceHistoryByEmployee(data)
   })

@@ -30,10 +30,14 @@ export function AttendanceLogItem({ log, employeeId }: AttendanceLogItemProps) {
 
   const latestRequest = log.requests[0]
 
-  const isEligibleForRequest = !log.timeOut && log.timeIn && !isToday(log.date)
+  // A shift that's still open *today* is still in progress — there's
+  // nothing to request yet. Past open shifts (forgot to clock out) and any
+  // completed shift can have a request regardless of status, blocked only
+  // while an existing request for it is still active.
+  const isOpenToday = !log.timeOut && isToday(log.date)
 
   const canCreateRequest =
-    isEligibleForRequest &&
+    !isOpenToday &&
     (!latestRequest ||
       latestRequest.status === AttendanceRequestStatus.DECLINED ||
       latestRequest.status === AttendanceRequestStatus.CANCELLED)
@@ -49,7 +53,6 @@ export function AttendanceLogItem({ log, employeeId }: AttendanceLogItemProps) {
               variant="ghost"
               size="icon-xs"
               className="absolute top-0.5 right-0.5"
-              disabled={Boolean(isEligibleForRequest) === false}
             >
               <MoreHorizontalIcon />
             </Button>
@@ -113,6 +116,7 @@ export function AttendanceLogItem({ log, employeeId }: AttendanceLogItemProps) {
       <CreateRequestDialog
         attendanceId={log.id}
         employeeId={employeeId}
+        isClockedOut={log.status === AttendanceStatus.CLOCKED_OUT}
         open={createRequestOpen}
         onOpenChange={setCreateRequestOpen}
       />
