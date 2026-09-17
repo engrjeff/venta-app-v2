@@ -1,12 +1,8 @@
 import { siteConfig } from "@/config/site"
-import type { ClassValue } from "clsx"
-import { clsx } from "clsx"
+import { SalaryType } from "@/generated/prisma/enums"
 import { formatDate } from "date-fns"
-import { twMerge } from "tailwind-merge"
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
+export { cn } from "cn"
 
 export function getInitials(
   firstName?: string | null,
@@ -107,4 +103,15 @@ export function formatDurationFromSeconds(totalSeconds: number) {
   const minutes = Math.floor((abs % 3600) / 60)
 
   return `${sign}${hours}h ${String(minutes).padStart(2, "0")}m`
+}
+
+export function formatSalaryType(salaryType: SalaryType) {
+  switch (salaryType) {
+    case SalaryType.DAILY:
+      return "day"
+    case SalaryType.HOURLY:
+      return "hr"
+    default:
+      return ""
+  }
 }

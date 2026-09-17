@@ -1,3 +1,4 @@
+import { AttendanceStatus as PrismaAttendanceStatus } from "@/generated/prisma/enums"
 import type { SalaryType } from "@/generated/prisma/enums"
 import {
   endOfDay,
@@ -9,6 +10,52 @@ import {
   subMonths,
   subWeeks,
 } from "date-fns"
+import type { TimesheetQueryOptions } from "./schema"
+import type { TimesheetRecord } from "./timesheet.types"
+
+export type TimesheetTotals = {
+  workHours: number
+  breakHours: number
+  overtimeHours: number
+  earnings: number
+}
+
+/**
+ * Records that haven't clocked out yet have partial/running snapshot
+ * totals, not final numbers — they're excluded from the aggregate.
+ */
+export function calculateTimesheetTotals(
+  records: Pick<
+    TimesheetRecord,
+    | "status"
+    | "totalWorkedSeconds"
+    | "totalBreakSeconds"
+    | "overtimeSeconds"
+    | "totalPay"
+  >[]
+): TimesheetTotals {
+  return records.reduce<TimesheetTotals>(
+    (acc, attendance) => {
+      if (attendance.status !== PrismaAttendanceStatus.CLOCKED_OUT) return acc
+
+      return {
+        workHours: acc.workHours + attendance.totalWorkedSeconds / 3600,
+        breakHours: acc.breakHours + attendance.totalBreakSeconds / 3600,
+        overtimeHours: acc.overtimeHours + attendance.overtimeSeconds / 3600,
+        earnings: acc.earnings + (attendance.totalPay ?? 0),
+      }
+    },
+    { workHours: 0, breakHours: 0, overtimeHours: 0, earnings: 0 }
+  )
+}
+
+export function countActiveTimesheetFilters(
+  search: Pick<TimesheetQueryOptions, "employees" | "branches" | "designations">
+) {
+  return [search.employees, search.branches, search.designations].filter(
+    (rule) => rule && rule.value.length > 0
+  ).length
+}
 
 export type DateRange =
   | {

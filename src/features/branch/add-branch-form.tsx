@@ -167,15 +167,15 @@ export function AddBranchForm({ storeId, onAfterSave }: AddBranchFormProps) {
             >
               <MapIcon /> Verify On Map
             </Button>
+            {viewingInMap && enteredAddress ? (
+              <div className="space-y-3">
+                <p className="text-sm leading-none font-medium select-none">
+                  Does this look right to you?
+                </p>
+                <MapEmbed location={enteredAddress} />
+              </div>
+            ) : null}
           </Field>
-          {viewingInMap && enteredAddress ? (
-            <div className="space-y-3">
-              <p className="text-sm leading-none font-medium select-none">
-                Does this look right to you?
-              </p>
-              <MapEmbed location={enteredAddress} />
-            </div>
-          ) : null}
         </FieldGroup>
         <div className="mt-auto flex justify-end gap-4 py-4">
           <Button type="button" variant="ghost" onClick={onAfterSave}>

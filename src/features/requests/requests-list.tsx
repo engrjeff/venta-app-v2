@@ -10,13 +10,15 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty"
-import { AttendanceRequestType } from "@/generated/prisma/enums"
+import { AttendanceRequestStatus } from "@/generated/prisma/enums"
 import { formatTimeOfDay } from "@/lib/utils"
 import {
   ATTENDANCE_REQUEST_STATUS_LABELS,
+  ATTENDANCE_REQUEST_TIME_LABELS,
   ATTENDANCE_REQUEST_TYPE_LABELS,
 } from "./request-labels"
 import type { AttendanceRequestWithRelations } from "./request.types"
+import { getRequestedTime } from "./request.utils"
 
 interface RequestsListProps {
   requests: AttendanceRequestWithRelations[]
@@ -48,54 +50,67 @@ export function RequestsList({
 
   return (
     <ul className="space-y-3">
-      {requests.map((request) => (
-        <li key={request.id}>
-          <div className="relative space-y-2 rounded-md bg-card p-3 text-sm shadow">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <div className="mb-1 flex items-center gap-2">
-                  <p className="font-medium">
-                    {ATTENDANCE_REQUEST_TYPE_LABELS[request.type]}
+      {requests.map((request) => {
+        const requestedTime = getRequestedTime(request)
+
+        return (
+          <li key={request.id}>
+            <div className="relative space-y-2 rounded-md bg-card p-3 text-sm shadow">
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <div className="mb-1 flex items-center gap-2">
+                    <p className="font-medium">
+                      {ATTENDANCE_REQUEST_TYPE_LABELS[request.type]}
+                    </p>
+                    {renderActions && (
+                      <Badge className="p-1.5" variant={request.status}>
+                        {ATTENDANCE_REQUEST_STATUS_LABELS[request.status]}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {showEmployee &&
+                      `${request.employee.firstName} ${request.employee.lastName} · `}
+                    For{" "}
+                    {formatDate(request.attendance.date, "MMM dd, yyy")}{" "}
                   </p>
-                  {renderActions && (
-                    <Badge className="p-1.5" variant={request.status}>
-                      {ATTENDANCE_REQUEST_STATUS_LABELS[request.status]}
-                    </Badge>
-                  )}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  {showEmployee &&
-                    `${request.employee.firstName} ${request.employee.lastName} · `}
-                  For {formatDate(request.attendance.date, "MMM dd, yyy")}{" "}
-                </p>
+                {renderActions ? (
+                  <div className="absolute top-0.5 right-0.5">
+                    {renderActions(request)}
+                  </div>
+                ) : (
+                  <Badge className="p-1.5" variant={request.status}>
+                    {ATTENDANCE_REQUEST_STATUS_LABELS[request.status]}
+                  </Badge>
+                )}
               </div>
-              {renderActions ? (
-                <div className="absolute top-0.5 right-0.5">
-                  {renderActions(request)}
-                </div>
-              ) : (
-                <Badge className="p-1.5" variant={request.status}>
-                  {ATTENDANCE_REQUEST_STATUS_LABELS[request.status]}
-                </Badge>
-              )}
-            </div>
-            {request.type === AttendanceRequestType.FORGOT_TO_CLOCK_OUT &&
-              request.clockOutTime && (
+              {requestedTime && (
                 <p className="text-muted-foreground">
-                  Requested clock-out:{" "}
+                  {ATTENDANCE_REQUEST_TIME_LABELS[request.type]}:{" "}
                   <span className="font-medium text-foreground">
-                    {formatTimeOfDay(request.clockOutTime)}
+                    {formatTimeOfDay(requestedTime)}
                   </span>
                 </p>
               )}
-            <p className="text-muted-foreground">Reason: {request.reason}</p>
-            <p className="text-xs text-muted-foreground">
-              Submitted{" "}
-              {formatDate(request.createdAt, "MMM dd, yyy 'at' hh:mm a")}
-            </p>
-          </div>
-        </li>
-      ))}
+              <p className="text-muted-foreground">Reason: {request.reason}</p>
+              {request.status === AttendanceRequestStatus.DECLINED &&
+                request.declineReason && (
+                  <p className="text-muted-foreground">
+                    Admin&apos;s reason:{" "}
+                    <span className="font-medium text-foreground">
+                      {request.declineReason}
+                    </span>
+                  </p>
+                )}
+              <p className="text-xs text-muted-foreground">
+                Submitted{" "}
+                {formatDate(request.createdAt, "MMM dd, yyy 'at' hh:mm a")}
+              </p>
+            </div>
+          </li>
+        )
+      })}
     </ul>
   )
 }

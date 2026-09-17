@@ -27,13 +27,18 @@ import { createAttendanceRequestSchema } from "./schema"
 interface CreateRequestFormProps {
   attendanceId: string
   employeeId: string
+  /** FORGOT_TO_CLOCK_OUT only applies while the day is still open. */
+  isClockedOut: boolean
   onAfterSave: VoidFunction
   onCancel: VoidFunction
 }
 
+const REQUEST_TYPE_OPTIONS = Object.values(AttendanceRequestType)
+
 export function CreateRequestForm({
   attendanceId,
   employeeId,
+  isClockedOut,
   onAfterSave,
   onCancel,
 }: CreateRequestFormProps) {
@@ -41,15 +46,24 @@ export function CreateRequestForm({
 
   const router = useRouter()
 
-  const form = useForm({
+  const typeOptions = isClockedOut
+    ? REQUEST_TYPE_OPTIONS.filter(
+        (rtype) => rtype !== AttendanceRequestType.FORGOT_TO_CLOCK_OUT
+      )
+    : REQUEST_TYPE_OPTIONS
+
+  const form = useForm<CreateAttendanceRequestInput>({
     resolver: zodResolver(createAttendanceRequestSchema),
     defaultValues: {
       attendanceId,
       employeeId,
-      type: AttendanceRequestType.FORGOT_TO_CLOCK_OUT,
+      type: isClockedOut
+        ? AttendanceRequestType.EDIT_TIME_OUT
+        : AttendanceRequestType.FORGOT_TO_CLOCK_OUT,
       reason: "",
       clockOutTime: "",
-    },
+      requestedTimeIn: "",
+    } as CreateAttendanceRequestInput,
   })
 
   const type = form.watch("type")
@@ -106,7 +120,7 @@ export function CreateRequestForm({
                     className="w-full"
                     {...controllerField}
                   >
-                    {Object.values(AttendanceRequestType).map((rtype) => (
+                    {typeOptions.map((rtype) => (
                       <NativeSelectOption key={rtype} value={rtype}>
                         {ATTENDANCE_REQUEST_TYPE_LABELS[rtype]}
                       </NativeSelectOption>
@@ -124,7 +138,8 @@ export function CreateRequestForm({
             )}
           />
 
-          {type === AttendanceRequestType.FORGOT_TO_CLOCK_OUT && (
+          {(type === AttendanceRequestType.FORGOT_TO_CLOCK_OUT ||
+            type === AttendanceRequestType.EDIT_TIME_OUT) && (
             <Controller
               name="clockOutTime"
               control={form.control}
@@ -132,7 +147,34 @@ export function CreateRequestForm({
                 <Field data-invalid={fieldState.invalid}>
                   <FieldContent>
                     <FieldLabel htmlFor={controllerField.name}>
-                      What time were you supposed to clock out?
+                      {type === AttendanceRequestType.FORGOT_TO_CLOCK_OUT
+                        ? "What time were you supposed to clock out?"
+                        : "What time did you actually clock out?"}
+                    </FieldLabel>
+                    <Input
+                      id={controllerField.name}
+                      type="time"
+                      aria-invalid={fieldState.invalid}
+                      {...controllerField}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                </Field>
+              )}
+            />
+          )}
+
+          {type === AttendanceRequestType.EDIT_TIME_IN && (
+            <Controller
+              name="requestedTimeIn"
+              control={form.control}
+              render={({ field: controllerField, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldContent>
+                    <FieldLabel htmlFor={controllerField.name}>
+                      What time did you actually clock in?
                     </FieldLabel>
                     <Input
                       id={controllerField.name}

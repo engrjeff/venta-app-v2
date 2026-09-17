@@ -27,6 +27,22 @@ export async function getDashboardData(input: DashboardDataInput) {
             },
           },
         },
+        employees: {
+          where: { status: EmploymentStatus.ACTIVE },
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            designation: { select: { id: true, name: true } },
+            branches: {
+              select: {
+                isPrimary: true,
+                branch: { select: { id: true, name: true } },
+              },
+            },
+          },
+          orderBy: { lastName: "asc" },
+        },
         _count: {
           select: {
             branches: true,

@@ -4,6 +4,7 @@ import { CreateRequestForm } from "./create-request-form"
 interface CreateRequestDialogProps {
   attendanceId: string
   employeeId: string
+  isClockedOut: boolean
   open: boolean
   onOpenChange: (open: boolean) => void
 }
@@ -11,6 +12,7 @@ interface CreateRequestDialogProps {
 export function CreateRequestDialog({
   attendanceId,
   employeeId,
+  isClockedOut,
   open,
   onOpenChange,
 }: CreateRequestDialogProps) {
@@ -26,6 +28,7 @@ export function CreateRequestDialog({
       <CreateRequestForm
         attendanceId={attendanceId}
         employeeId={employeeId}
+        isClockedOut={isClockedOut}
         onAfterSave={close}
         onCancel={close}
       />

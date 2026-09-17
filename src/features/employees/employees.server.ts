@@ -27,6 +27,21 @@ export async function getEmployees(input: GetEmployeesInput) {
             { lastName: { contains: input.q, mode: "insensitive" } },
           ],
         },
+        branches: input.branches
+          ? {
+              some: {
+                branchId:
+                  input.branches.operator === "is"
+                    ? { in: input.branches.value }
+                    : { notIn: input.branches.value },
+              },
+            }
+          : undefined,
+        designationId: input.designations
+          ? input.designations.operator === "is"
+            ? { in: input.designations.value }
+            : { notIn: input.designations.value }
+          : undefined,
       },
       include: {
         designation: {
@@ -214,7 +229,9 @@ export async function getEmployee(id: string) {
       where: { id },
       include: {
         organization: { select: { name: true } },
-        designation: { select: { name: true } },
+        designation: {
+          select: { id: true, name: true, salaryRate: true, salaryType: true },
+        },
         branches: {
           select: {
             branch: {
