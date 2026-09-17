@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input"
 import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select"
 import { Separator } from "@/components/ui/separator"
 import { useStoreFieldOptions } from "@/hooks/use-store-field-options"
+import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
@@ -28,11 +29,15 @@ import { addEmployeeSchema } from "./schema"
 interface CreateEmployeeFormProps {
   storeId: string
   onAfterSave: VoidFunction
+  submitLabel?: string
+  hideCancelButton?: boolean
 }
 
 export function CreateEmployeeForm({
   onAfterSave,
   storeId,
+  submitLabel = "Save Employee",
+  hideCancelButton = false,
 }: CreateEmployeeFormProps) {
   const createEmployee = useServerFn(employeesApi.create)
 
@@ -84,12 +89,12 @@ export function CreateEmployeeForm({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-4">
-      <form
-        onChange={() => form.clearErrors()}
-        onSubmit={form.handleSubmit(onSubmit, onFormError)}
-        className="grid h-full"
-      >
+    <form
+      onChange={() => form.clearErrors()}
+      onSubmit={form.handleSubmit(onSubmit, onFormError)}
+      className="flex min-h-0 flex-1 flex-col"
+    >
+      <div className="min-h-0 flex-1 overflow-y-auto p-4">
         <FieldGroup className="gap-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <Controller
@@ -300,17 +305,27 @@ export function CreateEmployeeForm({
             )}
           />
         </FieldGroup>
+      </div>
 
-        <div className="mt-auto flex justify-end gap-4 py-4">
+      <div
+        className={cn(
+          "flex gap-4 border-t p-4",
+          hideCancelButton ? "justify-stretch" : "justify-end"
+        )}
+      >
+        {!hideCancelButton && (
           <Button type="button" variant="ghost" onClick={onAfterSave}>
             Cancel
           </Button>
-          {/* submit button */}
-          <SubmitButton loading={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? "Saving..." : "Save Employee"}
-          </SubmitButton>
-        </div>
-      </form>
-    </div>
+        )}
+        {/* submit button */}
+        <SubmitButton
+          loading={form.formState.isSubmitting}
+          className={hideCancelButton ? "w-full" : undefined}
+        >
+          {form.formState.isSubmitting ? "Saving..." : submitLabel}
+        </SubmitButton>
+      </div>
+    </form>
   )
 }

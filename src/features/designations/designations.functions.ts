@@ -15,31 +15,31 @@ import {
 } from "./schema"
 
 export const createMany = createServerFn({ method: "POST" })
-  .inputValidator(designationArraySchema)
+  .validator(designationArraySchema)
   .handler(async ({ data }) => {
     return createDesignations(data)
   })
 
 export const getAll = createServerFn({ method: "GET" })
-  .inputValidator(storeIdSchema)
+  .validator(storeIdSchema)
   .handler(async ({ data }) => {
     return getStoreDesignations(data.id)
   })
 
 export const create = createServerFn({ method: "POST" })
-  .inputValidator(designationSchema)
+  .validator(designationSchema)
   .handler(async ({ data }) => {
     return createDesignation(data)
   })
 
 export const update = createServerFn({ method: "POST" })
-  .inputValidator(designationUpdateSchema)
+  .validator(designationUpdateSchema)
   .handler(async ({ data }) => {
     return updateDesignation(data)
   })
 
 export const remove = createServerFn({ method: "POST" })
-  .inputValidator(designationIdSchema)
+  .validator(designationIdSchema)
   .handler(async ({ data }) => {
     return softDeleteDesignation(data)
   })

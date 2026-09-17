@@ -9,25 +9,25 @@ import {
 import { branchIdSchema, branchSchema, branchUpdateSchema } from "./schema"
 
 export const getAll = createServerFn({ method: "GET" })
-  .inputValidator(orgIdSchema)
+  .validator(orgIdSchema)
   .handler(async ({ data }) => {
     return getStoreBranches(data.id)
   })
 
 export const create = createServerFn({ method: "POST" })
-  .inputValidator(branchSchema)
+  .validator(branchSchema)
   .handler(async ({ data }) => {
     return createStoreBranch(data)
   })
 
 export const update = createServerFn({ method: "POST" })
-  .inputValidator(branchUpdateSchema)
+  .validator(branchUpdateSchema)
   .handler(async ({ data }) => {
     return updateStoreBranch(data)
   })
 
 export const remove = createServerFn({ method: "POST" })
-  .inputValidator(branchIdSchema)
+  .validator(branchIdSchema)
   .handler(async ({ data }) => {
     return softDeleteBranch(data)
   })

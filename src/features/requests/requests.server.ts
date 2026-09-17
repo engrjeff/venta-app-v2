@@ -1,5 +1,6 @@
 import { clockOutAttendance } from "../attendance/attendance.server"
 import {
+  calculateAttendancePay,
   combineDateAndTime,
   secondsBetween,
 } from "../attendance/attendance.utils"
@@ -8,18 +9,46 @@ import {
   AttendanceRequestType,
   AttendanceStatus,
 } from "@/generated/prisma/enums"
+import type { Prisma } from "@/generated/prisma/client"
 import { prisma } from "@/lib/db"
 import type {
   AttendanceRequestIdInput,
   AttendanceRequestsByEmployeeInput,
   AttendanceRequestsByStoreInput,
   CreateAttendanceRequestInput,
+  DeclineAttendanceRequestInput,
 } from "./schema"
 
 const requestInclude = {
-  employee: { select: { id: true, firstName: true, lastName: true } },
-  attendance: { select: { date: true, timeIn: true, timeOut: true } },
-} as const
+  employee: {
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      designation: { select: { id: true, name: true } },
+    },
+  },
+  attendance: {
+    select: {
+      date: true,
+      timeIn: true,
+      timeOut: true,
+      status: true,
+      totalWorkedSeconds: true,
+      totalBreakSeconds: true,
+      totalPay: true,
+      branch: { select: { id: true, name: true } },
+      attendanceSnapshot: {
+        select: {
+          scheduleStartTime: true,
+          scheduleEndTime: true,
+          salaryType: true,
+          salaryRate: true,
+        },
+      },
+    },
+  },
+} satisfies Prisma.AttendanceRequestInclude
 
 export async function createAttendanceRequest(
   input: CreateAttendanceRequestInput
@@ -50,6 +79,17 @@ export async function createAttendanceRequest(
       }
     }
 
+    const requestedTimes =
+      input.type === AttendanceRequestType.EDIT_TIME_IN
+        ? {
+            requestedTimeIn: new Date(
+              `1970-01-01T${input.requestedTimeIn}:00Z`
+            ),
+          }
+        : {
+            clockOutTime: new Date(`1970-01-01T${input.clockOutTime}:00Z`),
+          }
+
     const request = await prisma.attendanceRequest.create({
       data: {
         organizationId: attendance.organizationId,
@@ -57,9 +97,7 @@ export async function createAttendanceRequest(
         attendanceId: input.attendanceId,
         type: input.type,
         reason: input.reason,
-        clockOutTime: input.clockOutTime
-          ? new Date(`1970-01-01T${input.clockOutTime}:00Z`)
-          : undefined,
+        ...requestedTimes,
       },
       include: requestInclude,
     })
@@ -106,6 +144,25 @@ export async function getAttendanceRequestsByStore(
             ? { in: input.employees.value }
             : { notIn: input.employees.value }
           : undefined,
+        type: input.type
+          ? input.type.operator === "is"
+            ? { in: input.type.value }
+            : { notIn: input.type.value }
+          : undefined,
+        attendance: {
+          branchId: input.branches
+            ? input.branches.operator === "is"
+              ? { in: input.branches.value }
+              : { notIn: input.branches.value }
+            : undefined,
+          date:
+            input.start || input.end
+              ? {
+                  gte: input.start ? new Date(input.start) : undefined,
+                  lte: input.end ? new Date(input.end) : undefined,
+                }
+              : undefined,
+        },
       },
       include: requestInclude,
       orderBy: { createdAt: "desc" },
@@ -135,13 +192,24 @@ export async function approveAttendanceRequest(
 
       const { attendanceSnapshot: snapshot, ...attendance } = request.attendance
 
-      if (request.type === AttendanceRequestType.FORGOT_TO_CLOCK_OUT) {
-        if (attendance.status === AttendanceStatus.CLOCKED_OUT) {
-          throw new Error(
-            "Employee has already clocked out for this attendance record."
-          )
-        }
+      const stillOpen = attendance.status !== AttendanceStatus.CLOCKED_OUT
 
+      if (
+        request.type === AttendanceRequestType.FORGOT_TO_CLOCK_OUT &&
+        !stillOpen
+      ) {
+        throw new Error(
+          "Employee has already clocked out for this attendance record. Use an Edit Time Out request to correct it instead."
+        )
+      }
+
+      const isClockOutFlow =
+        request.type === AttendanceRequestType.FORGOT_TO_CLOCK_OUT ||
+        request.type === AttendanceRequestType.EDIT_TIME_OUT
+
+      if (isClockOutFlow && stillOpen) {
+        // Employee hasn't clocked out yet — actually transition them to
+        // CLOCKED_OUT at the requested time (same flow for both types).
         if (!snapshot) {
           throw new Error("Attendance snapshot is missing.")
         }
@@ -196,6 +264,89 @@ export async function approveAttendanceRequest(
             })
           }
         }
+      } else if (request.type === AttendanceRequestType.EDIT_TIME_OUT) {
+        // Already clocked out — correct the final time-out and recompute
+        // worked seconds/pay from it (break total is assumed unchanged).
+        if (!snapshot) {
+          throw new Error("Attendance snapshot is missing.")
+        }
+
+        if (!request.clockOutTime) {
+          throw new Error("This request is missing a requested clock-out time.")
+        }
+
+        if (!attendance.timeIn) {
+          throw new Error("Missing time-in for this attendance record.")
+        }
+
+        const newTimeOut = combineDateAndTime(
+          attendance.date,
+          request.clockOutTime
+        )
+
+        const totalWorkedSeconds = Math.max(
+          0,
+          secondsBetween(attendance.timeIn, newTimeOut) -
+            attendance.totalBreakSeconds
+        )
+
+        const calculation = calculateAttendancePay({
+          totalWorkedSeconds,
+          scheduleStartTime: snapshot.scheduleStartTime,
+          scheduleEndTime: snapshot.scheduleEndTime,
+          salaryType: snapshot.salaryType,
+          salaryRate: snapshot.salaryRate,
+        })
+
+        await tx.attendance.update({
+          where: { id: attendance.id },
+          data: { timeOut: newTimeOut, totalWorkedSeconds, ...calculation },
+        })
+      } else if (request.type === AttendanceRequestType.EDIT_TIME_IN) {
+        if (!request.requestedTimeIn) {
+          throw new Error("This request is missing a requested time-in.")
+        }
+
+        const newTimeIn = combineDateAndTime(
+          attendance.date,
+          request.requestedTimeIn
+        )
+
+        if (stillOpen) {
+          // Worked-seconds accounting runs off workStartedAt, not timeIn,
+          // so correcting timeIn on an in-progress record needs no recompute.
+          await tx.attendance.update({
+            where: { id: attendance.id },
+            data: { timeIn: newTimeIn },
+          })
+        } else {
+          if (!snapshot) {
+            throw new Error("Attendance snapshot is missing.")
+          }
+
+          if (!attendance.timeOut) {
+            throw new Error("Missing time-out for this attendance record.")
+          }
+
+          const totalWorkedSeconds = Math.max(
+            0,
+            secondsBetween(newTimeIn, attendance.timeOut) -
+              attendance.totalBreakSeconds
+          )
+
+          const calculation = calculateAttendancePay({
+            totalWorkedSeconds,
+            scheduleStartTime: snapshot.scheduleStartTime,
+            scheduleEndTime: snapshot.scheduleEndTime,
+            salaryType: snapshot.salaryType,
+            salaryRate: snapshot.salaryRate,
+          })
+
+          await tx.attendance.update({
+            where: { id: attendance.id },
+            data: { timeIn: newTimeIn, totalWorkedSeconds, ...calculation },
+          })
+        }
       }
 
       return tx.attendanceRequest.update({
@@ -215,7 +366,7 @@ export async function approveAttendanceRequest(
 }
 
 export async function declineAttendanceRequest(
-  input: AttendanceRequestIdInput
+  input: DeclineAttendanceRequestInput
 ) {
   try {
     const request = await prisma.attendanceRequest.findUniqueOrThrow({
@@ -234,6 +385,7 @@ export async function declineAttendanceRequest(
       data: {
         status: AttendanceRequestStatus.DECLINED,
         reviewedAt: new Date(),
+        declineReason: input.declineReason,
       },
       include: requestInclude,
     })

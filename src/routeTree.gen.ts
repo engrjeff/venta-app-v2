@@ -8,375 +8,424 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root"
-import { Route as OnboardingRouteRouteImport } from "./routes/onboarding/route"
-import { Route as ProtectedRouteRouteImport } from "./routes/_protected/route"
-import { Route as authRouteRouteImport } from "./routes/(auth)/route"
-import { Route as IndexRouteImport } from "./routes/index"
-import { Route as OnboardingIndexRouteImport } from "./routes/onboarding/index"
-import { Route as OnboardingStoreSettingsRouteImport } from "./routes/onboarding/store-settings"
-import { Route as OnboardingFinishRouteImport } from "./routes/onboarding/finish"
-import { Route as OnboardingEmployeesRouteImport } from "./routes/onboarding/employees"
-import { Route as OnboardingDesignationsRouteImport } from "./routes/onboarding/designations"
-import { Route as OnboardingBranchRouteImport } from "./routes/onboarding/branch"
-import { Route as ProtectedTimesheetRouteImport } from "./routes/_protected/timesheet"
-import { Route as ProtectedSettingsRouteImport } from "./routes/_protected/settings"
-import { Route as ProtectedRequestsRouteImport } from "./routes/_protected/requests"
-import { Route as ProtectedEmployeesRouteImport } from "./routes/_protected/employees"
-import { Route as ProtectedDashboardRouteImport } from "./routes/_protected/dashboard"
-import { Route as authSignUpRouteImport } from "./routes/(auth)/sign-up"
-import { Route as authSignInRouteImport } from "./routes/(auth)/sign-in"
-import { Route as EStoreSlugRouteRouteImport } from "./routes/e/$storeSlug/route"
-import { Route as EStoreSlugIndexRouteImport } from "./routes/e/$storeSlug/index"
-import { Route as ApiAuthSplatRouteImport } from "./routes/api/auth/$"
-import { Route as EStoreSlugEmployeeIdRouteRouteImport } from "./routes/e/$storeSlug/$employeeId/route"
-import { Route as EStoreSlugEmployeeIdIndexRouteImport } from "./routes/e/$storeSlug/$employeeId/index"
-import { Route as EStoreSlugEmployeeIdRequestsRouteImport } from "./routes/e/$storeSlug/$employeeId/requests"
-import { Route as EStoreSlugEmployeeIdLogsRouteImport } from "./routes/e/$storeSlug/$employeeId/logs"
-import { Route as ApiResourcesStoreIdFieldOptionsRouteImport } from "./routes/api/resources/$storeId.field-options"
-import { Route as EStoreSlugEmployeeIdDailySalesRouteRouteImport } from "./routes/e/$storeSlug/$employeeId/daily-sales/route"
-import { Route as EStoreSlugEmployeeIdDailySalesIndexRouteImport } from "./routes/e/$storeSlug/$employeeId/daily-sales/index"
-import { Route as EStoreSlugEmployeeIdDailySalesSalesRouteImport } from "./routes/e/$storeSlug/$employeeId/daily-sales/sales"
-import { Route as EStoreSlugEmployeeIdDailySalesExpensesRouteImport } from "./routes/e/$storeSlug/$employeeId/daily-sales/expenses"
-import { Route as EStoreSlugEmployeeIdDailySalesCashOnHandRouteImport } from "./routes/e/$storeSlug/$employeeId/daily-sales/cash-on-hand"
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as authRouteRouteImport } from './routes/(auth)/route'
+import { Route as ProtectedRouteRouteImport } from './routes/_protected/route'
+import { Route as OnboardingRouteRouteImport } from './routes/onboarding/route'
+import { Route as authSignInRouteImport } from './routes/(auth)/sign-in'
+import { Route as authSignUpRouteImport } from './routes/(auth)/sign-up'
+import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
+import { Route as ProtectedOrdersRouteImport } from './routes/_protected/orders'
+import { Route as ProtectedProductsRouteImport } from './routes/_protected/products'
+import { Route as ProtectedRequestsRouteImport } from './routes/_protected/requests'
+import { Route as ProtectedSalesRouteImport } from './routes/_protected/sales'
+import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
+import { Route as ProtectedTimesheetRouteImport } from './routes/_protected/timesheet'
+import { Route as EStoreSlugRouteRouteImport } from './routes/e/$storeSlug/route'
+import { Route as OnboardingIndexRouteImport } from './routes/onboarding/index'
+import { Route as OnboardingBranchRouteImport } from './routes/onboarding/branch'
+import { Route as OnboardingDesignationsRouteImport } from './routes/onboarding/designations'
+import { Route as OnboardingEmployeesRouteImport } from './routes/onboarding/employees'
+import { Route as OnboardingFinishRouteImport } from './routes/onboarding/finish'
+import { Route as OnboardingStoreSettingsRouteImport } from './routes/onboarding/store-settings'
+import { Route as ProtectedEmployeesIndexRouteImport } from './routes/_protected/employees/index'
+import { Route as ProtectedEmployeesEmployeeIdRouteImport } from './routes/_protected/employees/$employeeId'
+import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as EStoreSlugIndexRouteImport } from './routes/e/$storeSlug/index'
+import { Route as EStoreSlugEmployeeIdRouteRouteImport } from './routes/e/$storeSlug/$employeeId/route'
+import { Route as ApiResourcesStoreIdFieldOptionsRouteImport } from './routes/api/resources/$storeId.field-options'
+import { Route as EStoreSlugEmployeeIdIndexRouteImport } from './routes/e/$storeSlug/$employeeId/index'
+import { Route as EStoreSlugEmployeeIdDailySalesRouteRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/route'
+import { Route as EStoreSlugEmployeeIdLogsRouteImport } from './routes/e/$storeSlug/$employeeId/logs'
+import { Route as EStoreSlugEmployeeIdRequestsRouteImport } from './routes/e/$storeSlug/$employeeId/requests'
+import { Route as EStoreSlugEmployeeIdDailySalesIndexRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/index'
+import { Route as EStoreSlugEmployeeIdDailySalesCashOnHandRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+import { Route as EStoreSlugEmployeeIdDailySalesExpensesRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/expenses'
+import { Route as EStoreSlugEmployeeIdDailySalesSalesRouteImport } from './routes/e/$storeSlug/$employeeId/daily-sales/sales'
 
-const OnboardingRouteRoute = OnboardingRouteRouteImport.update({
-  id: "/onboarding",
-  path: "/onboarding",
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
-  id: "/_protected",
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const authRouteRoute = authRouteRouteImport.update({
-  id: "/(auth)",
+  id: '/(auth)',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+const ProtectedRouteRoute = ProtectedRouteRouteImport.update({
+  id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => OnboardingRouteRoute,
+const OnboardingRouteRoute = OnboardingRouteRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const OnboardingStoreSettingsRoute = OnboardingStoreSettingsRouteImport.update({
-  id: "/store-settings",
-  path: "/store-settings",
-  getParentRoute: () => OnboardingRouteRoute,
+const authSignInRoute = authSignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => authRouteRoute,
 } as any)
-const OnboardingFinishRoute = OnboardingFinishRouteImport.update({
-  id: "/finish",
-  path: "/finish",
-  getParentRoute: () => OnboardingRouteRoute,
+const authSignUpRoute = authSignUpRouteImport.update({
+  id: '/sign-up',
+  path: '/sign-up',
+  getParentRoute: () => authRouteRoute,
 } as any)
-const OnboardingEmployeesRoute = OnboardingEmployeesRouteImport.update({
-  id: "/employees",
-  path: "/employees",
-  getParentRoute: () => OnboardingRouteRoute,
-} as any)
-const OnboardingDesignationsRoute = OnboardingDesignationsRouteImport.update({
-  id: "/designations",
-  path: "/designations",
-  getParentRoute: () => OnboardingRouteRoute,
-} as any)
-const OnboardingBranchRoute = OnboardingBranchRouteImport.update({
-  id: "/branch",
-  path: "/branch",
-  getParentRoute: () => OnboardingRouteRoute,
-} as any)
-const ProtectedTimesheetRoute = ProtectedTimesheetRouteImport.update({
-  id: "/timesheet",
-  path: "/timesheet",
+const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
-const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
-  id: "/settings",
-  path: "/settings",
+const ProtectedOrdersRoute = ProtectedOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedProductsRoute = ProtectedProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const ProtectedRequestsRoute = ProtectedRequestsRouteImport.update({
-  id: "/requests",
-  path: "/requests",
+  id: '/requests',
+  path: '/requests',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
-const ProtectedEmployeesRoute = ProtectedEmployeesRouteImport.update({
-  id: "/employees",
-  path: "/employees",
+const ProtectedSalesRoute = ProtectedSalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
-const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
-  id: "/dashboard",
-  path: "/dashboard",
+const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => ProtectedRouteRoute,
 } as any)
-const authSignUpRoute = authSignUpRouteImport.update({
-  id: "/sign-up",
-  path: "/sign-up",
-  getParentRoute: () => authRouteRoute,
-} as any)
-const authSignInRoute = authSignInRouteImport.update({
-  id: "/sign-in",
-  path: "/sign-in",
-  getParentRoute: () => authRouteRoute,
+const ProtectedTimesheetRoute = ProtectedTimesheetRouteImport.update({
+  id: '/timesheet',
+  path: '/timesheet',
+  getParentRoute: () => ProtectedRouteRoute,
 } as any)
 const EStoreSlugRouteRoute = EStoreSlugRouteRouteImport.update({
-  id: "/e/$storeSlug",
-  path: "/e/$storeSlug",
+  id: '/e/$storeSlug',
+  path: '/e/$storeSlug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingIndexRoute = OnboardingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingBranchRoute = OnboardingBranchRouteImport.update({
+  id: '/branch',
+  path: '/branch',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingDesignationsRoute = OnboardingDesignationsRouteImport.update({
+  id: '/designations',
+  path: '/designations',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingEmployeesRoute = OnboardingEmployeesRouteImport.update({
+  id: '/employees',
+  path: '/employees',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingFinishRoute = OnboardingFinishRouteImport.update({
+  id: '/finish',
+  path: '/finish',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const OnboardingStoreSettingsRoute = OnboardingStoreSettingsRouteImport.update({
+  id: '/store-settings',
+  path: '/store-settings',
+  getParentRoute: () => OnboardingRouteRoute,
+} as any)
+const ProtectedEmployeesIndexRoute = ProtectedEmployeesIndexRouteImport.update({
+  id: '/employees/',
+  path: '/employees/',
+  getParentRoute: () => ProtectedRouteRoute,
+} as any)
+const ProtectedEmployeesEmployeeIdRoute =
+  ProtectedEmployeesEmployeeIdRouteImport.update({
+    id: '/employees/$employeeId',
+    path: '/employees/$employeeId',
+    getParentRoute: () => ProtectedRouteRoute,
+  } as any)
+const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
+  id: '/api/auth/$',
+  path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EStoreSlugIndexRoute = EStoreSlugIndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => EStoreSlugRouteRoute,
-} as any)
-const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
-  id: "/api/auth/$",
-  path: "/api/auth/$",
-  getParentRoute: () => rootRouteImport,
 } as any)
 const EStoreSlugEmployeeIdRouteRoute =
   EStoreSlugEmployeeIdRouteRouteImport.update({
-    id: "/$employeeId",
-    path: "/$employeeId",
+    id: '/$employeeId',
+    path: '/$employeeId',
     getParentRoute: () => EStoreSlugRouteRoute,
+  } as any)
+const ApiResourcesStoreIdFieldOptionsRoute =
+  ApiResourcesStoreIdFieldOptionsRouteImport.update({
+    id: '/api/resources/$storeId/field-options',
+    path: '/api/resources/$storeId/field-options',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const EStoreSlugEmployeeIdIndexRoute =
   EStoreSlugEmployeeIdIndexRouteImport.update({
-    id: "/",
-    path: "/",
+    id: '/',
+    path: '/',
     getParentRoute: () => EStoreSlugEmployeeIdRouteRoute,
   } as any)
-const EStoreSlugEmployeeIdRequestsRoute =
-  EStoreSlugEmployeeIdRequestsRouteImport.update({
-    id: "/requests",
-    path: "/requests",
+const EStoreSlugEmployeeIdDailySalesRouteRoute =
+  EStoreSlugEmployeeIdDailySalesRouteRouteImport.update({
+    id: '/daily-sales',
+    path: '/daily-sales',
     getParentRoute: () => EStoreSlugEmployeeIdRouteRoute,
   } as any)
 const EStoreSlugEmployeeIdLogsRoute =
   EStoreSlugEmployeeIdLogsRouteImport.update({
-    id: "/logs",
-    path: "/logs",
+    id: '/logs',
+    path: '/logs',
     getParentRoute: () => EStoreSlugEmployeeIdRouteRoute,
   } as any)
-const ApiResourcesStoreIdFieldOptionsRoute =
-  ApiResourcesStoreIdFieldOptionsRouteImport.update({
-    id: "/api/resources/$storeId/field-options",
-    path: "/api/resources/$storeId/field-options",
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const EStoreSlugEmployeeIdDailySalesRouteRoute =
-  EStoreSlugEmployeeIdDailySalesRouteRouteImport.update({
-    id: "/daily-sales",
-    path: "/daily-sales",
+const EStoreSlugEmployeeIdRequestsRoute =
+  EStoreSlugEmployeeIdRequestsRouteImport.update({
+    id: '/requests',
+    path: '/requests',
     getParentRoute: () => EStoreSlugEmployeeIdRouteRoute,
   } as any)
 const EStoreSlugEmployeeIdDailySalesIndexRoute =
   EStoreSlugEmployeeIdDailySalesIndexRouteImport.update({
-    id: "/",
-    path: "/",
-    getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
-  } as any)
-const EStoreSlugEmployeeIdDailySalesSalesRoute =
-  EStoreSlugEmployeeIdDailySalesSalesRouteImport.update({
-    id: "/sales",
-    path: "/sales",
-    getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
-  } as any)
-const EStoreSlugEmployeeIdDailySalesExpensesRoute =
-  EStoreSlugEmployeeIdDailySalesExpensesRouteImport.update({
-    id: "/expenses",
-    path: "/expenses",
+    id: '/',
+    path: '/',
     getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
   } as any)
 const EStoreSlugEmployeeIdDailySalesCashOnHandRoute =
   EStoreSlugEmployeeIdDailySalesCashOnHandRouteImport.update({
-    id: "/cash-on-hand",
-    path: "/cash-on-hand",
+    id: '/cash-on-hand',
+    path: '/cash-on-hand',
+    getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
+  } as any)
+const EStoreSlugEmployeeIdDailySalesExpensesRoute =
+  EStoreSlugEmployeeIdDailySalesExpensesRouteImport.update({
+    id: '/expenses',
+    path: '/expenses',
+    getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
+  } as any)
+const EStoreSlugEmployeeIdDailySalesSalesRoute =
+  EStoreSlugEmployeeIdDailySalesSalesRouteImport.update({
+    id: '/sales',
+    path: '/sales',
     getParentRoute: () => EStoreSlugEmployeeIdDailySalesRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute
-  "/onboarding": typeof OnboardingRouteRouteWithChildren
-  "/e/$storeSlug": typeof EStoreSlugRouteRouteWithChildren
-  "/sign-in": typeof authSignInRoute
-  "/sign-up": typeof authSignUpRoute
-  "/dashboard": typeof ProtectedDashboardRoute
-  "/employees": typeof ProtectedEmployeesRoute
-  "/requests": typeof ProtectedRequestsRoute
-  "/settings": typeof ProtectedSettingsRoute
-  "/timesheet": typeof ProtectedTimesheetRoute
-  "/onboarding/branch": typeof OnboardingBranchRoute
-  "/onboarding/designations": typeof OnboardingDesignationsRoute
-  "/onboarding/employees": typeof OnboardingEmployeesRoute
-  "/onboarding/finish": typeof OnboardingFinishRoute
-  "/onboarding/store-settings": typeof OnboardingStoreSettingsRoute
-  "/onboarding/": typeof OnboardingIndexRoute
-  "/e/$storeSlug/$employeeId": typeof EStoreSlugEmployeeIdRouteRouteWithChildren
-  "/api/auth/$": typeof ApiAuthSplatRoute
-  "/e/$storeSlug/": typeof EStoreSlugIndexRoute
-  "/e/$storeSlug/$employeeId/daily-sales": typeof EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren
-  "/api/resources/$storeId/field-options": typeof ApiResourcesStoreIdFieldOptionsRoute
-  "/e/$storeSlug/$employeeId/logs": typeof EStoreSlugEmployeeIdLogsRoute
-  "/e/$storeSlug/$employeeId/requests": typeof EStoreSlugEmployeeIdRequestsRoute
-  "/e/$storeSlug/$employeeId/": typeof EStoreSlugEmployeeIdIndexRoute
-  "/e/$storeSlug/$employeeId/daily-sales/cash-on-hand": typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
-  "/e/$storeSlug/$employeeId/daily-sales/expenses": typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
-  "/e/$storeSlug/$employeeId/daily-sales/sales": typeof EStoreSlugEmployeeIdDailySalesSalesRoute
-  "/e/$storeSlug/$employeeId/daily-sales/": typeof EStoreSlugEmployeeIdDailySalesIndexRoute
+  '/': typeof IndexRoute
+  '/onboarding': typeof OnboardingRouteRouteWithChildren
+  '/e/$storeSlug': typeof EStoreSlugRouteRouteWithChildren
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
+  '/dashboard': typeof ProtectedDashboardRoute
+  '/orders': typeof ProtectedOrdersRoute
+  '/products': typeof ProtectedProductsRoute
+  '/requests': typeof ProtectedRequestsRoute
+  '/sales': typeof ProtectedSalesRoute
+  '/settings': typeof ProtectedSettingsRoute
+  '/timesheet': typeof ProtectedTimesheetRoute
+  '/onboarding/branch': typeof OnboardingBranchRoute
+  '/onboarding/designations': typeof OnboardingDesignationsRoute
+  '/onboarding/employees': typeof OnboardingEmployeesRoute
+  '/onboarding/finish': typeof OnboardingFinishRoute
+  '/onboarding/store-settings': typeof OnboardingStoreSettingsRoute
+  '/onboarding/': typeof OnboardingIndexRoute
+  '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRouteRouteWithChildren
+  '/employees/$employeeId': typeof ProtectedEmployeesEmployeeIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/employees/': typeof ProtectedEmployeesIndexRoute
+  '/e/$storeSlug/': typeof EStoreSlugIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales': typeof EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren
+  '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
+  '/e/$storeSlug/$employeeId/logs': typeof EStoreSlugEmployeeIdLogsRoute
+  '/e/$storeSlug/$employeeId/requests': typeof EStoreSlugEmployeeIdRequestsRoute
+  '/e/$storeSlug/$employeeId/': typeof EStoreSlugEmployeeIdIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand': typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
+  '/e/$storeSlug/$employeeId/daily-sales/expenses': typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/sales': typeof EStoreSlugEmployeeIdDailySalesSalesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/': typeof EStoreSlugEmployeeIdDailySalesIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute
-  "/sign-in": typeof authSignInRoute
-  "/sign-up": typeof authSignUpRoute
-  "/dashboard": typeof ProtectedDashboardRoute
-  "/employees": typeof ProtectedEmployeesRoute
-  "/requests": typeof ProtectedRequestsRoute
-  "/settings": typeof ProtectedSettingsRoute
-  "/timesheet": typeof ProtectedTimesheetRoute
-  "/onboarding/branch": typeof OnboardingBranchRoute
-  "/onboarding/designations": typeof OnboardingDesignationsRoute
-  "/onboarding/employees": typeof OnboardingEmployeesRoute
-  "/onboarding/finish": typeof OnboardingFinishRoute
-  "/onboarding/store-settings": typeof OnboardingStoreSettingsRoute
-  "/onboarding": typeof OnboardingIndexRoute
-  "/api/auth/$": typeof ApiAuthSplatRoute
-  "/e/$storeSlug": typeof EStoreSlugIndexRoute
-  "/api/resources/$storeId/field-options": typeof ApiResourcesStoreIdFieldOptionsRoute
-  "/e/$storeSlug/$employeeId/logs": typeof EStoreSlugEmployeeIdLogsRoute
-  "/e/$storeSlug/$employeeId/requests": typeof EStoreSlugEmployeeIdRequestsRoute
-  "/e/$storeSlug/$employeeId": typeof EStoreSlugEmployeeIdIndexRoute
-  "/e/$storeSlug/$employeeId/daily-sales/cash-on-hand": typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
-  "/e/$storeSlug/$employeeId/daily-sales/expenses": typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
-  "/e/$storeSlug/$employeeId/daily-sales/sales": typeof EStoreSlugEmployeeIdDailySalesSalesRoute
-  "/e/$storeSlug/$employeeId/daily-sales": typeof EStoreSlugEmployeeIdDailySalesIndexRoute
+  '/': typeof IndexRoute
+  '/sign-in': typeof authSignInRoute
+  '/sign-up': typeof authSignUpRoute
+  '/dashboard': typeof ProtectedDashboardRoute
+  '/orders': typeof ProtectedOrdersRoute
+  '/products': typeof ProtectedProductsRoute
+  '/requests': typeof ProtectedRequestsRoute
+  '/sales': typeof ProtectedSalesRoute
+  '/settings': typeof ProtectedSettingsRoute
+  '/timesheet': typeof ProtectedTimesheetRoute
+  '/onboarding/branch': typeof OnboardingBranchRoute
+  '/onboarding/designations': typeof OnboardingDesignationsRoute
+  '/onboarding/employees': typeof OnboardingEmployeesRoute
+  '/onboarding/finish': typeof OnboardingFinishRoute
+  '/onboarding/store-settings': typeof OnboardingStoreSettingsRoute
+  '/onboarding': typeof OnboardingIndexRoute
+  '/employees/$employeeId': typeof ProtectedEmployeesEmployeeIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/employees': typeof ProtectedEmployeesIndexRoute
+  '/e/$storeSlug': typeof EStoreSlugIndexRoute
+  '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
+  '/e/$storeSlug/$employeeId/logs': typeof EStoreSlugEmployeeIdLogsRoute
+  '/e/$storeSlug/$employeeId/requests': typeof EStoreSlugEmployeeIdRequestsRoute
+  '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand': typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
+  '/e/$storeSlug/$employeeId/daily-sales/expenses': typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/sales': typeof EStoreSlugEmployeeIdDailySalesSalesRoute
+  '/e/$storeSlug/$employeeId/daily-sales': typeof EStoreSlugEmployeeIdDailySalesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  "/": typeof IndexRoute
-  "/(auth)": typeof authRouteRouteWithChildren
-  "/_protected": typeof ProtectedRouteRouteWithChildren
-  "/onboarding": typeof OnboardingRouteRouteWithChildren
-  "/e/$storeSlug": typeof EStoreSlugRouteRouteWithChildren
-  "/(auth)/sign-in": typeof authSignInRoute
-  "/(auth)/sign-up": typeof authSignUpRoute
-  "/_protected/dashboard": typeof ProtectedDashboardRoute
-  "/_protected/employees": typeof ProtectedEmployeesRoute
-  "/_protected/requests": typeof ProtectedRequestsRoute
-  "/_protected/settings": typeof ProtectedSettingsRoute
-  "/_protected/timesheet": typeof ProtectedTimesheetRoute
-  "/onboarding/branch": typeof OnboardingBranchRoute
-  "/onboarding/designations": typeof OnboardingDesignationsRoute
-  "/onboarding/employees": typeof OnboardingEmployeesRoute
-  "/onboarding/finish": typeof OnboardingFinishRoute
-  "/onboarding/store-settings": typeof OnboardingStoreSettingsRoute
-  "/onboarding/": typeof OnboardingIndexRoute
-  "/e/$storeSlug/$employeeId": typeof EStoreSlugEmployeeIdRouteRouteWithChildren
-  "/api/auth/$": typeof ApiAuthSplatRoute
-  "/e/$storeSlug/": typeof EStoreSlugIndexRoute
-  "/e/$storeSlug/$employeeId/daily-sales": typeof EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren
-  "/api/resources/$storeId/field-options": typeof ApiResourcesStoreIdFieldOptionsRoute
-  "/e/$storeSlug/$employeeId/logs": typeof EStoreSlugEmployeeIdLogsRoute
-  "/e/$storeSlug/$employeeId/requests": typeof EStoreSlugEmployeeIdRequestsRoute
-  "/e/$storeSlug/$employeeId/": typeof EStoreSlugEmployeeIdIndexRoute
-  "/e/$storeSlug/$employeeId/daily-sales/cash-on-hand": typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
-  "/e/$storeSlug/$employeeId/daily-sales/expenses": typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
-  "/e/$storeSlug/$employeeId/daily-sales/sales": typeof EStoreSlugEmployeeIdDailySalesSalesRoute
-  "/e/$storeSlug/$employeeId/daily-sales/": typeof EStoreSlugEmployeeIdDailySalesIndexRoute
+  '/': typeof IndexRoute
+  '/(auth)': typeof authRouteRouteWithChildren
+  '/_protected': typeof ProtectedRouteRouteWithChildren
+  '/onboarding': typeof OnboardingRouteRouteWithChildren
+  '/e/$storeSlug': typeof EStoreSlugRouteRouteWithChildren
+  '/(auth)/sign-in': typeof authSignInRoute
+  '/(auth)/sign-up': typeof authSignUpRoute
+  '/_protected/dashboard': typeof ProtectedDashboardRoute
+  '/_protected/orders': typeof ProtectedOrdersRoute
+  '/_protected/products': typeof ProtectedProductsRoute
+  '/_protected/requests': typeof ProtectedRequestsRoute
+  '/_protected/sales': typeof ProtectedSalesRoute
+  '/_protected/settings': typeof ProtectedSettingsRoute
+  '/_protected/timesheet': typeof ProtectedTimesheetRoute
+  '/onboarding/branch': typeof OnboardingBranchRoute
+  '/onboarding/designations': typeof OnboardingDesignationsRoute
+  '/onboarding/employees': typeof OnboardingEmployeesRoute
+  '/onboarding/finish': typeof OnboardingFinishRoute
+  '/onboarding/store-settings': typeof OnboardingStoreSettingsRoute
+  '/onboarding/': typeof OnboardingIndexRoute
+  '/e/$storeSlug/$employeeId': typeof EStoreSlugEmployeeIdRouteRouteWithChildren
+  '/_protected/employees/$employeeId': typeof ProtectedEmployeesEmployeeIdRoute
+  '/api/auth/$': typeof ApiAuthSplatRoute
+  '/_protected/employees/': typeof ProtectedEmployeesIndexRoute
+  '/e/$storeSlug/': typeof EStoreSlugIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales': typeof EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren
+  '/api/resources/$storeId/field-options': typeof ApiResourcesStoreIdFieldOptionsRoute
+  '/e/$storeSlug/$employeeId/logs': typeof EStoreSlugEmployeeIdLogsRoute
+  '/e/$storeSlug/$employeeId/requests': typeof EStoreSlugEmployeeIdRequestsRoute
+  '/e/$storeSlug/$employeeId/': typeof EStoreSlugEmployeeIdIndexRoute
+  '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand': typeof EStoreSlugEmployeeIdDailySalesCashOnHandRoute
+  '/e/$storeSlug/$employeeId/daily-sales/expenses': typeof EStoreSlugEmployeeIdDailySalesExpensesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/sales': typeof EStoreSlugEmployeeIdDailySalesSalesRoute
+  '/e/$storeSlug/$employeeId/daily-sales/': typeof EStoreSlugEmployeeIdDailySalesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/onboarding"
-    | "/e/$storeSlug"
-    | "/sign-in"
-    | "/sign-up"
-    | "/dashboard"
-    | "/employees"
-    | "/requests"
-    | "/settings"
-    | "/timesheet"
-    | "/onboarding/branch"
-    | "/onboarding/designations"
-    | "/onboarding/employees"
-    | "/onboarding/finish"
-    | "/onboarding/store-settings"
-    | "/onboarding/"
-    | "/e/$storeSlug/$employeeId"
-    | "/api/auth/$"
-    | "/e/$storeSlug/"
-    | "/e/$storeSlug/$employeeId/daily-sales"
-    | "/api/resources/$storeId/field-options"
-    | "/e/$storeSlug/$employeeId/logs"
-    | "/e/$storeSlug/$employeeId/requests"
-    | "/e/$storeSlug/$employeeId/"
-    | "/e/$storeSlug/$employeeId/daily-sales/cash-on-hand"
-    | "/e/$storeSlug/$employeeId/daily-sales/expenses"
-    | "/e/$storeSlug/$employeeId/daily-sales/sales"
-    | "/e/$storeSlug/$employeeId/daily-sales/"
+    | '/'
+    | '/onboarding'
+    | '/e/$storeSlug'
+    | '/sign-in'
+    | '/sign-up'
+    | '/dashboard'
+    | '/orders'
+    | '/products'
+    | '/requests'
+    | '/sales'
+    | '/settings'
+    | '/timesheet'
+    | '/onboarding/branch'
+    | '/onboarding/designations'
+    | '/onboarding/employees'
+    | '/onboarding/finish'
+    | '/onboarding/store-settings'
+    | '/onboarding/'
+    | '/e/$storeSlug/$employeeId'
+    | '/employees/$employeeId'
+    | '/api/auth/$'
+    | '/employees/'
+    | '/e/$storeSlug/'
+    | '/e/$storeSlug/$employeeId/daily-sales'
+    | '/api/resources/$storeId/field-options'
+    | '/e/$storeSlug/$employeeId/logs'
+    | '/e/$storeSlug/$employeeId/requests'
+    | '/e/$storeSlug/$employeeId/'
+    | '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+    | '/e/$storeSlug/$employeeId/daily-sales/expenses'
+    | '/e/$storeSlug/$employeeId/daily-sales/sales'
+    | '/e/$storeSlug/$employeeId/daily-sales/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/sign-in"
-    | "/sign-up"
-    | "/dashboard"
-    | "/employees"
-    | "/requests"
-    | "/settings"
-    | "/timesheet"
-    | "/onboarding/branch"
-    | "/onboarding/designations"
-    | "/onboarding/employees"
-    | "/onboarding/finish"
-    | "/onboarding/store-settings"
-    | "/onboarding"
-    | "/api/auth/$"
-    | "/e/$storeSlug"
-    | "/api/resources/$storeId/field-options"
-    | "/e/$storeSlug/$employeeId/logs"
-    | "/e/$storeSlug/$employeeId/requests"
-    | "/e/$storeSlug/$employeeId"
-    | "/e/$storeSlug/$employeeId/daily-sales/cash-on-hand"
-    | "/e/$storeSlug/$employeeId/daily-sales/expenses"
-    | "/e/$storeSlug/$employeeId/daily-sales/sales"
-    | "/e/$storeSlug/$employeeId/daily-sales"
+    | '/'
+    | '/sign-in'
+    | '/sign-up'
+    | '/dashboard'
+    | '/orders'
+    | '/products'
+    | '/requests'
+    | '/sales'
+    | '/settings'
+    | '/timesheet'
+    | '/onboarding/branch'
+    | '/onboarding/designations'
+    | '/onboarding/employees'
+    | '/onboarding/finish'
+    | '/onboarding/store-settings'
+    | '/onboarding'
+    | '/employees/$employeeId'
+    | '/api/auth/$'
+    | '/employees'
+    | '/e/$storeSlug'
+    | '/api/resources/$storeId/field-options'
+    | '/e/$storeSlug/$employeeId/logs'
+    | '/e/$storeSlug/$employeeId/requests'
+    | '/e/$storeSlug/$employeeId'
+    | '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+    | '/e/$storeSlug/$employeeId/daily-sales/expenses'
+    | '/e/$storeSlug/$employeeId/daily-sales/sales'
+    | '/e/$storeSlug/$employeeId/daily-sales'
   id:
-    | "__root__"
-    | "/"
-    | "/(auth)"
-    | "/_protected"
-    | "/onboarding"
-    | "/e/$storeSlug"
-    | "/(auth)/sign-in"
-    | "/(auth)/sign-up"
-    | "/_protected/dashboard"
-    | "/_protected/employees"
-    | "/_protected/requests"
-    | "/_protected/settings"
-    | "/_protected/timesheet"
-    | "/onboarding/branch"
-    | "/onboarding/designations"
-    | "/onboarding/employees"
-    | "/onboarding/finish"
-    | "/onboarding/store-settings"
-    | "/onboarding/"
-    | "/e/$storeSlug/$employeeId"
-    | "/api/auth/$"
-    | "/e/$storeSlug/"
-    | "/e/$storeSlug/$employeeId/daily-sales"
-    | "/api/resources/$storeId/field-options"
-    | "/e/$storeSlug/$employeeId/logs"
-    | "/e/$storeSlug/$employeeId/requests"
-    | "/e/$storeSlug/$employeeId/"
-    | "/e/$storeSlug/$employeeId/daily-sales/cash-on-hand"
-    | "/e/$storeSlug/$employeeId/daily-sales/expenses"
-    | "/e/$storeSlug/$employeeId/daily-sales/sales"
-    | "/e/$storeSlug/$employeeId/daily-sales/"
+    | '__root__'
+    | '/'
+    | '/(auth)'
+    | '/_protected'
+    | '/onboarding'
+    | '/e/$storeSlug'
+    | '/(auth)/sign-in'
+    | '/(auth)/sign-up'
+    | '/_protected/dashboard'
+    | '/_protected/orders'
+    | '/_protected/products'
+    | '/_protected/requests'
+    | '/_protected/sales'
+    | '/_protected/settings'
+    | '/_protected/timesheet'
+    | '/onboarding/branch'
+    | '/onboarding/designations'
+    | '/onboarding/employees'
+    | '/onboarding/finish'
+    | '/onboarding/store-settings'
+    | '/onboarding/'
+    | '/e/$storeSlug/$employeeId'
+    | '/_protected/employees/$employeeId'
+    | '/api/auth/$'
+    | '/_protected/employees/'
+    | '/e/$storeSlug/'
+    | '/e/$storeSlug/$employeeId/daily-sales'
+    | '/api/resources/$storeId/field-options'
+    | '/e/$storeSlug/$employeeId/logs'
+    | '/e/$storeSlug/$employeeId/requests'
+    | '/e/$storeSlug/$employeeId/'
+    | '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+    | '/e/$storeSlug/$employeeId/daily-sales/expenses'
+    | '/e/$storeSlug/$employeeId/daily-sales/sales'
+    | '/e/$storeSlug/$employeeId/daily-sales/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -389,216 +438,244 @@ export interface RootRouteChildren {
   ApiResourcesStoreIdFieldOptionsRoute: typeof ApiResourcesStoreIdFieldOptionsRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/onboarding": {
-      id: "/onboarding"
-      path: "/onboarding"
-      fullPath: "/onboarding"
-      preLoaderRoute: typeof OnboardingRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/_protected": {
-      id: "/_protected"
-      path: ""
-      fullPath: "/"
-      preLoaderRoute: typeof ProtectedRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/(auth)": {
-      id: "/(auth)"
-      path: ""
-      fullPath: ""
-      preLoaderRoute: typeof authRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    "/": {
-      id: "/"
-      path: "/"
-      fullPath: "/"
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/onboarding/": {
-      id: "/onboarding/"
-      path: "/"
-      fullPath: "/onboarding/"
-      preLoaderRoute: typeof OnboardingIndexRouteImport
-      parentRoute: typeof OnboardingRouteRoute
+    '/(auth)': {
+      id: '/(auth)'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof authRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    "/onboarding/store-settings": {
-      id: "/onboarding/store-settings"
-      path: "/store-settings"
-      fullPath: "/onboarding/store-settings"
-      preLoaderRoute: typeof OnboardingStoreSettingsRouteImport
-      parentRoute: typeof OnboardingRouteRoute
+    '/_protected': {
+      id: '/_protected'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof ProtectedRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    "/onboarding/finish": {
-      id: "/onboarding/finish"
-      path: "/finish"
-      fullPath: "/onboarding/finish"
-      preLoaderRoute: typeof OnboardingFinishRouteImport
-      parentRoute: typeof OnboardingRouteRoute
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    "/onboarding/employees": {
-      id: "/onboarding/employees"
-      path: "/employees"
-      fullPath: "/onboarding/employees"
-      preLoaderRoute: typeof OnboardingEmployeesRouteImport
-      parentRoute: typeof OnboardingRouteRoute
-    }
-    "/onboarding/designations": {
-      id: "/onboarding/designations"
-      path: "/designations"
-      fullPath: "/onboarding/designations"
-      preLoaderRoute: typeof OnboardingDesignationsRouteImport
-      parentRoute: typeof OnboardingRouteRoute
-    }
-    "/onboarding/branch": {
-      id: "/onboarding/branch"
-      path: "/branch"
-      fullPath: "/onboarding/branch"
-      preLoaderRoute: typeof OnboardingBranchRouteImport
-      parentRoute: typeof OnboardingRouteRoute
-    }
-    "/_protected/timesheet": {
-      id: "/_protected/timesheet"
-      path: "/timesheet"
-      fullPath: "/timesheet"
-      preLoaderRoute: typeof ProtectedTimesheetRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    "/_protected/settings": {
-      id: "/_protected/settings"
-      path: "/settings"
-      fullPath: "/settings"
-      preLoaderRoute: typeof ProtectedSettingsRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    "/_protected/requests": {
-      id: "/_protected/requests"
-      path: "/requests"
-      fullPath: "/requests"
-      preLoaderRoute: typeof ProtectedRequestsRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    "/_protected/employees": {
-      id: "/_protected/employees"
-      path: "/employees"
-      fullPath: "/employees"
-      preLoaderRoute: typeof ProtectedEmployeesRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    "/_protected/dashboard": {
-      id: "/_protected/dashboard"
-      path: "/dashboard"
-      fullPath: "/dashboard"
-      preLoaderRoute: typeof ProtectedDashboardRouteImport
-      parentRoute: typeof ProtectedRouteRoute
-    }
-    "/(auth)/sign-up": {
-      id: "/(auth)/sign-up"
-      path: "/sign-up"
-      fullPath: "/sign-up"
-      preLoaderRoute: typeof authSignUpRouteImport
-      parentRoute: typeof authRouteRoute
-    }
-    "/(auth)/sign-in": {
-      id: "/(auth)/sign-in"
-      path: "/sign-in"
-      fullPath: "/sign-in"
+    '/(auth)/sign-in': {
+      id: '/(auth)/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
       preLoaderRoute: typeof authSignInRouteImport
       parentRoute: typeof authRouteRoute
     }
-    "/e/$storeSlug": {
-      id: "/e/$storeSlug"
-      path: "/e/$storeSlug"
-      fullPath: "/e/$storeSlug"
+    '/(auth)/sign-up': {
+      id: '/(auth)/sign-up'
+      path: '/sign-up'
+      fullPath: '/sign-up'
+      preLoaderRoute: typeof authSignUpRouteImport
+      parentRoute: typeof authRouteRoute
+    }
+    '/_protected/dashboard': {
+      id: '/_protected/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof ProtectedDashboardRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/orders': {
+      id: '/_protected/orders'
+      path: '/orders'
+      fullPath: '/orders'
+      preLoaderRoute: typeof ProtectedOrdersRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/products': {
+      id: '/_protected/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof ProtectedProductsRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/requests': {
+      id: '/_protected/requests'
+      path: '/requests'
+      fullPath: '/requests'
+      preLoaderRoute: typeof ProtectedRequestsRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/sales': {
+      id: '/_protected/sales'
+      path: '/sales'
+      fullPath: '/sales'
+      preLoaderRoute: typeof ProtectedSalesRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/settings': {
+      id: '/_protected/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ProtectedSettingsRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/timesheet': {
+      id: '/_protected/timesheet'
+      path: '/timesheet'
+      fullPath: '/timesheet'
+      preLoaderRoute: typeof ProtectedTimesheetRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/e/$storeSlug': {
+      id: '/e/$storeSlug'
+      path: '/e/$storeSlug'
+      fullPath: '/e/$storeSlug'
       preLoaderRoute: typeof EStoreSlugRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/e/$storeSlug/": {
-      id: "/e/$storeSlug/"
-      path: "/"
-      fullPath: "/e/$storeSlug/"
-      preLoaderRoute: typeof EStoreSlugIndexRouteImport
-      parentRoute: typeof EStoreSlugRouteRoute
+    '/onboarding/': {
+      id: '/onboarding/'
+      path: '/'
+      fullPath: '/onboarding/'
+      preLoaderRoute: typeof OnboardingIndexRouteImport
+      parentRoute: typeof OnboardingRouteRoute
     }
-    "/api/auth/$": {
-      id: "/api/auth/$"
-      path: "/api/auth/$"
-      fullPath: "/api/auth/$"
+    '/onboarding/branch': {
+      id: '/onboarding/branch'
+      path: '/branch'
+      fullPath: '/onboarding/branch'
+      preLoaderRoute: typeof OnboardingBranchRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/onboarding/designations': {
+      id: '/onboarding/designations'
+      path: '/designations'
+      fullPath: '/onboarding/designations'
+      preLoaderRoute: typeof OnboardingDesignationsRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/onboarding/employees': {
+      id: '/onboarding/employees'
+      path: '/employees'
+      fullPath: '/onboarding/employees'
+      preLoaderRoute: typeof OnboardingEmployeesRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/onboarding/finish': {
+      id: '/onboarding/finish'
+      path: '/finish'
+      fullPath: '/onboarding/finish'
+      preLoaderRoute: typeof OnboardingFinishRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/onboarding/store-settings': {
+      id: '/onboarding/store-settings'
+      path: '/store-settings'
+      fullPath: '/onboarding/store-settings'
+      preLoaderRoute: typeof OnboardingStoreSettingsRouteImport
+      parentRoute: typeof OnboardingRouteRoute
+    }
+    '/_protected/employees/': {
+      id: '/_protected/employees/'
+      path: '/employees'
+      fullPath: '/employees/'
+      preLoaderRoute: typeof ProtectedEmployeesIndexRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/_protected/employees/$employeeId': {
+      id: '/_protected/employees/$employeeId'
+      path: '/employees/$employeeId'
+      fullPath: '/employees/$employeeId'
+      preLoaderRoute: typeof ProtectedEmployeesEmployeeIdRouteImport
+      parentRoute: typeof ProtectedRouteRoute
+    }
+    '/api/auth/$': {
+      id: '/api/auth/$'
+      path: '/api/auth/$'
+      fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/e/$storeSlug/$employeeId": {
-      id: "/e/$storeSlug/$employeeId"
-      path: "/$employeeId"
-      fullPath: "/e/$storeSlug/$employeeId"
+    '/e/$storeSlug/': {
+      id: '/e/$storeSlug/'
+      path: '/'
+      fullPath: '/e/$storeSlug/'
+      preLoaderRoute: typeof EStoreSlugIndexRouteImport
+      parentRoute: typeof EStoreSlugRouteRoute
+    }
+    '/e/$storeSlug/$employeeId': {
+      id: '/e/$storeSlug/$employeeId'
+      path: '/$employeeId'
+      fullPath: '/e/$storeSlug/$employeeId'
       preLoaderRoute: typeof EStoreSlugEmployeeIdRouteRouteImport
       parentRoute: typeof EStoreSlugRouteRoute
     }
-    "/e/$storeSlug/$employeeId/": {
-      id: "/e/$storeSlug/$employeeId/"
-      path: "/"
-      fullPath: "/e/$storeSlug/$employeeId/"
-      preLoaderRoute: typeof EStoreSlugEmployeeIdIndexRouteImport
-      parentRoute: typeof EStoreSlugEmployeeIdRouteRoute
-    }
-    "/e/$storeSlug/$employeeId/requests": {
-      id: "/e/$storeSlug/$employeeId/requests"
-      path: "/requests"
-      fullPath: "/e/$storeSlug/$employeeId/requests"
-      preLoaderRoute: typeof EStoreSlugEmployeeIdRequestsRouteImport
-      parentRoute: typeof EStoreSlugEmployeeIdRouteRoute
-    }
-    "/e/$storeSlug/$employeeId/logs": {
-      id: "/e/$storeSlug/$employeeId/logs"
-      path: "/logs"
-      fullPath: "/e/$storeSlug/$employeeId/logs"
-      preLoaderRoute: typeof EStoreSlugEmployeeIdLogsRouteImport
-      parentRoute: typeof EStoreSlugEmployeeIdRouteRoute
-    }
-    "/api/resources/$storeId/field-options": {
-      id: "/api/resources/$storeId/field-options"
-      path: "/api/resources/$storeId/field-options"
-      fullPath: "/api/resources/$storeId/field-options"
+    '/api/resources/$storeId/field-options': {
+      id: '/api/resources/$storeId/field-options'
+      path: '/api/resources/$storeId/field-options'
+      fullPath: '/api/resources/$storeId/field-options'
       preLoaderRoute: typeof ApiResourcesStoreIdFieldOptionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/e/$storeSlug/$employeeId/daily-sales": {
-      id: "/e/$storeSlug/$employeeId/daily-sales"
-      path: "/daily-sales"
-      fullPath: "/e/$storeSlug/$employeeId/daily-sales"
+    '/e/$storeSlug/$employeeId/': {
+      id: '/e/$storeSlug/$employeeId/'
+      path: '/'
+      fullPath: '/e/$storeSlug/$employeeId/'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdIndexRouteImport
+      parentRoute: typeof EStoreSlugEmployeeIdRouteRoute
+    }
+    '/e/$storeSlug/$employeeId/daily-sales': {
+      id: '/e/$storeSlug/$employeeId/daily-sales'
+      path: '/daily-sales'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales'
       preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRouteImport
       parentRoute: typeof EStoreSlugEmployeeIdRouteRoute
     }
-    "/e/$storeSlug/$employeeId/daily-sales/": {
-      id: "/e/$storeSlug/$employeeId/daily-sales/"
-      path: "/"
-      fullPath: "/e/$storeSlug/$employeeId/daily-sales/"
+    '/e/$storeSlug/$employeeId/logs': {
+      id: '/e/$storeSlug/$employeeId/logs'
+      path: '/logs'
+      fullPath: '/e/$storeSlug/$employeeId/logs'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdLogsRouteImport
+      parentRoute: typeof EStoreSlugEmployeeIdRouteRoute
+    }
+    '/e/$storeSlug/$employeeId/requests': {
+      id: '/e/$storeSlug/$employeeId/requests'
+      path: '/requests'
+      fullPath: '/e/$storeSlug/$employeeId/requests'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdRequestsRouteImport
+      parentRoute: typeof EStoreSlugEmployeeIdRouteRoute
+    }
+    '/e/$storeSlug/$employeeId/daily-sales/': {
+      id: '/e/$storeSlug/$employeeId/daily-sales/'
+      path: '/'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales/'
       preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesIndexRouteImport
       parentRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRoute
     }
-    "/e/$storeSlug/$employeeId/daily-sales/sales": {
-      id: "/e/$storeSlug/$employeeId/daily-sales/sales"
-      path: "/sales"
-      fullPath: "/e/$storeSlug/$employeeId/daily-sales/sales"
-      preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesSalesRouteImport
+    '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand': {
+      id: '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+      path: '/cash-on-hand'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales/cash-on-hand'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesCashOnHandRouteImport
       parentRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRoute
     }
-    "/e/$storeSlug/$employeeId/daily-sales/expenses": {
-      id: "/e/$storeSlug/$employeeId/daily-sales/expenses"
-      path: "/expenses"
-      fullPath: "/e/$storeSlug/$employeeId/daily-sales/expenses"
+    '/e/$storeSlug/$employeeId/daily-sales/expenses': {
+      id: '/e/$storeSlug/$employeeId/daily-sales/expenses'
+      path: '/expenses'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales/expenses'
       preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesExpensesRouteImport
       parentRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRoute
     }
-    "/e/$storeSlug/$employeeId/daily-sales/cash-on-hand": {
-      id: "/e/$storeSlug/$employeeId/daily-sales/cash-on-hand"
-      path: "/cash-on-hand"
-      fullPath: "/e/$storeSlug/$employeeId/daily-sales/cash-on-hand"
-      preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesCashOnHandRouteImport
+    '/e/$storeSlug/$employeeId/daily-sales/sales': {
+      id: '/e/$storeSlug/$employeeId/daily-sales/sales'
+      path: '/sales'
+      fullPath: '/e/$storeSlug/$employeeId/daily-sales/sales'
+      preLoaderRoute: typeof EStoreSlugEmployeeIdDailySalesSalesRouteImport
       parentRoute: typeof EStoreSlugEmployeeIdDailySalesRouteRoute
     }
   }
@@ -615,27 +692,35 @@ const authRouteRouteChildren: authRouteRouteChildren = {
 }
 
 const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
-  authRouteRouteChildren
+  authRouteRouteChildren,
 )
 
 interface ProtectedRouteRouteChildren {
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
-  ProtectedEmployeesRoute: typeof ProtectedEmployeesRoute
+  ProtectedOrdersRoute: typeof ProtectedOrdersRoute
+  ProtectedProductsRoute: typeof ProtectedProductsRoute
   ProtectedRequestsRoute: typeof ProtectedRequestsRoute
+  ProtectedSalesRoute: typeof ProtectedSalesRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
   ProtectedTimesheetRoute: typeof ProtectedTimesheetRoute
+  ProtectedEmployeesEmployeeIdRoute: typeof ProtectedEmployeesEmployeeIdRoute
+  ProtectedEmployeesIndexRoute: typeof ProtectedEmployeesIndexRoute
 }
 
 const ProtectedRouteRouteChildren: ProtectedRouteRouteChildren = {
   ProtectedDashboardRoute: ProtectedDashboardRoute,
-  ProtectedEmployeesRoute: ProtectedEmployeesRoute,
+  ProtectedOrdersRoute: ProtectedOrdersRoute,
+  ProtectedProductsRoute: ProtectedProductsRoute,
   ProtectedRequestsRoute: ProtectedRequestsRoute,
+  ProtectedSalesRoute: ProtectedSalesRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
   ProtectedTimesheetRoute: ProtectedTimesheetRoute,
+  ProtectedEmployeesEmployeeIdRoute: ProtectedEmployeesEmployeeIdRoute,
+  ProtectedEmployeesIndexRoute: ProtectedEmployeesIndexRoute,
 }
 
 const ProtectedRouteRouteWithChildren = ProtectedRouteRoute._addFileChildren(
-  ProtectedRouteRouteChildren
+  ProtectedRouteRouteChildren,
 )
 
 interface OnboardingRouteRouteChildren {
@@ -657,7 +742,7 @@ const OnboardingRouteRouteChildren: OnboardingRouteRouteChildren = {
 }
 
 const OnboardingRouteRouteWithChildren = OnboardingRouteRoute._addFileChildren(
-  OnboardingRouteRouteChildren
+  OnboardingRouteRouteChildren,
 )
 
 interface EStoreSlugEmployeeIdDailySalesRouteRouteChildren {
@@ -681,7 +766,7 @@ const EStoreSlugEmployeeIdDailySalesRouteRouteChildren: EStoreSlugEmployeeIdDail
 
 const EStoreSlugEmployeeIdDailySalesRouteRouteWithChildren =
   EStoreSlugEmployeeIdDailySalesRouteRoute._addFileChildren(
-    EStoreSlugEmployeeIdDailySalesRouteRouteChildren
+    EStoreSlugEmployeeIdDailySalesRouteRouteChildren,
   )
 
 interface EStoreSlugEmployeeIdRouteRouteChildren {
@@ -702,7 +787,7 @@ const EStoreSlugEmployeeIdRouteRouteChildren: EStoreSlugEmployeeIdRouteRouteChil
 
 const EStoreSlugEmployeeIdRouteRouteWithChildren =
   EStoreSlugEmployeeIdRouteRoute._addFileChildren(
-    EStoreSlugEmployeeIdRouteRouteChildren
+    EStoreSlugEmployeeIdRouteRouteChildren,
   )
 
 interface EStoreSlugRouteRouteChildren {
@@ -716,7 +801,7 @@ const EStoreSlugRouteRouteChildren: EStoreSlugRouteRouteChildren = {
 }
 
 const EStoreSlugRouteRouteWithChildren = EStoreSlugRouteRoute._addFileChildren(
-  EStoreSlugRouteRouteChildren
+  EStoreSlugRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
@@ -732,9 +817,9 @@ export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from "./router.tsx"
-import type { createStart } from "@tanstack/react-start"
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
     ssr: true
     router: Awaited<ReturnType<typeof getRouter>>

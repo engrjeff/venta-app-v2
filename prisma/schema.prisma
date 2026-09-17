@@ -457,6 +457,8 @@ model Expense {
 
 enum AttendanceRequestType {
   FORGOT_TO_CLOCK_OUT
+  EDIT_TIME_IN
+  EDIT_TIME_OUT
 }
 
 enum AttendanceRequestStatus {
@@ -481,12 +483,17 @@ model AttendanceRequest {
   type   AttendanceRequestType
   reason String
 
-  /// Employee-specified clock-out time, used by FORGOT_TO_CLOCK_OUT requests
+  /// Employee-requested time-in, used by EDIT_TIME_IN requests
+  requestedTimeIn DateTime? @db.Time(0)
+
+  /// Employee-requested time-out, used by FORGOT_TO_CLOCK_OUT and EDIT_TIME_OUT requests
   clockOutTime DateTime? @db.Time(0)
 
   status AttendanceRequestStatus @default(PENDING)
 
   reviewedAt DateTime?
+
+  declineReason String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

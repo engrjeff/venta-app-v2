@@ -13,9 +13,33 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { ATTENDANCE_REQUEST_TYPE_LABELS } from "./request-labels"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { AttendanceRequestType } from "@/generated/prisma/enums"
+import { formatDate } from "date-fns"
 import type { AttendanceRequestWithRelations } from "./request.types"
 import { requestsApi } from "./requests.functions"
+
+const QUICK_DECLINE_REASONS = [
+  "No duty that day",
+  "Time doesn't match records",
+  "Filed too late",
+]
+
+function getDeclineDescription(request: AttendanceRequestWithRelations) {
+  const name = request.employee.firstName
+  const dateLabel = formatDate(request.attendance.date, "MMM d")
+
+  if (!request.attendance.timeOut) {
+    return `${name}'s ${dateLabel} shift stays without a clock-out, so that day earns nothing. They'll see your reason in their portal.`
+  }
+
+  if (request.type === AttendanceRequestType.EDIT_TIME_IN) {
+    return `${name}'s ${dateLabel} shift keeps its current clock-in time. They'll see your reason in their portal.`
+  }
+
+  return `${name}'s ${dateLabel} shift keeps its current clock-out time. They'll see your reason in their portal.`
+}
 
 interface DeclineRequestDialogProps {
   request: AttendanceRequestWithRelations
@@ -30,14 +54,19 @@ export function DeclineRequestDialog({
 }: DeclineRequestDialogProps) {
   const declineFn = useServerFn(requestsApi.declineFn)
 
+  const [declineReason, setDeclineReason] = useState("")
   const [isPending, setIsPending] = useState(false)
 
   const router = useRouter()
 
   async function handleDecline() {
+    if (!declineReason.trim()) return
+
     try {
       setIsPending(true)
-      const result = await declineFn({ data: { id: request.id } })
+      const result = await declineFn({
+        data: { id: request.id, declineReason: declineReason.trim() },
+      })
 
       if (result.error) {
         console.log("Error declining request: ", result.error)
@@ -65,25 +94,56 @@ export function DeclineRequestDialog({
   }
 
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
+    <AlertDialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) setDeclineReason("")
+        onOpenChange(isOpen)
+      }}
+    >
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Decline this request?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will decline the{" "}
-            <strong className="font-medium text-foreground">
-              {ATTENDANCE_REQUEST_TYPE_LABELS[request.type]}
-            </strong>{" "}
-            request. The employee&apos;s attendance record will not be changed.
+            {getDeclineDescription(request)}
           </AlertDialogDescription>
         </AlertDialogHeader>
+
+        <div className="space-y-2">
+          <div className="flex items-center gap-1.5 text-sm font-medium">
+            Reason <span className="text-destructive">required</span>
+          </div>
+          <Textarea
+            value={declineReason}
+            onChange={(e) => setDeclineReason(e.target.value)}
+            placeholder="Tell them why, so they can correct it next time..."
+            aria-invalid={!declineReason.trim()}
+          />
+          <div className="flex flex-wrap gap-2">
+            {QUICK_DECLINE_REASONS.map((reason) => (
+              <Button
+                key={reason}
+                type="button"
+                variant="outline"
+                size="sm"
+                className="rounded-full"
+                onClick={() => setDeclineReason(reason)}
+              >
+                {reason}
+              </Button>
+            ))}
+          </div>
+        </div>
+
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>Keep pending</AlertDialogCancel>
           <SubmitButton
-            variant="destructive"
+            variant="outline"
+            className="border-destructive text-destructive hover:bg-destructive/10"
             type="button"
             onClick={handleDecline}
             loading={isPending}
+            disabled={!declineReason.trim()}
           >
             Decline
           </SubmitButton>

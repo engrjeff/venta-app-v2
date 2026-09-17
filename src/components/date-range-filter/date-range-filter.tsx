@@ -31,10 +31,18 @@ export function DateRangeFilter({ value, onApply, presetsOnly }: Props) {
 
   const [open, setOpen] = React.useState(false)
   const [draft, setDraft] = React.useState<DateRange | undefined>(initialRange)
+  const [month, setMonth] = React.useState<Date>(draft?.from ?? new Date())
 
   React.useEffect(() => {
     setDraft(value ?? getThisWeekRange())
   }, [value])
+
+  // Keep the visible calendar month in sync whenever the range's start
+  // date changes from something other than manual month navigation
+  // (preset clicks, or the popover re-seeding its draft on open/close).
+  React.useEffect(() => {
+    if (draft?.from) setMonth(draft.from)
+  }, [draft?.from])
 
   function selectPreset(range: DateRange) {
     if (presetsOnly) {
@@ -126,10 +134,12 @@ export function DateRangeFilter({ value, onApply, presetsOnly }: Props) {
             <div className="flex flex-col">
               <Calendar
                 mode="range"
-                defaultMonth={draft?.from}
+                month={month}
+                onMonthChange={setMonth}
                 selected={draft}
                 onSelect={setDraft}
                 numberOfMonths={2}
+                weekStartsOn={1}
               />
 
               <div className="flex items-center justify-between border-t p-3">

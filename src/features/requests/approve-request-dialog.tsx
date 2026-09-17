@@ -1,5 +1,6 @@
 import { useRouter } from "@tanstack/react-router"
 import { useServerFn } from "@tanstack/react-start"
+import { CheckIcon } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 
@@ -14,10 +15,22 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { AttendanceRequestType } from "@/generated/prisma/enums"
-import { formatTimeOfDay } from "@/lib/utils"
-import { ATTENDANCE_REQUEST_TYPE_LABELS } from "./request-labels"
+import {
+  formatDurationFromSeconds,
+  formatPHP,
+  formatTimeOfDay,
+} from "@/lib/utils"
+import { formatDate } from "date-fns"
+import { getApprovalPreview } from "./request-approval-preview"
 import type { AttendanceRequestWithRelations } from "./request.types"
+import { getRequestedTime } from "./request.utils"
 import { requestsApi } from "./requests.functions"
+
+const APPROVE_TIME_VERBS: Record<AttendanceRequestType, string> = {
+  [AttendanceRequestType.FORGOT_TO_CLOCK_OUT]: "clock out",
+  [AttendanceRequestType.EDIT_TIME_OUT]: "clock out",
+  [AttendanceRequestType.EDIT_TIME_IN]: "clock in",
+}
 
 interface ApproveRequestDialogProps {
   request: AttendanceRequestWithRelations
@@ -35,6 +48,13 @@ export function ApproveRequestDialog({
   const [isPending, setIsPending] = useState(false)
 
   const router = useRouter()
+
+  const requestedTime = getRequestedTime(request)
+  const preview = getApprovalPreview(request)
+
+  const title = requestedTime
+    ? `Approve and set ${APPROVE_TIME_VERBS[request.type]} to ${formatTimeOfDay(requestedTime)}?`
+    : "Approve this request?"
 
   async function handleApprove() {
     try {
@@ -70,25 +90,61 @@ export function ApproveRequestDialog({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Approve this request?</AlertDialogTitle>
+          <div className="flex items-center gap-2">
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white">
+              <CheckIcon className="size-3.5" />
+            </span>
+            <AlertDialogTitle>{title}</AlertDialogTitle>
+          </div>
           <AlertDialogDescription>
-            This will approve the{" "}
-            <strong className="font-medium text-foreground">
-              {ATTENDANCE_REQUEST_TYPE_LABELS[request.type]}
-            </strong>{" "}
-            request and update the attendance record as though the employee
-            clocked out at{" "}
-            {request.type === AttendanceRequestType.FORGOT_TO_CLOCK_OUT &&
-            request.clockOutTime ? (
-              <strong className="font-medium text-foreground">
-                {formatTimeOfDay(request.clockOutTime)}
-              </strong>
+            {preview ? (
+              <>
+                {formatDate(request.attendance.date, "MMM d")} becomes a{" "}
+                <strong className="font-medium text-foreground">
+                  {formatDurationFromSeconds(preview.totalWorkedSeconds)}
+                </strong>{" "}
+                shift for {request.employee.firstName}
+                {preview.overtimeSeconds > 0 && (
+                  <>
+                    {" — "}
+                    {formatDurationFromSeconds(
+                      preview.regularWorkedSeconds
+                    )}{" "}
+                    regular plus{" "}
+                    {formatDurationFromSeconds(preview.overtimeSeconds)}{" "}
+                    overtime
+                  </>
+                )}
+                .
+              </>
             ) : (
-              "the requested time"
+              "This will approve the request and update the attendance record."
             )}
-            .
           </AlertDialogDescription>
         </AlertDialogHeader>
+
+        {preview && (
+          <div className="space-y-2 rounded-md border p-3 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-muted-foreground">
+                Earnings for that day
+              </span>
+              <span className="font-mono font-medium">
+                {formatPHP(request.attendance.totalPay ?? 0)} →{" "}
+                {formatPHP(preview.totalPay)}
+              </span>
+            </div>
+            {preview.overtimeSeconds > 0 && (
+              <div className="flex items-center justify-between">
+                <span className="text-muted-foreground">Overtime added</span>
+                <span className="font-mono font-medium text-amber-500">
+                  {formatDurationFromSeconds(preview.overtimeSeconds)}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
+
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <SubmitButton

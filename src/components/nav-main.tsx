@@ -13,8 +13,8 @@ import {
   ClockIcon,
   FileTextIcon,
   HomeIcon,
-  InboxIcon,
   SettingsIcon,
+  ShoppingBagIcon,
   UsersIcon,
 } from "lucide-react"
 
@@ -55,7 +55,7 @@ const OPERATIONS_NAV = [
   {
     id: "orders",
     title: "Orders",
-    Icon: InboxIcon,
+    Icon: ShoppingBagIcon,
     pathname: "/orders",
   },
 ]
@@ -83,7 +83,7 @@ export function NavMain() {
                 isActive={location.pathname.includes(item.pathname)}
                 render={<Link to={item.pathname} />}
               >
-                <item.Icon />
+                <item.Icon className="group-data-active/menu-button:text-chart-2" />
                 <span>{item.title}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -99,7 +99,7 @@ export function NavMain() {
                 isActive={location.pathname.includes(item.pathname)}
                 render={<Link to={item.pathname} />}
               >
-                <item.Icon />
+                <item.Icon className="group-data-active/menu-button:text-chart-2" />
                 <span>{item.title}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -115,7 +115,7 @@ export function NavMain() {
                 isActive={location.pathname.includes(item.pathname)}
                 render={<Link to={item.pathname} />}
               >
-                <item.Icon />
+                <item.Icon className="group-data-active/menu-button:text-chart-2" />
                 <span>{item.title}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>

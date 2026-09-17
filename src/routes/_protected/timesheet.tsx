@@ -1,10 +1,12 @@
+import { PageHeader } from "@/components/page-header"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { employeesApi } from "@/features/employees/employees.functions"
 import { storeApi } from "@/features/store/store.functions"
 import { timesheetQueryOptionsSchema } from "@/features/timesheet/schema"
-import { TimesheetList } from "@/features/timesheet/timesheet-list"
-import { TimesheetMobileFilters } from "@/features/timesheet/timesheet-mobile-filters"
+import { TimesheetFilters } from "@/features/timesheet/timesheet-filters"
+import { TimesheetMobileScreen } from "@/features/timesheet/timesheet-mobile-screen"
 import { TimesheetTable } from "@/features/timesheet/timesheet-table"
 import { timesheetApi } from "@/features/timesheet/timesheet.functions"
 import { generatePageTitle } from "@/lib/utils"
@@ -81,19 +83,31 @@ export const Route = createFileRoute("/_protected/timesheet")({
 
 function RouteComponent() {
   return (
-    <div className="flex h-full flex-col space-y-4 p-4">
-      {/* page header */}
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <ClockIcon className="size-4" />{" "}
-          <h1 className="font-semibold">Timesheet</h1>
+    <>
+      {/* desktop page header */}
+      <PageHeader className="hidden md:flex">
+        <PageHeader.Heading>
+          <PageHeader.Title>Timesheet</PageHeader.Title>
+        </PageHeader.Heading>
+        <PageHeader.Actions>
+          <Button size="sm" variant="outline">
+            Export CSV
+          </Button>
+        </PageHeader.Actions>
+      </PageHeader>
+      <div className="hidden min-h-0 flex-1 flex-col gap-4 pb-4 md:flex">
+        {/* timesheet filters */}
+        <TimesheetFilters />
+        {/* timesheet table*/}
+        <div className="min-h-0 flex-1 overflow-y-auto px-6">
+          <TimesheetTable />
         </div>
       </div>
-      {/* content on mobile */}
-      <TimesheetMobileFilters />
-      <TimesheetList />
-      {/* content on desktop */}
-      <TimesheetTable />
-    </div>
+
+      {/* mobile screen */}
+      <div className="min-h-0 flex-1 overflow-y-auto md:hidden">
+        <TimesheetMobileScreen />
+      </div>
+    </>
   )
 }

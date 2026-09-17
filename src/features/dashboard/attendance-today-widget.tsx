@@ -1,6 +1,15 @@
-import { Badge } from "@/components/ui/badge"
+import { FilterTabs } from "@/components/filter-tabs"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   Empty,
   EmptyDescription,
@@ -15,90 +24,87 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import type {
-  Attendance,
-  Branch,
-  Designation,
-  Employee,
-} from "@/generated/prisma/browser"
+import { AttendanceStatusBadge } from "@/features/attendance/attendance-status-badge"
 import { AttendanceStatus } from "@/generated/prisma/enums"
-import { formatTime } from "@/lib/utils"
-import { useNavigate } from "@tanstack/react-router"
-import { SearchIcon } from "lucide-react"
-import { useState } from "react"
-
-interface AttendanceRecord extends Attendance {
-  branch: Pick<Branch, "id" | "name">
-  employee: Pick<Employee, "id" | "firstName" | "lastName" | "username"> & {
-    designation: Pick<Designation, "id" | "name">
-  }
-}
+import { formatTime, getInitials } from "@/lib/utils"
+import { Link, useNavigate } from "@tanstack/react-router"
+import { MoveUpRightIcon, SearchIcon } from "lucide-react"
+import { useMemo, useState } from "react"
+import type {
+  AttendanceRecord,
+  AttendanceStatusFilter,
+  EmployeeRosterEntry,
+} from "./dashboard.types"
+import { buildRows } from "./dashboard.utils"
 
 export function AttendanceTodayWidget({
+  employees,
   attendanceRecords,
+  scheduledCount,
 }: {
+  employees: EmployeeRosterEntry[]
   attendanceRecords: AttendanceRecord[]
+  scheduledCount: number
 }) {
   const navigate = useNavigate()
-  const [statusFilter, setStatusFilter] = useState<AttendanceStatus>()
+  const [statusFilter, setStatusFilter] = useState<AttendanceStatusFilter>()
 
-  const filteredRecords = statusFilter
-    ? attendanceRecords.filter((a) => a.status === statusFilter)
-    : attendanceRecords
+  const rows = useMemo(
+    () => buildRows(employees, attendanceRecords),
+    [employees, attendanceRecords]
+  )
+
+  const filteredRows =
+    statusFilter === undefined
+      ? rows
+      : statusFilter === "NOT_CLOCKED_IN"
+        ? rows.filter((row) => row.status === undefined)
+        : rows.filter((row) => row.status === statusFilter)
 
   return (
     <Card size="sm" className="rounded-md">
       <CardHeader>
         <CardTitle>Today's Attendance</CardTitle>
+        <CardDescription className="text-xs">
+          {scheduledCount} employees scheduled today
+        </CardDescription>
+        <CardAction>
+          <FilterTabs>
+            <FilterTabs.Link
+              active={statusFilter === undefined}
+              onClick={() => setStatusFilter(undefined)}
+            >
+              All
+            </FilterTabs.Link>
+            <FilterTabs.Link
+              active={statusFilter === AttendanceStatus.WORKING}
+              onClick={() => setStatusFilter(AttendanceStatus.WORKING)}
+            >
+              Working
+            </FilterTabs.Link>
+            <FilterTabs.Link
+              active={statusFilter === AttendanceStatus.ON_BREAK}
+              onClick={() => setStatusFilter(AttendanceStatus.ON_BREAK)}
+            >
+              On Break
+            </FilterTabs.Link>
+            <FilterTabs.Link
+              active={statusFilter === AttendanceStatus.CLOCKED_OUT}
+              onClick={() => setStatusFilter(AttendanceStatus.CLOCKED_OUT)}
+            >
+              Clocked Out
+            </FilterTabs.Link>
+            <FilterTabs.Link
+              active={statusFilter === "NOT_CLOCKED_IN"}
+              onClick={() => setStatusFilter("NOT_CLOCKED_IN")}
+            >
+              Not Clocked In
+            </FilterTabs.Link>
+          </FilterTabs>
+        </CardAction>
       </CardHeader>
       <CardContent className="px-0">
-        <div className="flex items-center gap-2 px-3 pb-3">
-          <Button
-            type="button"
-            size="sm"
-            variant={statusFilter === undefined ? "secondary" : "ghost"}
-            className="text-xs"
-            onClick={() => setStatusFilter(undefined)}
-          >
-            All
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant={
-              statusFilter === AttendanceStatus.WORKING ? "secondary" : "ghost"
-            }
-            className="text-xs"
-            onClick={() => setStatusFilter(AttendanceStatus.WORKING)}
-          >
-            Working
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant={
-              statusFilter === AttendanceStatus.ON_BREAK ? "secondary" : "ghost"
-            }
-            className="text-xs"
-            onClick={() => setStatusFilter(AttendanceStatus.ON_BREAK)}
-          >
-            On Break
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant={
-              statusFilter === AttendanceStatus.CLOCKED_OUT
-                ? "secondary"
-                : "ghost"
-            }
-            className="text-xs"
-            onClick={() => setStatusFilter(AttendanceStatus.CLOCKED_OUT)}
-          >
-            Clocked Out
-          </Button>
-        </div>
-        <Table>
+        <Table className="border-b">
           <TableHeader>
             <TableRow className="border-t bg-muted/50 font-semibold">
               <TableHead>Employee</TableHead>
@@ -109,7 +115,7 @@ export function AttendanceTodayWidget({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredRecords.length === 0 ? (
+            {filteredRows.length === 0 ? (
               <TableRow className="pointer-events-none">
                 <TableCell colSpan={5}>
                   <Empty>
@@ -123,59 +129,96 @@ export function AttendanceTodayWidget({
                 </TableCell>
               </TableRow>
             ) : (
-              filteredRecords.map((attendance) => (
-                <TableRow
-                  key={attendance.id}
-                  className="group cursor-pointer"
-                  onClick={() =>
-                    navigate({
-                      to: "/timesheet",
-                      search: {
-                        employees: {
-                          operator: "is",
-                          value: [attendance.employeeId],
-                        },
-                      },
-                    })
-                  }
-                >
-                  <TableCell>
-                    <p className="font-semibold group-hover:underline">
-                      {attendance.employee.lastName},{" "}
-                      {attendance.employee.firstName}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {attendance.employee.designation.name}
-                    </p>
-                  </TableCell>
-                  <TableCell>{attendance.branch.name}</TableCell>
-                  <TableCell>
-                    <Badge variant={attendance.status}>
-                      {attendance.status.replaceAll("_", " ").toLowerCase()}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {attendance.timeIn && (
-                      <p className="text-center font-mono">
-                        {formatTime(attendance.timeIn)}
-                      </p>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {attendance.timeOut ? (
-                      <p className="text-center font-mono">
-                        {formatTime(attendance.timeOut)}
-                      </p>
-                    ) : (
-                      <p className="text-center">--</p>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))
+              filteredRows.map((row) => {
+                const hasAttendance = row.status !== undefined
+
+                return (
+                  <TableRow
+                    key={row.key}
+                    className="group cursor-pointer"
+                    onClick={
+                      hasAttendance
+                        ? () =>
+                            navigate({
+                              to: "/timesheet",
+                              search: {
+                                employees: {
+                                  operator: "is",
+                                  value: [row.employeeId],
+                                },
+                              },
+                            })
+                        : undefined
+                    }
+                  >
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Avatar size="sm">
+                          <AvatarFallback className="text-xs font-semibold">
+                            {getInitials(
+                              row.employee.firstName,
+                              row.employee.lastName
+                            )}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p
+                            className={
+                              hasAttendance
+                                ? "text-xs font-semibold group-hover:underline"
+                                : "text-xs font-semibold"
+                            }
+                          >
+                            {row.employee.lastName}, {row.employee.firstName}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {row.employee.designation.name}
+                          </p>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {row.branch?.name ?? "--"}
+                    </TableCell>
+                    <TableCell>
+                      <AttendanceStatusBadge status={row.status} />
+                    </TableCell>
+                    <TableCell>
+                      {row.timeIn && (
+                        <p className="text-center font-mono">
+                          {formatTime(row.timeIn)}
+                        </p>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {row.timeOut ? (
+                        <p className="text-center font-mono">
+                          {formatTime(row.timeOut)}
+                        </p>
+                      ) : (
+                        <p className="text-center">--</p>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )
+              })
             )}
           </TableBody>
         </Table>
       </CardContent>
+      <CardFooter className="justify-end px-0">
+        <Button
+          nativeButton={false}
+          size="xs"
+          variant="link"
+          className="text-blue-500"
+          render={
+            <Link to="/timesheet">
+              View Timesheet <MoveUpRightIcon />
+            </Link>
+          }
+        />
+      </CardFooter>
     </Card>
   )
 }
